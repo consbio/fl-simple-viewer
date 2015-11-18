@@ -1,0 +1,528 @@
+html {
+    height: 100%;
+}
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Verdana, Geneva, sans-serif;
+    color: #333;
+}
+a {
+    text-decoration: none;
+    color: #3182bd;
+}
+a:hover {
+    text-decoration: underline;
+}
+
+p {
+    margin-top: 0;
+    line-height: 1.3;
+}
+p.inset {
+    margin-left: 16px;
+}
+
+
+input[type=range]{
+    -webkit-appearance: none;
+    /* fix for FF unable to apply focus style bug  */
+    border: 1px solid white;
+    cursor: pointer;
+    opacity: 0.5;
+}
+input[type=range]::-webkit-slider-runnable-track {
+    width: 150px;
+    height: 5px;
+    background: #ddd;
+    border: none;
+    border-radius: 3px;
+}
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #333;
+    margin-top: -6px;
+}
+input[type=range]:focus {
+    outline: none;
+}
+input[type=range]:focus::-webkit-slider-runnable-track {
+    background: #ccc;
+}
+input[type=range]::-moz-range-track {
+    width: 150px;
+    height: 5px;
+    background: #ddd;
+    border: none;
+    border-radius: 3px;
+}
+input[type=range]::-moz-range-thumb {
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: goldenrod;
+}
+/*hide the outline behind the border*/
+input[type=range]:-moz-focusring{
+    outline: 1px solid white;
+    outline-offset: -1px;
+}
+input[type=range]:focus::-moz-range-track {
+    background: #ccc;
+}
+input[type=range]::-ms-track {
+    width: 150px;
+    height: 5px;
+
+    /*remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead */
+    background: transparent;
+
+    /*leave room for the larger thumb to overflow with a transparent border */
+    border-color: transparent;
+    border-width: 6px 0;
+
+    /*remove default tick marks*/
+    color: transparent;
+}
+input[type=range]::-ms-fill-lower {
+    background: #777;
+    border-radius: 10px;
+}
+input[type=range]::-ms-fill-upper {
+    background: #ddd;
+    border-radius: 10px;
+}
+input[type=range]::-ms-thumb {
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: goldenrod;
+}
+input[type=range]:focus::-ms-fill-lower {
+    background: #888;
+}
+input[type=range]:focus::-ms-fill-upper {
+    background: #ccc;
+}
+
+
+/* Core classes */
+.center {
+    text-align: center;
+}
+
+.small {
+    font-size: smaller;
+}
+
+.quiet {
+    color: #666;
+}
+
+.italic {
+    font-style: italic;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.nomargin {
+    margin: 0 !important;
+}
+
+.clear {
+    clear: both;
+}
+
+.right {
+    float: right;
+}
+
+.left {
+    float: left;
+}
+
+.align-right {
+    text-align: right;
+}
+
+.button {
+    color: #888;
+    background: #F6F6F6;
+    border: 1px solid #AAA;
+    padding: 4px 6px;
+    cursor: pointer;
+    border-radius: 6px;
+}
+.button:hover {
+    color: #333;
+    border-color: #888;
+    box-shadow: 1px 1px 3px #666;
+}
+
+.button-close {
+    padding: 3px;
+    cursor: pointer;
+}
+
+.inline-top {
+    display: inline-block !important;
+    vertical-align: top;
+}
+.inline-middle {
+    display: inline-block !important;
+    vertical-align: middle;
+}
+
+.reset {
+    float: right;
+    color: #1f77b4;
+    cursor: pointer;
+}
+.reset:hover {
+    text-decoration: underline;
+}
+
+.credit-photo {
+    text-align: right;
+    font-size: 0.7em;
+    color: #FFF;
+    position: relative;
+    top: -16px;
+    float: right;
+    background: rgba(0,0,0,0.35);
+    padding: 0 4px;
+    text-shadow: 1px 1px 2px #000;
+}
+.credit-photo a {
+    color: #FFF;
+}
+
+.divider {
+    height: 1px;
+    border-top: 1px solid #AAA;
+    margin: 6px 0;
+}
+
+.divider.divider-light {
+    border-color: #EEE;
+}
+
+.badge {
+    background: #333;
+    color: #FFF;
+    display: inline-block;
+    text-align: center;
+    padding: 0.2em 0.5em;
+    border-radius: 16px;
+    font-family: "Trebuchet MS", Helvetica, sans-serif;
+}
+
+/* intended to be setup as a leaflet control to coordinate layout with other controls */
+.map-panel {
+    background: #FFF;
+    border: 4px solid #FFF;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+    border-radius: 4px;
+    overflow: hidden;
+    /*pointer-events: none;*/
+}
+/* End core classes */
+
+
+/* Tabs Widget */
+.tabs {
+    list-style: none;
+    margin: 0;
+    padding: 4px 10px 0;
+    background-color: #AAA;
+    color: white;
+}
+.tabs > li {
+    display: inline-block;
+    padding: 4px 10px;
+    cursor: pointer;
+    border-radius: 3px 3px 0 0;
+}
+.tabs > li:hover {
+    background-color: #BBB;
+}
+.tabs > li.active {
+    font-weight: bold;
+    background: #FFF;
+    color: #333;
+}
+.tab {
+    padding: 16px;
+}
+.tab-ref {
+    padding: 1px 8px;
+    background: #AAA;
+    color: #FFF;
+    border-radius: 3px 3px 0 0;
+}
+
+/* End Tabs Widget */
+
+
+/* Modal Dialog */
+/* first element is actually the background scrim */
+.modal {
+    position: absolute;
+    z-index: 1001;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.4);
+}
+.modal > div {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    width: 600px;
+    background: #F6F6F6;
+    border: 1px solid #999;
+    border-radius: 6px;
+    box-shadow: 2px 2px 5px #000;
+    padding: 10px;
+}
+.modal > div > div:first-child {
+    border-bottom: 1px solid #DDD;
+    padding-bottom: 3px;
+    margin-bottom: 10px;
+}
+.modal > div > div:first-child > h3 {
+    margin: 0;
+}
+.modal .button-close {
+    font-size: 1.3em;
+    color: #888;
+    padding: 0;
+}
+.modal .button-close:hover {
+    color: #333;
+}
+/* End Modal Dialog */
+
+
+
+/* Leaflet overrides */
+.leaflet-control-layers-toggle {
+    background-image: none;
+    width: auto;
+    height: auto;
+    padding:4px;
+    text-decoration: none;
+    font-size: 1.3em;
+}
+/* End Leaflet overrides */
+
+path.leaflet-interactive {
+    stroke: #EEE;
+    stroke-width: 0.5px;
+    stroke-opacity: 0.5;
+    fill-opacity: 0.75;
+    /*fill-opacity: 1;*/
+}
+path.leaflet-interactive:hover {
+    stroke-width: 3px;
+    stroke-opacity: 1 !important;
+    stroke: #333;
+    /*fill: #000;*/
+    /*fill-opacity: 0.1;*/
+}
+/*path.leaflet-interactive.selected {*/
+    /*stroke: #e6550d;*/
+    /*fill: #000;*/
+    /*fill-opacity: 0.25;*/
+/*}*/
+/* transparency levels */
+.t_0 path.leaflet-interactive {
+    fill-opacity: 1 !important;
+    stroke-opacity: 0.5 !important;
+}
+.t_25 path.leaflet-interactive {
+    fill-opacity: 0.75 !important;
+    stroke-opacity: 0.5 !important;
+}
+.t_50 path.leaflet-interactive {
+    fill-opacity: 0.5 !important;
+    stroke-opacity: 0.25 !important;
+}
+.t_75 path.leaflet-interactive {
+    fill-opacity: 0.25 !important;
+    stroke-opacity: 0.125 !important;
+    stroke: #333;
+}
+.t_100 path.leaflet-interactive {
+    fill-opacity: 0 !important;
+    stroke-opacity: 0.1 !important;
+    stroke: #333;
+}
+
+
+/* dc.js overrides */
+div.dc-chart {
+    float: none;
+}
+
+
+
+
+/* Page elements */
+#Header {
+    height:34px;
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    background: #587387;
+    background: linear-gradient(left, #b8673d 0, #646D5A 60px, #a6b398 100%);
+    background: -webkit-linear-gradient(left, #b8673d 0, #646D5A 60px, #a6b398 100%);
+    color: white;
+    border-bottom: 2px solid #333;
+}
+#Header img {
+    margin: 2px 10px 2px 4px;
+    height: 30px;
+}
+#Header h3 {
+    margin:4px 6px;
+    text-shadow: 1px 1px 2px #333;
+}
+#Header .button {
+    margin: 3px 6px 0 0;
+}
+
+#Footer {
+    height:28px;
+    position:absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    color: white;
+    background: #646D5A;
+    border-top: 2px solid #333;
+}
+#Footer > ul {
+    list-style: none;
+    margin: 4px 4px 0;
+    padding: 0;
+}
+#Footer > ul > li {
+    display: inline-block;
+    padding-left: 16px;
+}
+#Footer > ul > li:first-child {
+    padding-left: 8px;
+}
+#Footer a {
+    color: white !important;
+}
+
+#Main {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 36px;
+    bottom: 30px;
+}
+
+#Sidebar {
+    position: absolute;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 30%; /* note: this may need to be hardcoded depending on contents */
+    border-right: 2px solid #333;
+    background-color: #FFF;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+#Sidebar .button-close {
+    color: #EEE;
+}
+#Sidebar .button-close:hover {
+    color: #FFF;
+}
+
+#SidebarToggle {
+    position: relative;
+    z-index: 100;
+    top: 5px;
+    width: 20px;
+    font-size: 20px;
+    padding: 4px 6px;
+    background-color: #FFF;
+    border-radius: 0 4px 4px 0;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+    cursor: pointer;
+}
+#SidebarToggle:hover {
+    background-color: #f4f4f4;
+}
+
+#Map {
+    position: absolute;
+    top:0;
+    left:0;
+    bottom:0;
+    right:0;
+    z-index: 1;
+}
+
+
+
+
+#Filter .dc-chart g.row text {
+    fill: black;
+    font-size: 14px;
+}
+
+#Filter h5 {
+    margin: 10px 0 0 0;
+}
+
+
+#Legend {
+    font-size: 1.2em;
+}
+#Legend > select {
+    border: none;
+    cursor: pointer;
+}
+#Legend > div {
+    clear: both;
+    padding: 6px 4px;
+    margin-top: 4px;
+    border-top: 1px solid #CCC;
+}
+#Legend .colorpatch {
+    /*padding: 4px 2px;*/
+    /*cursor: default;*/
+    /*border-radius: 3px;*/
+    height: 1.25em;
+    width: 1.25em;
+    vertical-align: middle;
+    display: inline-block;
+    margin: 1px 6px 1px 2px;
+    border: 1px solid #DDD;
+}
+
+#Legend .colorpatch + div {
+    display: inline-block;
+    vertical-align: middle;
+}
