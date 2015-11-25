@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="deps/L.Control.ZoomBox.css" />
     <link rel="stylesheet" href="deps/dc.css" />
     <link rel="stylesheet" href="deps/nv.d3.css" />
+    <!--<link rel="stylesheet" href="deps/d3-tablesort.css" />-->
     <link rel="stylesheet" href="static/main.css" />
 </head>
 <body>
@@ -21,6 +22,7 @@
     <script src="deps/crossfilter.min.js"></script>
     <script src="deps/dc.min.js"></script>
     <script src="deps/nv.d3.min.js"></script>
+    <!--<script src="deps/d3-tablesort.js"></script>-->
 
 
     <div id="Header">
@@ -143,6 +145,8 @@
                     <section>
                         <h4>Biodiversity - Overall Species Richness:</h4>
                         <div id="BioSppRich_Chart"></div>
+                        <h5 style="margin-bottom:4px;">Species Present:</h5>
+                        <table cellspacing="0"><tbody id="BioSppRichList"></tbody></table>
                     </section>
 
                     <section>

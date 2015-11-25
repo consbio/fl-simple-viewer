@@ -21,6 +21,121 @@ outdir = '../features'
 #     field_map[os.path.split(filename)[1].replace('.csv', '')] = fields
 
 
+# df = pd.read_csv(.., dtype={'HUC_12': str}).set_index('HUC_12')
+# df.loc['030901011504']
+
+
+files = [
+    'PFLCCPRByHUC12',
+    'CLIPOverallPrioritiesByHUC12',
+    'CLIPBiodiversityPrioritesByHUC12',
+    'CLIPLanScpPrioritiesByHUC12',
+    'CLIPSrfWatPrioritiesByHUC12',
+    'LandOwnershipByHUC12',
+    'FHAB_L1',
+    'SHCA_L1',
+    'NATCOM_L1',
+    'PHRICH_L1',
+    'PHRICH_L2'
+]
+
+dfs = dict()
+
+for filename in files:
+    dfs[filename] = pd.read_csv(os.path.join(working_dir, filename + '.csv'), dtype={'HUC_12': str}).set_index('HUC_12')
+
+primary_df = dfs[dfs.keys()[0]]
+
+for huc in primary_df.index: #[0:500]:
+    # print('Processing {}'.format(huc))
+    record = primary_df.loc[huc]
+    data = {
+        'acres': record['ACRES']
+    }
+
+    # PFLCC priorities
+    # record = dfs['PFLCCPRByHUC12'].loc[huc]
+    # fields = [u'CLIPp_P1', u'CLIPp_P2', u'CLIPp_P3', u'CLIPp_P4', 'CLIPp_P5']
+    # data['priority'] = [round(record[f], 1) for f in fields]
+
+    # CLIP priorities
+    record = dfs['CLIPOverallPrioritiesByHUC12'].loc[huc]
+    fields = [u'CLIPp_P1', u'CLIPp_P2', u'CLIPp_P3', u'CLIPp_P4', 'CLIPp_P5', 'CLIPp_0']
+    data['clip'] = [round(record[f], 1) for f in fields]
+
+    # Biodiversity
+    record = dfs['CLIPBiodiversityPrioritesByHUC12'].loc[huc]
+    fields = ['BioDp_P1', 'BioDp_P2', 'BioDp_P3', 'BioDp_P4', 'BioDp_P5', 'BioDp_0']
+    data['bio'] = [round(record[f], 1) for f in fields]
+
+    # Biodiversity - rare species
+    record = dfs['FHAB_L1'].loc[huc]
+    fields = ['FHABp_P1', 'FHABp_P2','FHABp_P3', 'FHABp_P4', 'FHABp_0']
+    data['bio_rare_spp'] = [round(record[f], 1) for f in fields]
+
+    # Biodiversity - SHCA
+    record = dfs['SHCA_L1'].loc[huc]
+    fields = ['SHCAp_P1', 'SHCAp_P2', 'SHCAp_P3', 'SHCAp_P4', 'SHCAp_0']
+    data['bio_shca'] = [round(record[f], 1) for f in fields]
+
+    # Biodiversity - PNC
+    record = dfs['NATCOM_L1'].loc[huc]
+    fields = ['NCp_P1', 'NCp_P2', 'NCp_P3', 'NCp_P4', 'NCp_0']
+    data['bio_pnc'] = [round(record[f], 1) for f in fields]
+
+    # Biodiversity - Spp Richness
+    record = dfs['PHRICH_L1'].loc[huc]
+    fields = ['PHRICHp_P1', 'PHRICHp_P2', 'PHRICHp_P3', 'PHRICHp_P4', 'PHRICHp__1', 'PHRICHp_0']
+    data['bio_spp_rich'] = [round(record[f], 1) for f in fields]
+
+    # Biodiversity - Spp Richness Level 2
+    record = dfs['PHRICH_L2'].loc[huc]
+    fields = ['AMKE_PH_H', 'ASMS_PH_H', 'BCFS_PH_H', 'BEAR_PH_H', 'BE_PH_H', 'BGFRG_PH_H', 'BWVI_PH_H', 'CHBM_PH_H', 'CKMS_PH_H', 'COHA_PH_H', 'CRCA_PH_H', 'CROC_PH_H', 'DUCK_PH_H', 'FATSL_PH_H', 'FKMS_PH_H', 'FLOMO_PH_H', 'FSC_PH_H', 'GBAT_PH_H', 'GSHP_PH_H', 'GSMS_PH_H', 'GTORT_PH_H', 'KDEER_PH_H', 'KTURT_PH_H', 'LIMK_PH_H', 'LKMR_PH_H', 'LOUSP_PH_H', 'LOWA_PH_H', 'MACSP_PH_H', 'MACU_PH_H', 'NEWT_PH_H', 'OWL_PH_H', 'PABU_PH_H', 'PANT_PH_H', 'PBTF_PH_H', 'PLOVR_PH_H', 'RCCSN_PH_H', 'RCW_PH_H', 'SABM_PH_H', 'SAVOL_PH_H', 'SCRJY_PH_H', 'SCTSP_PH_H', 'SEBAT_PH_H', 'SEBM_PH_H', 'SESAL_PH_H', 'SHFS_PH_H', 'SIRAT_PH_H', 'SKMR_PH_H', 'SNKIT_PH_H', 'SRRAT_PH_H', 'SSKNK_PH_H', 'STHA_PH_H', 'STKI_PH_H', 'WADE_PH_H', 'WCPI_PH_H']
+    values = [int(round(record[f], 0)) for f in fields]
+    data['bio_spp_rich2'] = dict([x for x in zip([f.replace('_PH_H', '') for f in fields], values) if x[1] > 0])
+
+
+
+    # Landscapes
+    record = dfs['CLIPLanScpPrioritiesByHUC12'].loc[huc]
+    fields = ['Lanp_P1', 'Lanp_P2', 'Lanp_P3', 'Lanp_P4', 'Lanp_P5', 'Lanp_0']
+    data['land'] = [round(record[f], 1) for f in fields]
+
+    # Surface water
+    record = dfs['CLIPSrfWatPrioritiesByHUC12'].loc[huc]
+    fields = ['SWp_P1', 'SWp_P2', 'SWp_P3', 'SWp_P4', 'SWp_P5', 'SWp_0']
+    data['water'] = [round(record[f], 1) for f in fields]
+
+    # Overall ownership
+    record = dfs['LandOwnershipByHUC12'].loc[huc]
+    fields = ['Federal_p', 'State_p', 'Local_p', 'Private_p']
+    data['ownership'] = [round(record[f], 1) for f in fields]
+
+
+
+
+
+    # record = dfs[''].loc[huc]
+    # fields = []
+    # data[''] = [round(record[f], 1) for f in fields]
+
+
+    with open(os.path.join(outdir, '{0}.json'.format(huc)), 'w') as outfile:
+        outfile.write(json.dumps(data, indent=2))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 field_map = {
@@ -217,102 +332,3 @@ field_map = {
                        'UrbDev_H', 'SLR_H', 'NoScen_H', 'FSCon_P', 'ConEas_P', 'RurDev_P', 'SUrbDev_P',
                        'UrbDev_P', 'SLR_P', 'NoScen_P']
 }
-
-
-
-# df = pd.read_csv(.., dtype={'HUC_12': str}).set_index('HUC_12')
-# df.loc['030901011504']
-
-
-files = [
-    'PFLCCPRByHUC12',
-    'CLIPOverallPrioritiesByHUC12',
-    'CLIPBiodiversityPrioritesByHUC12',
-    'CLIPLanScpPrioritiesByHUC12',
-    'CLIPSrfWatPrioritiesByHUC12',
-    'LandOwnershipByHUC12',
-    'FHAB_L1',
-    'SHCA_L1',
-    'NATCOM_L1',
-    'PHRICH_L1'
-]
-
-dfs = dict()
-
-for filename in files:
-    dfs[filename] = pd.read_csv(os.path.join(working_dir, filename + '.csv'), dtype={'HUC_12': str}).set_index('HUC_12')
-
-primary_df = dfs[dfs.keys()[0]]
-
-for huc in primary_df.index[0:500]:
-    print('Processing {}'.format(huc))
-    record = primary_df.loc[huc]
-    data = {
-        'acres': record['ACRES']
-    }
-
-    # PFLCC priorities
-    # record = dfs['PFLCCPRByHUC12'].loc[huc]
-    # fields = [u'CLIPp_P1', u'CLIPp_P2', u'CLIPp_P3', u'CLIPp_P4', 'CLIPp_P5']
-    # data['priority'] = [round(record[f], 1) for f in fields]
-
-    # CLIP priorities
-    record = dfs['CLIPOverallPrioritiesByHUC12'].loc[huc]
-    fields = [u'CLIPp_P1', u'CLIPp_P2', u'CLIPp_P3', u'CLIPp_P4', 'CLIPp_P5', 'CLIPp_0']
-    data['clip'] = [round(record[f], 1) for f in fields]
-
-    # Biodiversity
-    record = dfs['CLIPBiodiversityPrioritesByHUC12'].loc[huc]
-    fields = ['BioDp_P1', 'BioDp_P2', 'BioDp_P3', 'BioDp_P4', 'BioDp_P5', 'BioDp_0']
-    data['bio'] = [round(record[f], 1) for f in fields]
-
-    # Biodiversity - rare species
-    record = dfs['FHAB_L1'].loc[huc]
-    fields = ['FHABp_P1', 'FHABp_P2','FHABp_P3', 'FHABp_P4', 'FHABp_0']
-    data['bio_rare_spp'] = [round(record[f], 1) for f in fields]
-
-    # Biodiversity - SHCA
-    record = dfs['SHCA_L1'].loc[huc]
-    fields = ['SHCAp_P1', 'SHCAp_P2', 'SHCAp_P3', 'SHCAp_P4', 'SHCAp_0']
-    data['bio_shca'] = [round(record[f], 1) for f in fields]
-
-    # Biodiversity - PNC
-    record = dfs['NATCOM_L1'].loc[huc]
-    fields = ['NCp_P1', 'NCp_P2', 'NCp_P3', 'NCp_P4', 'NCp_0']
-    data['bio_pnc'] = [round(record[f], 1) for f in fields]
-
-    # Biodiversity - Spp Richness
-    record = dfs['PHRICH_L1'].loc[huc]
-    fields = ['PHRICHp_P1', 'PHRICHp_P2', 'PHRICHp_P3', 'PHRICHp_P4', 'PHRICHp__1', 'PHRICHp_0']
-    data['bio_spp_rich'] = [round(record[f], 1) for f in fields]
-
-
-    # Landscapes
-    record = dfs['CLIPLanScpPrioritiesByHUC12'].loc[huc]
-    fields = ['Lanp_P1', 'Lanp_P2', 'Lanp_P3', 'Lanp_P4', 'Lanp_P5', 'Lanp_0']
-    data['land'] = [round(record[f], 1) for f in fields]
-
-    # Surface water
-    record = dfs['CLIPSrfWatPrioritiesByHUC12'].loc[huc]
-    fields = ['SWp_P1', 'SWp_P2', 'SWp_P3', 'SWp_P4', 'SWp_P5', 'SWp_0']
-    data['water'] = [round(record[f], 1) for f in fields]
-
-    # Overall ownership
-    record = dfs['LandOwnershipByHUC12'].loc[huc]
-    fields = ['Federal_p', 'State_p', 'Local_p', 'Private_p']
-    data['ownership'] = [round(record[f], 1) for f in fields]
-
-
-
-
-
-    # record = dfs[''].loc[huc]
-    # fields = []
-    # data[''] = [round(record[f], 1) for f in fields]
-
-
-    with open(os.path.join(outdir, '{0}.json'.format(huc)), 'w') as outfile:
-        outfile.write(json.dumps(data))
-
-
-

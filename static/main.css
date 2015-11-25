@@ -576,8 +576,26 @@ div.dc-chart {
     margin-bottom: 4px;
 }
 
+#Details table {
+    margin-top: 0;
+    padding-left: 20px;
+    font-size: 0.9em;
+}
+#Details td:first-child {
+    width: 260px;
+    padding: 4px 16px 4px 4px
+}
+#Details td + td {
+    padding: 4px;
+    font-size: small;
+}
+tr.even,
+tr.even {
+    background: #F6F6F6;
+}
 
 
+/* used by pie chart - TODO */
 ul.legend {
     list-style: none;
     margin-top:0;
@@ -615,7 +633,7 @@ ul.legend {
     vertical-align: top;
 }
 
-
+/* used by pie chart - TODO */
 
 
 

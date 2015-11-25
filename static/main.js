@@ -38,7 +38,81 @@ var featuresURL = 'features/';
 
 //config of data
 priorityLabels = ['Priority 1', 'Priority 2', 'Priority 3', 'Priority 4', 'Priority 5', 'Not a Priority'];
-
+var species = {
+    "BE": "Bald Eagle",
+    "FSC": "Florida Sandhill Crane",
+    "FKMS": "Florida Keys Mole Skink",
+    "GRAYBAT": "Gray Bat",
+    "GBAT": "Gray Bat",
+    "COHA": "Cooper's Hawk",
+    "BCFS": "Big Cypress Fox Squirrel",
+    "PANTHER": "Florida Panther",
+    "PANT": "Florida Panther",
+    "MACSP": "MacGillivray's Seaside Sparrow",
+    "SEALSALM": "Seal Salamander",
+    "SESAL": "Seal Salamander",
+    "DUCK": "Mottled Duck",
+    "PBTFROG": "Pine Barrens Tree Frog",
+    "PBTF": "Pine Barrens Tree Frog",
+    "WCPI": "White-Crowned Pigeon",
+    "CROC": "American Crocodile",
+    "NEWT": "Striped Newt",
+    "ASMS": "Atlantic Salt Marsh Snake",
+    "OWL": "Florida Burrowing Owl",
+    "PABU": "Painted Bunting",
+    "ASTK": "Swallow-Tailed Kite",
+    "LIMPK": "Limpkin",
+    "LIMK": "Limpkin",
+    "KMTURT": "Lower Keys Striped Mud Turtle",
+    "KTURT": "Lower Keys Striped Mud Turtle",
+    "KDEER": "Florida Key Deer",
+    "SCOTTSP": "Scott's Seaside Sparrow",
+    "SCTSP": "Scott's Seaside Sparrow",
+    "BOGFROG": "Bog Frog",
+    "BGFRG": "Bog Frog",
+    "LOWA": "Lousiana Waterthrush",
+    "AIBM": "Anastasia Island Beach Mouse",
+    "GTORT": "Gopher Tortoise",
+    "SALTVOLE": "Florida Salt Marsh Vole",
+    "SAVOL": "Florida Salt Marsh Vole",
+    "CKMS": "Cedar Key Mole Skink",
+    "SABM": "St. Andrews Beach Mouse",
+    "SEBAT": "Southeastern Bat",
+    "RRCSNAKE": "Rim Rock Crowned Snake",
+    "RCCSN": "Rim Rock Crowned Snake",
+    "GSMS": "Gulf Salt Marsh Snake",
+    "WADE": "Wading Birds",
+    "MACU": "Mangrove Cuckoo",
+    "RCW": "Red-Cockaded Woodpecker",
+    "PLOVER": "Cuban Snowy Plover",
+    "PLOVR": "Cuban Snowy Plover",
+    "SKMR": "Black Skimmer",
+    "CHBM": "Choctawhatchee Beach Mouse",
+    "STKI": "Swallow-Tailed Kite",
+    "LOUSSP": "Louisiana Seaside Sparrow",
+    "LOUSP": "Louisiana Seaside Sparrow",
+    "BWVI": "Black-Whiskered Vireo",
+    "BEAR": "Florida Black Bear",
+    "SNKITE": "Florida Snail Kite",
+    "SNKIT": "Florida Snail Kite",
+    "LKMR": "Lower Keys Marsh Rabbit",
+    "SRRAT": "Silver Rice Rat",
+    "FLOMO": "Florida Mouse",
+    "AMKE": "Southeastern American Kestrel",
+    "SHFS": "Sherman's Fox Squirrel",
+    "SEBM": "Southeastern Beach Mouse",
+    "SIRAT": "Sanibel Island Rice Rat",
+    "STHA": "Short-Tailed Hawk",
+    "CRCA": "Crested Caracara",
+    "FLATSAL": "Flatwoods Salamander",
+    "FATSL": "Flatwoods Salamander",
+    "SSKINK": "Sand Skink",
+    "SSKNK": "Sand Skink",
+    "GRSHPRSP": "Florida Grasshopper Sparrow",
+    "GSHP": "Florida Grasshopper Sparrow",
+    "SCRUBJAY": "Florida Scrub-Jay",
+    "SCRJY": "Florida Scrub-Jay"
+};
 
 
 
@@ -346,7 +420,15 @@ function showDetails(id) {
     d3.select('#Unit').text(id);
     d3.select('#UnitArea').text(d3.format(',')(details.acres));
 
-    var priorityColors = ["#08519c", "#3182bd", "#6baed6", "#bdd7e7", "#eff3ff", '#ffffcc'];
+    var priorityColors = ["#006837", "#31a354", "#78c679", "#c2e699", "#ffffcc", '#EEE'];
+    var priorityLabels4 = priorityLabels.slice(0, 4);
+    priorityLabels4.push(priorityLabels[5]);
+    var priorityColors4 = priorityColors.slice(0, 4);
+    priorityColors4.push(priorityColors[5]);
+
+
+
+    //var priorityColors = ["#08519c", "#3182bd", "#6baed6", "#bdd7e7", "#eff3ff", '#ffffcc'];
     //var priorityColors = colors.slice().reverse();
     //priorityColors.push(['#EEE']);  //TODO: should probably be at top
     //var priorityData = [];
@@ -361,71 +443,21 @@ function showDetails(id) {
     //    });
     //createPieChart(priorityData, d3.select("#CLIP_PieChart"), "200px", "200px");
 
-    createHorizBarChart(
-        d3.select('#CLIP_Chart'),
-        details.clip,
-        priorityLabels,
-        priorityColors
-    );
+    createHorizBarChart(d3.select('#CLIP_Chart'), details.clip, priorityLabels, priorityColors);
+    createHorizBarChart(d3.select('#Bio_Chart'), details.bio, priorityLabels, priorityColors);
+    createHorizBarChart(d3.select('#BioRareSpp_Chart'), details.bio_rare_spp, priorityLabels4, priorityColors4);
+    createHorizBarChart(d3.select('#BioSHCA_Chart'), details.bio_shca, priorityLabels4, priorityColors4);
+    createHorizBarChart(d3.select('#BioPNC_Chart'), details.bio_pnc, priorityLabels4, priorityColors4);
+    createHorizBarChart(d3.select('#BioSppRich_Chart'), details.bio_spp_rich, priorityLabels, priorityColors);
 
-    createHorizBarChart(
-        d3.select('#Bio_Chart'),
-        details.bio,
-        priorityLabels,
-        priorityColors
-    );
+    createAreaList(d3.select('#BioSppRichList'), details.bio_spp_rich2, species);
 
-    var priorityLabels4 = priorityLabels.slice(0, 4);
-    priorityLabels4.push(priorityLabels[5]);
-    var priorityColors4 = priorityColors.slice(0, 4);
-    priorityColors4.push(priorityColors[5]);
-    createHorizBarChart(
-        d3.select('#BioRareSpp_Chart'),
-        details.bio_rare_spp,
-        priorityLabels4,
-        priorityColors4
-    );
-
-    createHorizBarChart(
-        d3.select('#BioSHCA_Chart'),
-        details.bio_shca,
-        priorityLabels4,
-        priorityColors4
-    );
-
-    createHorizBarChart(
-        d3.select('#BioPNC_Chart'),
-        details.bio_pnc,
-        priorityLabels4,
-        priorityColors4
-    );
-
-    createHorizBarChart(
-        d3.select('#BioSppRich_Chart'),
-        details.bio_spp_rich,
-        priorityLabels,
-        priorityColors
-    );
-
-
-    createHorizBarChart(
-        d3.select('#Land_Chart'),
-        details.land,
-        priorityLabels,
-        priorityColors
-    );
-
-    createHorizBarChart(
-        d3.select('#Water_Chart'),
-        details.water,
-        priorityLabels,
-        priorityColors
-    );
+    createHorizBarChart(d3.select('#Land_Chart'), details.land, priorityLabels, priorityColors);
+    createHorizBarChart(d3.select('#Water_Chart'), details.water, priorityLabels, priorityColors);
 
     if (d3.sum(details.ownership)) {
         createHorizBarChart(
-            d3.select('#Owner_Chart'),
-            details.ownership,
+            d3.select('#Owner_Chart'), details.ownership,
             ['Federal', 'State', 'Local', 'Private'],
             priorityColors.slice(0, 4)
         );
@@ -471,6 +503,67 @@ function createHorizBarChart(node, data, labels, colors){
 
         return chart;
       });
+}
+
+// labels in this case are an object
+// TODO: probably should be handled better
+function createAreaList(node, data, labels){
+    node.html('');
+
+    var keys = d3.keys(data);
+    keys.sort(d3.ascending);
+    var formatter = d3.format(',');
+
+    node.selectAll('tr').data(keys).enter()
+        .append('tr')
+        .each(function(d, i){
+            var node = d3.select(this);
+            node.classed('even', i%2 == 1);
+            node.append('td').text(function(d){ return labels[d]});
+            node.append('td').text(function(d){ return formatter(data[d]) + ' ha' });
+        });
+
+
+
+    //var selection = node.selectAll().data(keys);
+    //selection.enter().insert('dt').text(function(d){ return labels[d] + ':' }).classed('even', function(d, i){return i%2 == 1});
+    //selection.enter().insert('dd').text(function(d){ return formatter(data.get(d)) + ' ha' }).classed('even', function(d, i){return i%2 == 1});
+
+    //var rows = d3.keys(data).map(function(d){
+    //    return [labels[d], data[d]]
+    //});
+    //var table = TableSort(
+    //    '#BioSppRichList',
+    //    [
+    //        {text: 'Species', sort: TableSort.alphabetic, sort_column: true},
+    //        {text: 'Hectares', sort: TableSort.numeric}
+    //    ],
+    //    rows,
+    //    {width: '400px'}
+    //);
+
+
+
+
+
+    //node.selectAll('dt')
+    //    .data(keys).enter()
+    //    .append('dt')
+    //    .each(function(d){
+    //        var node = d3.select(this);
+    //        node.text(function(d){ return d + ':' })
+    //        d3.select(node.node().parentNode).append('dd').text(function(d){ return data.get(d) + ' ha' });
+    //    });
+
+
+        //.html(function(d){
+        //    //return '<dl>' + d + '</dl>: <dd>' + formatter(data.get(d)) + ' ha</dd>';
+        //});
+
+    //node.selectAll('dd')
+    //    .data(keys).enter()
+    //    .append('dd')
+    //    .text(function(d){ return data.get(d) + ' ha' });
 }
 
 
