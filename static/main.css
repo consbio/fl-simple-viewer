@@ -317,6 +317,57 @@ input[type=range]:focus::-ms-fill-upper {
 /* End Modal Dialog */
 
 
+/* from http://tobiasahlin.com/spinkit/*/
+.spinner {
+    margin: 0 auto;
+    height: 30px;
+    text-align: center;
+}
+.spinner > div {
+    background-color: #333;
+    height: 100%;
+    width: 6px;
+    display: inline-block;
+
+    -webkit-animation: stretchdelay 1.2s infinite ease-in-out;
+    animation: stretchdelay 1.2s infinite ease-in-out;
+}
+.spinner .rect2 {
+    -webkit-animation-delay: -1.1s;
+    animation-delay: -1.1s;
+}
+.spinner .rect3 {
+    -webkit-animation-delay: -1.0s;
+    animation-delay: -1.0s;
+}
+.spinner .rect4 {
+    -webkit-animation-delay: -0.9s;
+    animation-delay: -0.9s;
+}
+.spinner .rect5 {
+    -webkit-animation-delay: -0.8s;
+    animation-delay: -0.8s;
+}
+@-webkit-keyframes stretchdelay {
+    0%, 40%, 100% {
+        -webkit-transform: scaleY(0.4);
+    }
+    20% {
+        -webkit-transform: scaleY(1.0);
+    }
+}
+@keyframes stretchdelay {
+    0%, 40%, 100% {
+        transform: scaleY(0.4);
+        -webkit-transform: scaleY(0.4);
+    }  20% {
+       transform: scaleY(1.0);
+       -webkit-transform: scaleY(1.0);
+   }
+}
+
+
+
 
 /* Leaflet overrides */
 .leaflet-control-layers-toggle {
@@ -376,6 +427,30 @@ path.leaflet-interactive:hover {
 /* dc.js overrides */
 div.dc-chart {
     float: none;
+}
+
+
+/* NVD3 overrides */
+.nv-multibarHorizontal .nv-bar {
+    stroke: #DDD !important;
+    shape-rendering: crispEdges;
+}
+
+.nv-multibarHorizontal .nv-bar rect {
+    stroke-opacity: 1 !important;
+}
+
+.nv-axislabel {
+    font-size:14px;
+    font-weight: bold;
+}
+
+.nvd3.nv-pie path {
+    stroke: #AAA;
+}
+
+.nvtooltip {
+    background: #FFF;
 }
 
 
@@ -446,7 +521,7 @@ div.dc-chart {
     top: 0;
     left: 0;
     bottom: 0;
-    width: 30%; /* note: this may need to be hardcoded depending on contents */
+    width: 470px;
     border-right: 2px solid #333;
     background-color: #FFF;
     overflow-y: auto;
@@ -492,9 +567,58 @@ div.dc-chart {
     font-size: 14px;
 }
 
-#Filter h5 {
+#Filter h4 {
     margin: 10px 0 0 0;
 }
+
+
+#Details h4 {
+    margin-bottom: 4px;
+}
+
+
+
+ul.legend {
+    list-style: none;
+    margin-top:0;
+}
+.legendElement {
+    padding: 4px 2px;
+    cursor: default;
+    border-radius: 3px;
+}
+.legendElement.highlight,
+#IndicatorTooltipContents .highlight
+{
+    background: rgba(252, 249, 142, 0.43);
+}
+.legendElement:hover {
+    background: #F2F2F2;
+}
+.legendElement > div:first-child{
+    padding: 4px;
+    width: 18px;
+    height: 22px;
+    margin-right: 4px;
+    border: 1px solid #AAA;
+    border-radius: 3px;
+    font-size: 18px;
+    text-align: center;
+    overflow: hidden;
+}
+.legendElement > div + div {
+    width: 150px;
+}
+.legendElement.small > div:first-child {
+    height: 12px;
+    width: 12px;
+    vertical-align: top;
+}
+
+
+
+
+
 
 
 #Legend {
@@ -511,9 +635,6 @@ div.dc-chart {
     border-top: 1px solid #CCC;
 }
 #Legend .colorpatch {
-    /*padding: 4px 2px;*/
-    /*cursor: default;*/
-    /*border-radius: 3px;*/
     height: 1.25em;
     width: 1.25em;
     vertical-align: middle;
@@ -521,7 +642,6 @@ div.dc-chart {
     margin: 1px 6px 1px 2px;
     border: 1px solid #DDD;
 }
-
 #Legend .colorpatch + div {
     display: inline-block;
     vertical-align: middle;

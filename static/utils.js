@@ -5,6 +5,26 @@
 
 
 /**
+ * NEW
+ * Map an array of properties, and an array of values per property to an array of objects:
+ * [{<prop1>: <v>, <prop2>: <l>},...]
+ * @param {string[]} properties - the properties to add to each object.  Must match number of arrays passed in
+ * @param {..Array} [arrays] - The arrays to process
+ * @returns {Array} Returns array of objcts with properties and values
+ */
+function zipIntoObj(properties, arrays){
+    return _.unzip(_.rest(arguments)).map(function(d){
+        var obj = {};
+        properties.forEach(function(p, i){
+            obj[p] = d[i];
+        });
+        return obj;
+    })
+}
+
+
+
+/**
  * Cast string fields to numeric type, if possible, during loading of a CSV file.
  * Operates on rows in place.
  * @param {Object} row - The row to modify.

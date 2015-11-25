@@ -20,9 +20,13 @@ var fieldLabels = {
 };
 var barHeight = 20;
 var chartWidth = 440;
-var colors = ['#ffffcc','#c2e699','#78c679','#31a354','#006837'];
+var colors = ['#ffffcc','#c2e699','#78c679','#31a354','#006837'];  //lowest to hightest
 function filterColors(){ return '#9ecae1' }
 var transparency = 25;  //on 0-100% scale
+var featureCache = {};
+var pendingRequest = null;
+var featuresURL = 'features/';
+
 
 //var filterColors = {
 //    'bio': function(){ return '#006837' },
@@ -30,6 +34,12 @@ var transparency = 25;  //on 0-100% scale
 //    'land': function(){ return '#006837' },
 //    'water': function(){ return '#9ecae1' },
 //}
+
+
+//config of data
+priorityLabels = ['Priority 1', 'Priority 2', 'Priority 3', 'Priority 4', 'Priority 5', 'Not a Priority'];
+
+
 
 
 /* DOM interactions powered by D3 */
@@ -106,9 +116,11 @@ var basemaps = {
 
 map = L.map('Map', {
     layers: [basemaps['ESRI Topo']],
-    zoom: 7,
+    //zoom: 7,
     maxZoom: 12,
-    center: [27.84, -86.02]
+    //center: [27.84, -86.02]
+    center: [30.86, -87.51],
+    zoom: 11
 });
 map.zoomControl.setPosition('topright');
 map.addControl(L.control.zoomBox({modal: false, position:'topright'}));
@@ -170,8 +182,8 @@ d3.csv('static/summary.csv',
         // TODO: tune these loops
         summaryFields.forEach(function(d){
             var values = rows.map(function(r){ return r[d] });
-            //scales[d] = d3.scale.quantile().range(classes).domain(values);  //d3.scale.quantile().range((d != 'land')? classes: d3.range(3)).domain(values);
-            scales[d] = d3.scale.threshold().domain([20, 40, 60, 80, 101]).range([0, 1, 2, 3, 4]);
+            scales[d] = d3.scale.quantile().range(classes).domain(values);  //d3.scale.quantile().range((d != 'land')? classes: d3.range(3)).domain(values);
+            //scales[d] = d3.scale.threshold().domain([20, 40, 60, 80, 101]).range([0, 1, 2, 3, 4]);
             rows.forEach(function(r) {
                 r[d + '_q'] = scales[d](r[d]);
             });
@@ -200,7 +212,7 @@ function load() {
     .each(function(d){
         var container = d3.select(this);
 
-        container.append('h5').text(fieldLabels[d]);
+        container.append('h4').text(fieldLabels[d]);
         var chartNode = container.append('div').classed('chart', true);
         chartNode.append('div')
             .append('div')
@@ -296,10 +308,173 @@ function setSelectedField(field) {
 
 
 
-
-function selectUnit(id) {
+function selectUnit(id){
     console.log('select ', id);
+    selectTab(d3.select('#Nav li[data-tab="Details"]'));
+    d3.select('#Details > h2').classed('hidden', true);
+
+    if (pendingRequest != null) {
+        pendingRequest.abort();
+    }
+
+    if (featureCache[id] != null){
+        //d3.select('#DetailsLoadingScrim').classed('hidden', true);
+        d3.select('#DetailsContainer').classed('hidden', false);
+        showDetails(id);
+    }
+    else {
+        // TODO: do this in a timeout to prevent jitter
+        //d3.select('#DetailsLoadingScrim').classed('hidden', false);
+        //d3.select('#DetailsContainer').classed('hidden', true);
+
+        pendingRequest = d3.json(featuresURL + id + '.json', function (r) {
+            if (r == null || r == undefined) { return }  //should handle case where no data is available
+            pendingRequest = null;
+            featureCache[id] = r;
+            selectUnit(id);
+        });
+    }
 }
+
+
+function showDetails(id) {
+    console.log('show details');
+    var record = index.get('id');
+    var details = featureCache[id];
+    console.log(details);
+
+    d3.select('#Unit').text(id);
+    d3.select('#UnitArea').text(d3.format(',')(details.acres));
+
+    var priorityColors = ["#08519c", "#3182bd", "#6baed6", "#bdd7e7", "#eff3ff", '#ffffcc'];
+    //var priorityColors = colors.slice().reverse();
+    //priorityColors.push(['#EEE']);  //TODO: should probably be at top
+    //var priorityData = [];
+    //details.clip.forEach(function(d, i){
+    //        if (d > 0){
+    //            priorityData.push({
+    //                label: priorityLabels[i],
+    //                percent: d,
+    //                color: priorityColors[i]
+    //            });
+    //        }
+    //    });
+    //createPieChart(priorityData, d3.select("#CLIP_PieChart"), "200px", "200px");
+
+    createHorizBarChart(
+        d3.select('#CLIP_Chart'),
+        details.clip,
+        priorityLabels,
+        priorityColors
+    );
+
+    createHorizBarChart(
+        d3.select('#Bio_Chart'),
+        details.bio,
+        priorityLabels,
+        priorityColors
+    );
+
+    var priorityLabels4 = priorityLabels.slice(0, 4);
+    priorityLabels4.push(priorityLabels[5]);
+    var priorityColors4 = priorityColors.slice(0, 4);
+    priorityColors4.push(priorityColors[5]);
+    createHorizBarChart(
+        d3.select('#BioRareSpp_Chart'),
+        details.bio_rare_spp,
+        priorityLabels4,
+        priorityColors4
+    );
+
+    createHorizBarChart(
+        d3.select('#BioSHCA_Chart'),
+        details.bio_shca,
+        priorityLabels4,
+        priorityColors4
+    );
+
+    createHorizBarChart(
+        d3.select('#BioPNC_Chart'),
+        details.bio_pnc,
+        priorityLabels4,
+        priorityColors4
+    );
+
+    createHorizBarChart(
+        d3.select('#BioSppRich_Chart'),
+        details.bio_spp_rich,
+        priorityLabels,
+        priorityColors
+    );
+
+
+    createHorizBarChart(
+        d3.select('#Land_Chart'),
+        details.land,
+        priorityLabels,
+        priorityColors
+    );
+
+    createHorizBarChart(
+        d3.select('#Water_Chart'),
+        details.water,
+        priorityLabels,
+        priorityColors
+    );
+
+    if (d3.sum(details.ownership)) {
+        createHorizBarChart(
+            d3.select('#Owner_Chart'),
+            details.ownership,
+            ['Federal', 'State', 'Local', 'Private'],
+            priorityColors.slice(0, 4)
+        );
+    }
+    else {
+        // TODO
+        d3.select('#Owner_Chart').html('');
+    }
+
+}
+
+function createHorizBarChart(node, data, labels, colors){
+
+    nv.addGraph(function() {
+        var chart = nv.models.multiBarHorizontalChart()
+            .x(function(d) { return d.label })
+            .y(function(d) { return d.value })
+            .barColor(colors)
+            .margin({top: 0, right: 20, bottom: 50, left: 75})
+            .showLegend(false)
+            .showControls(false)
+            .tooltips(true);
+
+
+        chart.yAxis
+            .tickFormat(d3.format(',.2f'));
+
+        chart.yAxis
+            .axisLabel('Percent of Watershed')
+            .tickFormat(d3.format('.0f'));
+
+        chart.tooltip.contentGenerator(function(obj){
+                return '<b>' + obj.data.label + ':</b> ' + obj.data.value + '%';
+            });
+
+        node.html('');
+        node.append('svg')
+            .style({height: '200', width: '440'})
+            .datum([{key:'', values: zipIntoObj(['value', 'label'], data, labels)}])
+            .call(chart);
+
+        nv.utils.windowResize(chart.update);
+
+        return chart;
+      });
+}
+
+
+
 
 
 
@@ -319,8 +494,56 @@ function barLabels(scale) {
 }
 
 
+//data needs value, label, color, and percent
+function createPieChart(data, node, width, height){
+    node.html('');
 
+    nv.addGraph(function() {
+        var chart = nv.models.pieChart()
+            .margin({top: 0, right: 0, bottom: 0, left: 0})
+            .x(function(d) { return d.label })
+            .y(function(d) { return d.percent })
+            .showLegend(false)
+            .showLabels(false)
+            .color(data.map(function(d){return d.color}))
+            .valueFormat(function(d){return d3.format('.0f')(d) + '%'})
+            .width(width)
+            .height(height);
 
+        node.append('svg')
+            .classed('inline-middle', true)
+            .style({
+                width: width,
+                height: height
+            })
+            .datum(data)
+            .call(chart);
+
+        //var sortedData = data.slice();
+        //sortedData.sort(function(a, b){return a.percent < b.percent});
+        node.append('ul')
+            .classed('inline-middle legend', true)
+            .selectAll('li')
+            .data(data)
+            .enter().append('li')
+            .classed('legendElement small', true)
+            .each(function(d){
+                var node = d3.select(this);
+                node.append('div').classed('inline-top', true).style('background', d.color);
+                var percentLabel = ((d.percent >= 1)? Math.round(d.percent): '< 1') + '%';
+                var label = '<b>' + percentLabel + ' ' + d.label;
+                if (d.value != null){
+                    label += '</b><br/>(' + formatNumber(d.value) + ' acres)';
+                }
+                node.append('div').classed('inline-top', true).html(label);
+                if (d.tooltip){
+                    node.attr('title', d.tooltip);
+                }
+            });
+
+        return chart;
+    });
+}
 
 
 
