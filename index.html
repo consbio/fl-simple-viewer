@@ -108,7 +108,7 @@
                 </div>
                 <div id="DetailsContainer" class="hidden">
                     <h3 style="margin: 4px 0 0 0">Watershed: <span id="Unit"></span></h3>
-                    <div><span id="UnitArea" class="quiet small"></span> acres</div>
+                    <div><span id="UnitArea" class="quiet small"></span> hectares</div>
 
                     <!--<ul id="InnerNav" class="tabs small">-->
                         <!--<li class="active" data-tab="Overview">Overview</li>-->
@@ -116,10 +116,10 @@
                         <!--<li data-tab="Details">Details</li>-->
                     <!--</ul>-->
 
-                    <section>
-                        <h4>Priority Resources:</h4>
+                    <section style="margin-top: 20px;">
+                        <h4>CLIP Overall Priorities:</h4>
+                        <div id="CLIP_PieChart" style="margin-bottom: 30px;"></div>
                         <div id="CLIP_Chart"></div>
-                        <!--<div id="CLIP_PieChart"></div>-->
                     </section>
 
                     <section>
@@ -135,6 +135,7 @@
                     <section>
                         <h4>Biodiversity - Strategic Habitat Conservation Areas:</h4>
                         <div id="BioSHCA_Chart"></div>
+                        <div id="BioSHCATable" style="margin-top: 20px;"></div>
                     </section>
 
                     <section>
@@ -143,10 +144,11 @@
                     </section>
 
                     <section>
-                        <h4>Biodiversity - Overall Species Richness:</h4>
+                        <h4>Biodiversity - Overall Vertebrate Species Richness:</h4>
                         <div id="BioSppRich_Chart"></div>
-                        <h5 style="margin-bottom:4px;">Species Present:</h5>
-                        <table cellspacing="0"><tbody id="BioSppRichList"></tbody></table>
+                        <div id="BioSppRichTable" style="margin-top: 20px;"></div>
+                        <!--<h5 style="margin-bottom:4px;">Species Present:</h5>-->
+                        <!--<table cellspacing="0"><tbody id="BioSppRichList"></tbody></table>-->
                     </section>
 
                     <section>
@@ -159,10 +161,10 @@
                         <div id="Water_Chart"></div>
                     </section>
 
-                    <section>
-                        <h4>Overall Ownership:</h4>
-                        <div id="Owner_Chart"></div>
-                    </section>
+                    <!--<section>-->
+                        <!--<h4>Overall Ownership:</h4>-->
+                        <!--<div id="Owner_Chart"></div>-->
+                    <!--</section>-->
 
 
 

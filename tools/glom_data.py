@@ -21,9 +21,6 @@ outdir = '../features'
 #     field_map[os.path.split(filename)[1].replace('.csv', '')] = fields
 
 
-# df = pd.read_csv(.., dtype={'HUC_12': str}).set_index('HUC_12')
-# df.loc['030901011504']
-
 
 files = [
     'PFLCCPRByHUC12',
@@ -31,12 +28,18 @@ files = [
     'CLIPBiodiversityPrioritesByHUC12',
     'CLIPLanScpPrioritiesByHUC12',
     'CLIPSrfWatPrioritiesByHUC12',
-    'LandOwnershipByHUC12',
     'FHAB_L1',
     'SHCA_L1',
+    'SHCA_L2_P1',
+    'SHCA_L2_P2',
+    'SHCA_L2_P3',
+    'SHCA_L2_P4',
     'NATCOM_L1',
     'PHRICH_L1',
-    'PHRICH_L2'
+    'PHRICH_L2',
+    'LandOwnershipByHUC12',
+    # 'DetailedLandOwnershipByHUC12'
+    'ManagedAreas_FNAI_HUC12'
 ]
 
 dfs = dict()
@@ -44,13 +47,13 @@ dfs = dict()
 for filename in files:
     dfs[filename] = pd.read_csv(os.path.join(working_dir, filename + '.csv'), dtype={'HUC_12': str}).set_index('HUC_12')
 
-primary_df = dfs[dfs.keys()[0]]
+primary_df = dfs['CLIPOverallPrioritiesByHUC12']
 
 for huc in primary_df.index: #[0:500]:
     # print('Processing {}'.format(huc))
     record = primary_df.loc[huc]
     data = {
-        'acres': record['ACRES']
+        'hectares': int(round(record['ACRES'].item() * 0.404686))
     }
 
     # PFLCC priorities
@@ -78,6 +81,37 @@ for huc in primary_df.index: #[0:500]:
     fields = ['SHCAp_P1', 'SHCAp_P2', 'SHCAp_P3', 'SHCAp_P4', 'SHCAp_0']
     data['bio_shca'] = [round(record[f], 1) for f in fields]
 
+    # Biodiversity - SHCA Level 2 (TODO: only write out nonempty fields)
+    shca_level2 = {}
+    record = dfs['SHCA_L2_P1'].loc[huc]
+    fields = ['ASMS_PH_H', 'CHBM_PH_H', 'GBAT_PH_H', 'GSHP_PH_H', 'KDEER_PH_H', 'LKMR_PH_H', 'PANT_PH_H', 'SABM_PH_H', 'SAVOL_PH_H', 'SIRAT_PH_H', 'SRRAT_PH_H']
+    values = [int(round(record[f], 0)) for f in fields]
+    if sum(values):
+        shca_level2['1'] = dict([x for x in zip([f.replace('_PH_H', '') for f in fields], values) if x[1] > 0])
+
+    record = dfs['SHCA_L2_P2'].loc[huc]
+    # TODO: fix duplicate
+    fields = ['BCFS_PH_H', 'BEAR_PH_H', 'CROC_PH_H', 'LOUSP_PH_H', 'MACSP_PH_H', 'NEWT_PH_H', 'PLOVR_PH_H', 'SCRJY_PH_H', 'SESAL_PH_H', 'SNKIT_PH_H', 'SSKNK_PH_H', 'STHA_PH_H', 'SRRAT_PH_H']
+    values = [int(round(record[f], 0)) for f in fields]
+    if sum(values):
+        shca_level2['2'] = dict([x for x in zip([f.replace('_PH_H', '') for f in fields], values) if x[1] > 0])
+
+    record = dfs['SHCA_L2_P3'].loc[huc]
+    fields = ['FLOMO_PH_H', 'GSMS_PH_H', 'OWL_PH_H', 'PBTF_PH_H', 'SCTSP_PH_H', 'STKI_PH_H', 'WCPI_PH_H']
+    values = [int(round(record[f], 0)) for f in fields]
+    if sum(values):
+        shca_level2['3'] = dict([x for x in zip([f.replace('_PH_H', '') for f in fields], values) if x[1] > 0])
+
+    record = dfs['SHCA_L2_P4'].loc[huc]
+    fields = ['COHA_PH_H', 'MACU_PH_H']
+    values = [int(round(record[f], 0)) for f in fields]
+    if sum(values):
+        shca_level2['4'] = dict([x for x in zip([f.replace('_PH_H', '') for f in fields], values) if x[1] > 0])
+
+    data['bio_shca2'] = shca_level2
+
+
+
     # Biodiversity - PNC
     record = dfs['NATCOM_L1'].loc[huc]
     fields = ['NCp_P1', 'NCp_P2', 'NCp_P3', 'NCp_P4', 'NCp_0']
@@ -95,7 +129,6 @@ for huc in primary_df.index: #[0:500]:
     data['bio_spp_rich2'] = dict([x for x in zip([f.replace('_PH_H', '') for f in fields], values) if x[1] > 0])
 
 
-
     # Landscapes
     record = dfs['CLIPLanScpPrioritiesByHUC12'].loc[huc]
     fields = ['Lanp_P1', 'Lanp_P2', 'Lanp_P3', 'Lanp_P4', 'Lanp_P5', 'Lanp_0']
@@ -108,10 +141,39 @@ for huc in primary_df.index: #[0:500]:
 
     # Overall ownership
     record = dfs['LandOwnershipByHUC12'].loc[huc]
-    fields = ['Federal_p', 'State_p', 'Local_p', 'Private_p']
-    data['ownership'] = [round(record[f], 1) for f in fields]
+    fields = ['Federal_H', 'State_H', 'Local_H', 'Private_H']
+    values = [int(round(record[f], 0)) for f in fields]
+    data['ownership'] = dict([x for x in zip([f.replace('_H', '') for f in fields], values) if x[1] > 0])
 
+    # Detailed ownership - may be multiple records per HUC.  Nest according to type:managing institution:property name:hectares
+    # data issues - this doesn't get classified same as ownership data above
+    table = dfs['ManagedAreas_FNAI_HUC12']
+    if huc in table.index:
+        records = table.loc[huc]
+        ownership = {}
+        if len(records.shape) > 1:
+            for i in range(records.shape[0]):
+                record = records.ix[i]
+                owner_type = record['MATYPE2']
+                owner_inst = record['MGRINST']
+                prop_name = record['MANAME']
+                hectares = int(round(record['ActAREA_H']))
+                if not owner_type in ownership:
+                    ownership[owner_type] = {}
+                if not owner_inst in ownership[owner_type]:
+                    ownership[owner_type][owner_inst] = {}
+                ownership[owner_type][owner_inst][prop_name] = hectares
 
+        else:
+            record = records
+            ownership = {
+                record['MATYPE2']: {
+                    record['MGRINST']: {record['MANAME']: int(round(record['ActAREA_H']))}
+                }
+            }
+
+        if ownership:
+            data['ownership_detailed'] = ownership
 
 
 
@@ -122,13 +184,6 @@ for huc in primary_df.index: #[0:500]:
 
     with open(os.path.join(outdir, '{0}.json'.format(huc)), 'w') as outfile:
         outfile.write(json.dumps(data, indent=2))
-
-
-
-
-
-
-
 
 
 

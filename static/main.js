@@ -38,82 +38,93 @@ var featuresURL = 'features/';
 
 //config of data
 priorityLabels = ['Priority 1', 'Priority 2', 'Priority 3', 'Priority 4', 'Priority 5', 'Not a Priority'];
+
+// common name|priority
 var species = {
-    "BE": "Bald Eagle",
-    "FSC": "Florida Sandhill Crane",
-    "FKMS": "Florida Keys Mole Skink",
-    "GRAYBAT": "Gray Bat",
-    "GBAT": "Gray Bat",
-    "COHA": "Cooper's Hawk",
-    "BCFS": "Big Cypress Fox Squirrel",
-    "PANTHER": "Florida Panther",
-    "PANT": "Florida Panther",
-    "MACSP": "MacGillivray's Seaside Sparrow",
-    "SEALSALM": "Seal Salamander",
-    "SESAL": "Seal Salamander",
-    "DUCK": "Mottled Duck",
-    "PBTFROG": "Pine Barrens Tree Frog",
-    "PBTF": "Pine Barrens Tree Frog",
-    "WCPI": "White-Crowned Pigeon",
-    "CROC": "American Crocodile",
-    "NEWT": "Striped Newt",
-    "ASMS": "Atlantic Salt Marsh Snake",
-    "OWL": "Florida Burrowing Owl",
-    "PABU": "Painted Bunting",
-    "ASTK": "Swallow-Tailed Kite",
-    "LIMPK": "Limpkin",
-    "LIMK": "Limpkin",
-    "KMTURT": "Lower Keys Striped Mud Turtle",
-    "KTURT": "Lower Keys Striped Mud Turtle",
-    "KDEER": "Florida Key Deer",
-    "SCOTTSP": "Scott's Seaside Sparrow",
-    "SCTSP": "Scott's Seaside Sparrow",
-    "BOGFROG": "Bog Frog",
-    "BGFRG": "Bog Frog",
-    "LOWA": "Lousiana Waterthrush",
-    "AIBM": "Anastasia Island Beach Mouse",
-    "GTORT": "Gopher Tortoise",
-    "SALTVOLE": "Florida Salt Marsh Vole",
-    "SAVOL": "Florida Salt Marsh Vole",
-    "CKMS": "Cedar Key Mole Skink",
-    "SABM": "St. Andrews Beach Mouse",
-    "SEBAT": "Southeastern Bat",
-    "RRCSNAKE": "Rim Rock Crowned Snake",
-    "RCCSN": "Rim Rock Crowned Snake",
-    "GSMS": "Gulf Salt Marsh Snake",
-    "WADE": "Wading Birds",
-    "MACU": "Mangrove Cuckoo",
-    "RCW": "Red-Cockaded Woodpecker",
-    "PLOVER": "Cuban Snowy Plover",
-    "PLOVR": "Cuban Snowy Plover",
-    "SKMR": "Black Skimmer",
-    "CHBM": "Choctawhatchee Beach Mouse",
-    "STKI": "Swallow-Tailed Kite",
-    "LOUSSP": "Louisiana Seaside Sparrow",
-    "LOUSP": "Louisiana Seaside Sparrow",
-    "BWVI": "Black-Whiskered Vireo",
-    "BEAR": "Florida Black Bear",
-    "SNKITE": "Florida Snail Kite",
-    "SNKIT": "Florida Snail Kite",
-    "LKMR": "Lower Keys Marsh Rabbit",
-    "SRRAT": "Silver Rice Rat",
-    "FLOMO": "Florida Mouse",
-    "AMKE": "Southeastern American Kestrel",
-    "SHFS": "Sherman's Fox Squirrel",
-    "SEBM": "Southeastern Beach Mouse",
-    "SIRAT": "Sanibel Island Rice Rat",
-    "STHA": "Short-Tailed Hawk",
-    "CRCA": "Crested Caracara",
-    "FLATSAL": "Flatwoods Salamander",
-    "FATSL": "Flatwoods Salamander",
-    "SSKINK": "Sand Skink",
-    "SSKNK": "Sand Skink",
-    "GRSHPRSP": "Florida Grasshopper Sparrow",
-    "GSHP": "Florida Grasshopper Sparrow",
-    "SCRUBJAY": "Florida Scrub-Jay",
-    "SCRJY": "Florida Scrub-Jay"
+    AIBM: "Anastasia Island Beach Mouse|1",
+    AMKE: "Southeastern American Kestrel|",
+    ASMS: "Atlantic Salt Marsh Snake|1",
+    ASTK: "Swallow-Tailed Kite|3",
+    BCFS: "Big Cypress Fox Squirrel|2",
+    BE: "Bald Eagle|",
+    BEAR: "Florida Black Bear|2",
+    BGFRG: "Bog Frog|",
+    BOGFROG: "Bog Frog|",
+    BWVI: "Black-Whiskered Vireo|",
+    CHBM: "Choctawhatchee Beach Mouse|1",
+    CKMS: "Cedar Key Mole Skink|",
+    COHA: "Cooper's Hawk|4",   //differs between report and attribute table
+    CRCA: "Crested Caracara|",
+    CROC: "American Crocodile|2",
+    DUCK: "Mottled Duck|",
+    FATSL: "Flatwoods Salamander|",
+    FKMS: "Florida Keys Mole Skink|",
+    FLATSAL: "Flatwoods Salamander|",
+    FLOMO: "Florida Mouse|3",
+    FSC: "Florida Sandhill Crane|",
+    GBAT: "Gray Bat|1",
+    GRAYBAT: "Gray Bat|1",
+    GRSHPRSP: "Florida Grasshopper Sparrow|1",
+    GSHP: "Florida Grasshopper Sparrow|1",
+    GSMS: "Gulf Salt Marsh Snake|3",  //differs between report and attribute table
+    GTORT: "Gopher Tortoise|",
+    KDEER: "Florida Key Deer|1",
+    KMTURT: "Lower Keys Striped Mud Turtle|",
+    KTURT: "Lower Keys Striped Mud Turtle|",
+    LIMK: "Limpkin|",
+    LIMPK: "Limpkin|",
+    LKMR: "Lower Keys Marsh Rabbit|1",
+    LOUSP: "Louisiana Seaside Sparrow|2",
+    LOUSSP: "Louisiana Seaside Sparrow|2",
+    LOWA: "Lousiana Waterthrush|",
+    MACSP: "MacGillivray's Seaside Sparrow|2",
+    MACU: "Mangrove Cuckoo|4",   //differs between report and attribute table
+    NEWT: "Striped Newt|2",
+    OWL: "Florida Burrowing Owl|3",
+    PABU: "Painted Bunting|",
+    PANT: "Florida Panther|1",
+    PANTHER: "Florida Panther|1",
+    PBTF: "Pine Barrens Tree Frog|3",  //differs between report and attribute table
+    PBTFROG: "Pine Barrens Tree Frog|3",   //differs between report and attribute table
+    PLOVER: "Cuban Snowy Plover|2",
+    PLOVR: "Cuban Snowy Plover|2",
+    RCCSN: "Rim Rock Crowned Snake|",
+    RCW: "Red-Cockaded Woodpecker|",
+    RRCSNAKE: "Rim Rock Crowned Snake|",
+    SABM: "St. Andrews Beach Mouse|1",
+    SALTVOLE: "Florida Salt Marsh Vole|1",
+    SAVOL: "Florida Salt Marsh Vole|1",
+    SCOTTSP: "Scott's Seaside Sparrow|3",
+    SCRJY: "Florida Scrub-Jay|2",
+    SCRUBJAY: "Florida Scrub-Jay|2",
+    SCTSP: "Scott's Seaside Sparrow|3",
+    SEALSALM: "Seal Salamander|2",
+    SEBAT: "Southeastern Bat|",
+    SEBM: "Southeastern Beach Mouse|1",
+    SESAL: "Seal Salamander|2",
+    SHFS: "Sherman's Fox Squirrel|",
+    SIRAT: "Sanibel Island Rice Rat|1",
+    SKMR: "Black Skimmer|",
+    SNKIT: "Florida Snail Kite|2",
+    SNKITE: "Florida Snail Kite|2",
+    SRRAT: "Silver Rice Rat|1",  //differs in report vs attribute table (occurs in P1 & P2) //
+    SSKINK: "Sand Skink|2",
+    SSKNK: "Sand Skink|2",
+    STHA: "Short-Tailed Hawk|2",
+    STKI: "Swallow-Tailed Kite|3",
+    WADE: "Wading Birds|",
+    WCPI: "White-Crowned Pigeon|3"
 };
 
+var sppLabels = {};
+d3.keys(species).forEach(function(d){
+    sppLabels[d] = species[d].split('|')[0]
+});
+
+
+var speciesLinks = {
+    GTORT: 'http://myfwc.com/wildlifehabitats/profiles/reptiles-and-amphibians/reptiles/gopher-tortoise/'
+};
 
 
 /* DOM interactions powered by D3 */
@@ -417,73 +428,129 @@ function showDetails(id) {
     var details = featureCache[id];
     console.log(details);
 
-    d3.select('#Unit').text(id);
-    d3.select('#UnitArea').text(d3.format(',')(details.acres));
+    d3.selectAll('path.selected').classed('selected', false);
 
-    var priorityColors = ["#006837", "#31a354", "#78c679", "#c2e699", "#ffffcc", '#EEE'];
+    var feature = featureIndex.get(id);
+    feature.bringToFront();
+    var path = d3.select(feature._path)
+    path.classed('selected', true);
+
+    d3.select('#Unit').text(id);
+    d3.select('#UnitArea').text(d3.format(',')(details.hectares));
+
+    //var priorityColors = colors.slice().reverse();
+    //priorityColors.push(['#EEE']);  //TODO: should probably be at top
+
+    //var priorityColors = ["#006837", "#31a354", "#78c679", "#c2e699", "#ffffcc", '#EEE']; //green
+    var priorityColors = ["#08519c", "#3182bd", "#6baed6", "#bdd7e7", "#eff3ff", '#ffffcc']; //blue
     var priorityLabels4 = priorityLabels.slice(0, 4);
     priorityLabels4.push(priorityLabels[5]);
     var priorityColors4 = priorityColors.slice(0, 4);
     priorityColors4.push(priorityColors[5]);
 
 
+    var priorityData = [];
+    details.clip.forEach(function(d, i){
+            if (d > 0){
+                priorityData.push({
+                    label: priorityLabels[i],
+                    percent: d,
+                    color: priorityColors[i]
+                });
+            }
+        });
+    createPieChart(priorityData, d3.select("#CLIP_PieChart"), "200px", "200px");
 
-    //var priorityColors = ["#08519c", "#3182bd", "#6baed6", "#bdd7e7", "#eff3ff", '#ffffcc'];
-    //var priorityColors = colors.slice().reverse();
-    //priorityColors.push(['#EEE']);  //TODO: should probably be at top
-    //var priorityData = [];
-    //details.clip.forEach(function(d, i){
-    //        if (d > 0){
-    //            priorityData.push({
-    //                label: priorityLabels[i],
-    //                percent: d,
-    //                color: priorityColors[i]
-    //            });
-    //        }
-    //    });
-    //createPieChart(priorityData, d3.select("#CLIP_PieChart"), "200px", "200px");
+    createHorizBarChart(d3.select('#CLIP_Chart'), details.clip, priorityLabels, priorityColors, '%');
+    createHorizBarChart(d3.select('#Bio_Chart'), details.bio, priorityLabels, priorityColors, '%');
+    createHorizBarChart(d3.select('#BioRareSpp_Chart'), details.bio_rare_spp, priorityLabels4, priorityColors4, '%');
+    createHorizBarChart(d3.select('#BioSHCA_Chart'), details.bio_shca, priorityLabels4, priorityColors4, '%');
 
-    createHorizBarChart(d3.select('#CLIP_Chart'), details.clip, priorityLabels, priorityColors);
-    createHorizBarChart(d3.select('#Bio_Chart'), details.bio, priorityLabels, priorityColors);
-    createHorizBarChart(d3.select('#BioRareSpp_Chart'), details.bio_rare_spp, priorityLabels4, priorityColors4);
-    createHorizBarChart(d3.select('#BioSHCA_Chart'), details.bio_shca, priorityLabels4, priorityColors4);
-    createHorizBarChart(d3.select('#BioPNC_Chart'), details.bio_pnc, priorityLabels4, priorityColors4);
-    createHorizBarChart(d3.select('#BioSppRich_Chart'), details.bio_spp_rich, priorityLabels, priorityColors);
+    var tableNode = d3.select('#BioSHCATable');
+    tableNode.html('');
+    //var groups = {};
+    //d3.keys(details.bio_spp_rich2).forEach(function(d){
+    //    var group = species[d].split('|')[1] || 0;
+    //    if (groups[group] == null){
+    //        groups[group] = {};
+    //    }
+    //    groups[group][d] = details.bio_spp_rich2[d];
+    //});
+    d3.range(1, 5).forEach(function(d, i){
+        var values = details.bio_shca2[d];
+        if (!values) return;
 
-    createAreaList(d3.select('#BioSppRichList'), details.bio_spp_rich2, species);
-
-    createHorizBarChart(d3.select('#Land_Chart'), details.land, priorityLabels, priorityColors);
-    createHorizBarChart(d3.select('#Water_Chart'), details.water, priorityLabels, priorityColors);
-
-    if (d3.sum(details.ownership)) {
-        createHorizBarChart(
-            d3.select('#Owner_Chart'), details.ownership,
-            ['Federal', 'State', 'Local', 'Private'],
-            priorityColors.slice(0, 4)
+        tableNode.append('h5').text(priorityLabels4[i]);
+        createThumbnailAreaTable(
+            tableNode.append('table').attr('cellspacing', 0).append('tbody'),
+            values, sppLabels, speciesLinks
         );
-    }
-    else {
-        // TODO
-        d3.select('#Owner_Chart').html('');
-    }
+    });
+
+
+
+    createHorizBarChart(d3.select('#BioPNC_Chart'), details.bio_pnc, priorityLabels4, priorityColors4, '%');
+    createHorizBarChart(d3.select('#BioSppRich_Chart'), details.bio_spp_rich, priorityLabels, priorityColors, '%');
+
+    tableNode = d3.select('#BioSppRichTable');
+    tableNode.html('');
+    var groups = {};
+    d3.keys(details.bio_spp_rich2).forEach(function(d){
+        var group = species[d].split('|')[1] || 0;
+        if (groups[group] == null){
+            groups[group] = {};
+        }
+        groups[group][d] = details.bio_spp_rich2[d];
+    });
+    d3.range(1, 6).concat([0]).forEach(function(d, i){
+        if (groups[d] == null) return;
+
+        tableNode.append('h5').text(priorityLabels[i]);
+        createThumbnailAreaTable(
+            tableNode.append('table').attr('cellspacing', 0).append('tbody'),
+            groups[d], sppLabels, speciesLinks
+        );
+    });
+
+
+    createHorizBarChart(d3.select('#Land_Chart'), details.land, priorityLabels, priorityColors, '%');
+    createHorizBarChart(d3.select('#Water_Chart'), details.water, priorityLabels, priorityColors, '%');
+
+    //if (d3.sum(details.ownership)) {
+    //    createHorizBarChart(
+    //        d3.select('#Owner_Chart'), details.ownership,
+    //        ['Federal', 'State', 'Local', 'Private'],
+    //        priorityColors.slice(0, 4),
+    //        '%'
+    //    );
+    //}
+    //else {
+    //    // TODO
+    //    d3.select('#Owner_Chart').html('');
+    //}
 
 }
 
-function createHorizBarChart(node, data, labels, colors){
-
+function createHorizBarChart(node, data, labels, colors, units){
     nv.addGraph(function() {
         var chart = nv.models.multiBarHorizontalChart()
             .x(function(d) { return d.label })
             .y(function(d) { return d.value })
             .barColor(colors)
-            .margin({top: 0, right: 20, bottom: 50, left: 75})
+            .margin({top: 0, right: 0, bottom: 0, left: 100})
             .showLegend(false)
             .showControls(false)
-            .tooltips(true);
+            .showValues(true)
+            .valueFormat(function(d){
+                if (Math.round(d) === d){
+                    return d3.format('.0f')(d) + units;
+                }
+                return d3.format('.1f')(d) + units;
+            })
+            .showYAxis(false)
+            .tooltips(false)
+            .duration(0);
 
-
-        chart.yAxis
-            .tickFormat(d3.format(',.2f'));
 
         chart.yAxis
             .axisLabel('Percent of Watershed')
@@ -495,9 +562,21 @@ function createHorizBarChart(node, data, labels, colors){
 
         node.html('');
         node.append('svg')
-            .style({height: '200', width: '440'})
+            .style({height: 24 * data.length, width: '480'})
             .datum([{key:'', values: zipIntoObj(['value', 'label'], data, labels)}])
             .call(chart);
+
+        node.selectAll('.nv-bar text').each(function(d, i){
+            var node = d3.select(this);
+            var x = parseFloat(node.attr('x'));
+            if (x > 100){
+                node.attr('x', x - 10).attr('text-anchor', 'end').style('fill-opacity', 1);
+                if (i < 2) {
+                    node.style('fill', '#FFF');
+                }
+            }
+        });
+
 
         nv.utils.windowResize(chart.update);
 
@@ -507,7 +586,7 @@ function createHorizBarChart(node, data, labels, colors){
 
 // labels in this case are an object
 // TODO: probably should be handled better
-function createAreaList(node, data, labels){
+function createThumbnailAreaTable(node, data, labels, links){
     node.html('');
 
     var keys = d3.keys(data);
@@ -519,51 +598,24 @@ function createAreaList(node, data, labels){
         .each(function(d, i){
             var node = d3.select(this);
             node.classed('even', i%2 == 1);
-            node.append('td').text(function(d){ return labels[d]});
-            node.append('td').text(function(d){ return formatter(data[d]) + ' ha' });
+
+            var img = (i%2 == 1)? 'http://myfwc.com/media/88306/Eaglets_Nesting_F_TSteffer.jpg': 'http://myfwc.com/media/1389950/Cute-Tortoise.jpg';
+
+            //node.append('td').append('img').attr('src', img);
+            node.append('td')
+                .html(function(d){
+                    var html = labels[d];
+                    if (links[d] != null) {
+                        html = '<a href="' + links[d] + '" target="_blank">' + html + '</a>';
+                    }
+                    return html;
+                })
+                .classed('col-name', true);
+
+            node.append('td')
+                .text(function(d){ return formatter(data[d]) + ' ha' })
+                .classed('col-area', true);
         });
-
-
-
-    //var selection = node.selectAll().data(keys);
-    //selection.enter().insert('dt').text(function(d){ return labels[d] + ':' }).classed('even', function(d, i){return i%2 == 1});
-    //selection.enter().insert('dd').text(function(d){ return formatter(data.get(d)) + ' ha' }).classed('even', function(d, i){return i%2 == 1});
-
-    //var rows = d3.keys(data).map(function(d){
-    //    return [labels[d], data[d]]
-    //});
-    //var table = TableSort(
-    //    '#BioSppRichList',
-    //    [
-    //        {text: 'Species', sort: TableSort.alphabetic, sort_column: true},
-    //        {text: 'Hectares', sort: TableSort.numeric}
-    //    ],
-    //    rows,
-    //    {width: '400px'}
-    //);
-
-
-
-
-
-    //node.selectAll('dt')
-    //    .data(keys).enter()
-    //    .append('dt')
-    //    .each(function(d){
-    //        var node = d3.select(this);
-    //        node.text(function(d){ return d + ':' })
-    //        d3.select(node.node().parentNode).append('dd').text(function(d){ return data.get(d) + ' ha' });
-    //    });
-
-
-        //.html(function(d){
-        //    //return '<dl>' + d + '</dl>: <dd>' + formatter(data.get(d)) + ' ha</dd>';
-        //});
-
-    //node.selectAll('dd')
-    //    .data(keys).enter()
-    //    .append('dd')
-    //    .text(function(d){ return data.get(d) + ' ha' });
 }
 
 
