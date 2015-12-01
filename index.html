@@ -33,147 +33,195 @@
     </div>
 
     <div id="Main">
-        <div id="SidebarToggle" class="button-open" data-target="Sidebar" title="Click for details">
-           <i class="fa fa-info-circle"></i>
-        </div>
+        <!--<div id="SidebarToggle" class="button-open" data-target="Sidebar SidebarNav" title="Click for details">-->
+           <!--<i class="fa fa-info-circle"></i>-->
+        <!--</div>-->
+
+        <!--<div id="SidebarNav">-->
+            <!--<div>-->
+                <!--<i class="fa fa-times-circle button-close" data-target="Sidebar SidebarNav"></i>-->
+            <!--</div>-->
+            <!--<ul id="Nav" class="tabs small">-->
+                <!--<li class="active" data-tab="Intro">Intro</li>-->
+                <!--<li data-tab="Filter">Filter</li>-->
+                <!--&lt;!&ndash;<li data-tab="Details">Details</li>&ndash;&gt;-->
+                <!--<li data-tab="Details">Status</li>-->
+                <!--<li data-tab="Details">Threats</li>-->
+                <!--<li data-tab="Details">Partners</li>-->
+            <!--</ul>-->
+        <!--</div>-->
 
         <div id="Sidebar">
-            <div class="right">
-                <i class="fa fa-times-circle button-close" data-target="Sidebar"></i>
-            </div>
-            <ul id="Nav" class="tabs small">
-                <li class="active" data-tab="Overview">Overview</li>
-                <li data-tab="Filter">Filter</li>
-                <li data-tab="Details">Details</li>
-            </ul>
-            <div id="Overview" class="tab">
-                <p>
-                    <img src="static/img/8382622720_887e32ea2c_z.jpg" style="width:50%;margin:0 10px 6px 0; border-radius: 10px 0;box-shadow:2px 2px 5px #AAA;" align="left"/>
-                    <span style="font-size:larger; font-weight: bold;">
-                        The Critical Lands and Waters Identification Project
-                    </span>
-                     is part of an analysis by the Century Commission to envision Florida’s future over the next 50 years,
-                    and to develop recommendations to the Governor and Legislature on how the state can achieve social,
-                    economic and environmental sustainability.
-
-                    <br/><br/>
-
-                    This visualization tool is intended to...
-
-                    <br/><br/>
-
-                    To find out more about CLIP, <a href="#">click here</a>.
-                </p>
-
-                <div class="divider divider-light"></div>
-                <div>
-
-                    <h4 class="nomargin"><span class="badge">1</span> Compare Key Characteristics across Florida</h4>
-                    <p class="inset" style="font-size: small">
-                        Use the <span class="tab-ref">Filter</span> tab above to explore different combinations of key characteristics assessed at the
-                        watershed scale across the state.
-                        <br><br>
-                        Simply click on a bar to show only watersheds that have that value for that factor.  You can combine
-                        filters across factors to see unique combinations, such as the watersheds that have the highest
-                        amount of priority resources AND highest biodiversity.
-                    </p>
-
-                    <h4 class="nomargin"><span class="badge">2</span> Explore Details for a Watershed</h4>
-                    <p class="inset" style="font-size: small">
-                        To find out more information about a specific watershed, click on it in the map.  The <span class="tab-ref">Details</span>
-                        tab will show a rich collection of descriptive information about that watershed.
-                    </p>
+            <div id='SidebarHeader'>
+                <div id="MainSidebarHeader">
+                    <ul id="Nav" class="tabs">
+                        <li class="active" data-tab="Intro">Intro</li>
+                        <li data-tab="Filter"><i class="fa fa-map"></i> Configure Map</li>
+                    </ul>
                 </div>
 
-                <div class="divider divider-light"></div>
-                <div class="quiet center" style="font-size:x-small;">
-                    Photo credit: <a href="https://www.flickr.com/photos/allenmcgregor/8382622720/in/album-72157632522466315/" target="_blank">Allen McGregor</a> (creative commons).
-                </div>
-            </div>
-            <div id="Filter" class="tab hidden">
-                <h5 class="nomargin" style="color: #AAA;">Click on a bar to filter watersheds that have that percentage cover of that resource.
-                    Click other bars to add filters.</h5>
-            </div>
-            <div id="Details" class="tab hidden">
-                <h2 class="center" style="color: #AAA">Please click on a watershed</h2>
-                <div id="DetailsLoadingScrim" class="hidden">
-                    <div class="spinner">
-                        <h4 class="nomargin">Loading</h4>
-                        <div class="rect1"></div>
-                        <div class="rect2"></div>
-                        <div class="rect3"></div>
-                        <div class="rect4"></div>
-                        <div class="rect5"></div>
+                <div id="DetailsHeader" class="hidden">
+                    <div class="right">
+                        <i id="DetailsClose" class="fa fa-times-circle"></i>
                     </div>
-                </div>
-                <div id="DetailsContainer" class="hidden">
-                    <h3 id="Unit"></h3>
+                    <h4 id="Unit"></h4>
                     <div class="quiet small">
                         <i>
-                            <div class="right">(<span id="UnitArea"></span> hectares)</div>
-                            <div id="UnitID" class="left"></div>
-                            <div class="clear"></div>
+                            <span id="UnitID"></span>
+                            (<span id="UnitArea"></span> hectares)
+
                         </i>
                     </div>
 
-                    <!--<ul id="InnerNav" class="tabs small">-->
-                        <!--<li class="active" data-tab="Overview">Overview</li>-->
-                        <!--<li data-tab="Filter">Filter</li>-->
-                        <!--<li data-tab="Details">Details</li>-->
-                    <!--</ul>-->
-
-                    <section style="margin-top: 20px;">
-                        <h4>CLIP Overall Priorities:</h4>
-                        <div id="CLIP_Chart"></div>
-                    </section>
-
-                    <section>
-                        <h4>Biodiversity:</h4>
-                        <div id="Bio_Chart"></div>
-                    </section>
-
-                    <section>
-                        <h4>Biodiversity - Rare Species:</h4>
-                        <div id="BioRareSpp_Chart"></div>
-                    </section>
-
-                    <section>
-                        <h4>Biodiversity - Strategic Habitat Conservation Areas:</h4>
-                        <div id="BioSHCA_Chart"></div>
-                        <div id="BioSHCATable" style="margin-top: 20px;margin-left:20px;"></div>
-                    </section>
-
-                    <section>
-                        <h4>Biodiversity - Priority Natural Communities:</h4>
-                        <div id="BioPNC_Chart"></div>
-                    </section>
-
-                    <section>
-                        <h4>Biodiversity - Overall Vertebrate Species Richness:</h4>
-                        <div id="BioSppRich_Chart"></div>
-                        <div id="BioSppRichTable" style="margin-top: 20px;"></div>
-                        <!--<h5 style="margin-bottom:4px;">Species Present:</h5>-->
-                        <!--<table cellspacing="0"><tbody id="BioSppRichList"></tbody></table>-->
-                    </section>
-
-                    <section>
-                        <h4>Landscape:</h4>
-                        <div id="Land_Chart"></div>
-                    </section>
-
-                    <section>
-                        <h4>Surface Water:</h4>
-                        <div id="Water_Chart"></div>
-                    </section>
-
-                    <!--<section>-->
-                        <!--<h4>Overall Ownership:</h4>-->
-                        <!--<div id="Owner_Chart"></div>-->
-                    <!--</section>-->
-
-
-
+                    <ul id="InnerNav" class="tabs small">
+                        <li class="active" data-tab="">Overview</li>
+                        <li data-tab="">Biodiversity</li>
+                        <li data-tab="">Landscape</li>
+                        <li data-tab="">Water</li>
+                        <li data-tab="">Threats</li>
+                    </ul>
                 </div>
+            </div>
+
+
+            <div id="MainSidebar">
+                <!--<ul id="Nav" class="tabs">-->
+                    <!--<li class="active" data-tab="Intro">Intro</li>-->
+                    <!--<li data-tab="Filter"><i class="fa fa-map"></i> Configure Map</li>-->
+                <!--</ul>-->
+
+                <div id="Intro" class="tab">
+                    <p>
+                        <img src="static/img/8382622720_887e32ea2c_z.jpg" style="width:50%;margin:0 10px 6px 0; border-radius: 10px 0;box-shadow:2px 2px 5px #AAA;" align="left"/>
+                        <span style="font-size:larger; font-weight: bold;">
+                            The Critical Lands and Waters Identification Project
+                        </span>
+                         is part of an analysis by the Century Commission to envision Florida’s future over the next 50 years,
+                        and to develop recommendations to the Governor and Legislature on how the state can achieve social,
+                        economic and environmental sustainability.
+
+                        <br/><br/>
+
+                        This visualization tool is intended to...
+
+                        <br/><br/>
+
+                        To find out more about CLIP, <a href="#">click here</a>.
+                    </p>
+
+                    <div class="divider divider-light"></div>
+                    <div>
+
+                        <h4 class="nomargin"><span class="badge">1</span> Compare Key Characteristics across Florida</h4>
+                        <p class="inset" style="font-size: small">
+                            Use the <span class="tab-ref">Configure Map</span> tab above to explore
+                            different combinations of key characteristics assessed at the
+                            watershed scale across the state.
+                            <br><br>
+                            Simply click on a bar to show only watersheds that have that value for that factor.  You can combine
+                            filters across factors to see unique combinations, such as the watersheds that have the highest
+                            amount of priority resources AND highest biodiversity.
+                        </p>
+
+                        <h4 class="nomargin"><span class="badge">2</span> Explore Details for a Watershed</h4>
+                        <p class="inset" style="font-size: small">
+                            To find out more information about a specific watershed, click on it in the map.
+                            <!--The <span class="tab-ref">Details</span>-->
+                            <!--tab will show a rich collection of descriptive information about that watershed.-->
+                        </p>
+                    </div>
+
+                    <div class="divider divider-light"></div>
+                    <div class="quiet center" style="font-size:x-small;">
+                        Photo credit: <a href="https://www.flickr.com/photos/allenmcgregor/8382622720/in/album-72157632522466315/" target="_blank">Allen McGregor</a> (creative commons).
+                    </div>
+                </div>
+                <div id="Filter" class="tab hidden">
+                    <h5 class="nomargin" style="color: #AAA;">Click on a bar to filter watersheds that have that percentage cover of that resource.
+                        Click other bars to add filters.</h5>
+                </div>
+            </div>
+
+            <div id="Details" class="hidden">
+                <!--<div id="DetailsLoadingScrim" class="hidden">-->
+                    <!--<div class="spinner">-->
+                        <!--<h4 class="nomargin">Loading</h4>-->
+                        <!--<div class="rect1"></div>-->
+                        <!--<div class="rect2"></div>-->
+                        <!--<div class="rect3"></div>-->
+                        <!--<div class="rect4"></div>-->
+                        <!--<div class="rect5"></div>-->
+                    <!--</div>-->
+                <!--</div>-->
+
+                <!--<div class="right">-->
+                    <!--<i id="DetailsClose" class="fa fa-times-circle"></i>-->
+                <!--</div>-->
+                <!--<h4 id="Unit"></h4>-->
+                <!--<div class="quiet small">-->
+                    <!--<i>-->
+                        <!--<span id="UnitID"></span>-->
+                        <!--(<span id="UnitArea"></span> hectares)-->
+
+                    <!--</i>-->
+                <!--</div>-->
+
+                <!--<ul id="InnerNav" class="tabs small">-->
+                    <!--<li class="active" data-tab="">Overview</li>-->
+                    <!--<li data-tab="">Biodiversity</li>-->
+                    <!--<li data-tab="">Landscape</li>-->
+                    <!--<li data-tab="">Water</li>-->
+                <!--</ul>-->
+
+
+                <section style="margin-top: 20px;">
+                    <h4>CLIP Overall Priorities:</h4>
+                    <div id="CLIP_Chart"></div>
+                </section>
+
+                <section>
+                    <h4>Biodiversity:</h4>
+                    <div id="Bio_Chart"></div>
+                </section>
+
+                <section>
+                    <h4>Biodiversity - Rare Species:</h4>
+                    <div id="BioRareSpp_Chart"></div>
+                </section>
+
+                <section>
+                    <h4>Biodiversity - Strategic Habitat Conservation Areas:</h4>
+                    <div id="BioSHCA_Chart"></div>
+                    <div id="BioSHCATable" style="margin-top: 20px;margin-left:20px;"></div>
+                </section>
+
+                <section>
+                    <h4>Biodiversity - Priority Natural Communities:</h4>
+                    <div id="BioPNC_Chart"></div>
+                </section>
+
+                <section>
+                    <h4>Biodiversity - Overall Vertebrate Species Richness:</h4>
+                    <div id="BioSppRich_Chart"></div>
+                    <div id="BioSppRichTable" style="margin-top: 20px;"></div>
+                    <!--<h5 style="margin-bottom:4px;">Species Present:</h5>-->
+                    <!--<table cellspacing="0"><tbody id="BioSppRichList"></tbody></table>-->
+                </section>
+
+                <section>
+                    <h4>Landscape:</h4>
+                    <div id="Land_Chart"></div>
+                </section>
+
+                <section>
+                    <h4>Surface Water:</h4>
+                    <div id="Water_Chart"></div>
+                </section>
+
+                <!--<section>-->
+                    <!--<h4>Overall Ownership:</h4>-->
+                    <!--<div id="Owner_Chart"></div>-->
+                <!--</section>-->
             </div>
         </div>
 

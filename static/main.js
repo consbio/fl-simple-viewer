@@ -128,6 +128,7 @@ var speciesLinks = {
 
 
 /* DOM interactions powered by D3 */
+//TODO: these have been updated, migrate to leaflet-quickstart and dm-quickstart
 /******* Tabs *********/
 
 d3.selectAll('.tabs li').on('click', function() {
@@ -137,17 +138,33 @@ function selectTab(node){
     var id = node.attr('data-tab');
     d3.select(node.node().parentNode).selectAll('li.active').classed('active', false);
     node.classed('active', true);
-    d3.select(node.node().parentNode.parentNode).selectAll('.tab').classed('hidden', function(d){
-        return d3.select(this).attr('id') != id;
-    });
+
+    // select all tabs in same container as our target, and toggle visibility
+    d3.select(d3.select('#' + id).node().parentNode)
+        .selectAll('.tab')
+        .classed('hidden', function(d){
+            return d3.select(this).attr('id') != id;
+        });
 }
 
 /******* Open / Close buttons *********/
 d3.selectAll('.button-open').on('click', function() {
-    d3.select('#' + d3.select(this).attr('data-target')).classed('hidden', false);
+    var ids = d3.select(this).attr('data-target').split(' ');
+    ids.forEach(function(id){
+        d3.select('#' + id).classed('hidden', false);
+    });
 });
 d3.selectAll('.button-close').on('click', function() {
-    d3.select('#' + d3.select(this).attr('data-target')).classed('hidden', true);
+    var ids = d3.select(this).attr('data-target').split(' ');
+    ids.forEach(function(id){
+        d3.select('#' + id).classed('hidden', true);
+    });
+});
+d3.select('#DetailsClose').on('click', function(){
+    d3.select('#MainSidebar').classed('hidden', false);
+    d3.select('#MainSidebarHeader').classed('hidden', false);
+    d3.select('#Details').classed('hidden', true);
+    d3.select('#DetailsHeader').classed('hidden', true);
 });
 
 /******** Expandos *****************/
@@ -234,11 +251,11 @@ var basemaps = {
 
 map = L.map('Map', {
     layers: [basemaps['ESRI Topo']],
-    //zoom: 7,
     maxZoom: 12,
-    //center: [27.84, -86.02]
-    center: [30.86, -87.51],
-    zoom: 11
+    center: [27.84, -86.02],
+     zoom: 7
+    //center: [30.86, -87.51],
+    //zoom: 11
 });
 map.zoomControl.setPosition('topright');
 map.addControl(L.control.zoomBox({modal: false, position:'topright'}));
@@ -434,8 +451,13 @@ function setSelectedField(field) {
 
 function selectUnit(id){
     console.log('select ', id);
-    selectTab(d3.select('#Nav li[data-tab="Details"]'));
-    d3.select('#Details > h2').classed('hidden', true);
+    //selectTab(d3.select('#Nav li[data-tab="Details"]'));
+    //d3.select('#Details > h2').classed('hidden', true);
+
+    d3.select('#MainSidebar').classed('hidden', true);
+    d3.select('#MainSidebarHeader').classed('hidden', true);
+    d3.select('#Details').classed('hidden', false);
+    d3.select('#DetailsHeader').classed('hidden', false);
 
     if (pendingRequest != null) {
         pendingRequest.abort();
@@ -443,7 +465,7 @@ function selectUnit(id){
 
     if (featureCache[id] != null){
         //d3.select('#DetailsLoadingScrim').classed('hidden', true);
-        d3.select('#DetailsContainer').classed('hidden', false);
+        //d3.select('#DetailsContainer').classed('hidden', false);
         showDetails(id);
     }
     else {

@@ -86,10 +86,10 @@ for huc in primary_df.index: #[0:500]:
     # Biodiversity - SHCA Level 2 (TODO: only write out nonempty fields)
     shca_level2 = {}
     record = dfs['SHCA_L2_P1'].loc[huc]
-    fields = ['ASMS_PH_H', 'CHBM_PH_H', 'GBAT_PH_H', 'GSHP_PH_H', 'KDEER_PH_H', 'LKMR_PH_H', 'PANT_PH_H', 'SABM_PH_H', 'SAVOL_PH_H', 'SIRAT_PH_H', 'SRRAT_PH_H']
+    fields = ['ASMS_PH_H', 'CHBM_PH_H', 'GBAT_PH_H', 'GSHP_PH_H', 'KDEER_PH_H', 'LKMR_PH_H', 'PANT_PH_H', 'SABM_PH_H', 'SAVOL_PH_H', 'SIRAT_PH_H', 'SEBM_H']
     values = [int(round(record[f], 0)) for f in fields]
     if sum(values):
-        shca_level2['1'] = dict([x for x in zip([f.replace('_PH_H', '') for f in fields], values) if x[1] > 0])
+        shca_level2['1'] = dict([x for x in zip([f.replace('_PH_H', '').replace('_H', '') for f in fields], values) if x[1] > 0])
 
     record = dfs['SHCA_L2_P2'].loc[huc]
     # TODO: fix duplicate
