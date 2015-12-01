@@ -3,3 +3,4 @@ syntax: glob
 .gitignore
 media/*
 features/*
+tools/deploy_settings.py
