@@ -19,7 +19,7 @@ var fieldLabels = {
     'water': 'Surface Water'
 };
 var barHeight = 20;
-var chartWidth = 440;
+var chartWidth = 420;
 var colors = ['#ffffcc','#c2e699','#78c679','#31a354','#006837'];  //lowest to hightest
 function filterColors(){ return '#9ecae1' }
 var transparency = 25;  //on 0-100% scale
@@ -39,7 +39,7 @@ var featuresURL = 'features/';
 //config of data
 priorityLabels = ['Priority 1', 'Priority 2', 'Priority 3', 'Priority 4', 'Priority 5', 'Not a Priority'];
 
-// common name|priority
+// common name|priority(4 levels, not 5)
 var species = {
     AIBM: "Anastasia Island Beach Mouse|1",
     AMKE: "Southeastern American Kestrel|",
@@ -53,7 +53,7 @@ var species = {
     BWVI: "Black-Whiskered Vireo|",
     CHBM: "Choctawhatchee Beach Mouse|1",
     CKMS: "Cedar Key Mole Skink|",
-    COHA: "Cooper's Hawk|4",   //differs between report and attribute table
+    COHA: "Cooper's Hawk|4",
     CRCA: "Crested Caracara|",
     CROC: "American Crocodile|2",
     DUCK: "Mottled Duck|",
@@ -66,7 +66,7 @@ var species = {
     GRAYBAT: "Gray Bat|1",
     GRSHPRSP: "Florida Grasshopper Sparrow|1",
     GSHP: "Florida Grasshopper Sparrow|1",
-    GSMS: "Gulf Salt Marsh Snake|3",  //differs between report and attribute table
+    GSMS: "Gulf Salt Marsh Snake|3",
     GTORT: "Gopher Tortoise|",
     KDEER: "Florida Key Deer|1",
     KMTURT: "Lower Keys Striped Mud Turtle|",
@@ -78,14 +78,14 @@ var species = {
     LOUSSP: "Louisiana Seaside Sparrow|2",
     LOWA: "Lousiana Waterthrush|",
     MACSP: "MacGillivray's Seaside Sparrow|2",
-    MACU: "Mangrove Cuckoo|4",   //differs between report and attribute table
+    MACU: "Mangrove Cuckoo|4",
     NEWT: "Striped Newt|2",
     OWL: "Florida Burrowing Owl|3",
     PABU: "Painted Bunting|",
     PANT: "Florida Panther|1",
     PANTHER: "Florida Panther|1",
-    PBTF: "Pine Barrens Tree Frog|3",  //differs between report and attribute table
-    PBTFROG: "Pine Barrens Tree Frog|3",   //differs between report and attribute table
+    PBTF: "Pine Barrens Tree Frog|3",
+    PBTFROG: "Pine Barrens Tree Frog|3",
     PLOVER: "Cuban Snowy Plover|2",
     PLOVR: "Cuban Snowy Plover|2",
     RCCSN: "Rim Rock Crowned Snake|",
@@ -150,6 +150,39 @@ d3.selectAll('.button-close').on('click', function() {
     d3.select('#' + d3.select(this).attr('data-target')).classed('hidden', true);
 });
 
+/******** Expandos *****************/
+function initExpando(header, container, open) {
+    header.classed('expandable', true)
+        .classed('expanded', open);
+
+    header.html('<i class="fa fa-caret-' + ((open)? 'down': 'right') + '"></i>' + header.html());
+    if (!open){
+        container.classed('hidden', true);
+    }
+    else {
+        header.insert('i', 'first-child').classed('fa fa-caret-down', true);
+    }
+
+    header.on('click', function(){
+        //var node = d3.select(this);
+        //console.log(this, container);
+        if (header.classed('expanded')){
+            container.classed('hidden', true);
+            header.classed('expanded', false);
+            header.select('.fa-caret-down').classed('fa-caret-down', false).classed('fa-caret-right', true);
+        }
+        else {
+            container.classed('hidden', false);
+            header.classed('expanded', true);
+            header.select('.fa-caret-right').classed('fa-caret-right', false).classed('fa-caret-down', true);
+        }
+    })
+}
+//d3.selectAll('section.expandable h4').on('click', function() {
+//    console.log(d3.event)
+//    console.log(d3.select(d3.event))
+//
+//});
 
 
 
@@ -294,10 +327,16 @@ function load() {
     d3.select('#Filter').selectAll('div')
     .data(summaryFields).enter()
     .append('div')
-    .each(function(d){
+    .each(function(d, i){
         var container = d3.select(this);
 
-        container.append('h4').text(fieldLabels[d]);
+        var header = container.append('h4').text(fieldLabels[d]);
+        container = container.append('div');
+
+        if (i > 1){ //TODO
+            initExpando(header, container);
+        }
+
         var chartNode = container.append('div').classed('chart', true);
         chartNode.append('div')
             .append('div')
@@ -432,14 +471,12 @@ function showDetails(id) {
 
     var feature = featureIndex.get(id);
     feature.bringToFront();
-    var path = d3.select(feature._path)
+    var path = d3.select(feature._path);
     path.classed('selected', true);
 
-    d3.select('#Unit').text(id);
+    d3.select('#Unit').text(details.name);
+    d3.select('#UnitID').text('HUC 12: ' + id);
     d3.select('#UnitArea').text(d3.format(',')(details.hectares));
-
-    //var priorityColors = colors.slice().reverse();
-    //priorityColors.push(['#EEE']);  //TODO: should probably be at top
 
     //var priorityColors = ["#006837", "#31a354", "#78c679", "#c2e699", "#ffffcc", '#EEE']; //green
     var priorityColors = ["#08519c", "#3182bd", "#6baed6", "#bdd7e7", "#eff3ff", '#ffffcc']; //blue
@@ -448,23 +485,11 @@ function showDetails(id) {
     var priorityColors4 = priorityColors.slice(0, 4);
     priorityColors4.push(priorityColors[5]);
 
-
-    var priorityData = [];
-    details.clip.forEach(function(d, i){
-            if (d > 0){
-                priorityData.push({
-                    label: priorityLabels[i],
-                    percent: d,
-                    color: priorityColors[i]
-                });
-            }
-        });
-    createPieChart(priorityData, d3.select("#CLIP_PieChart"), "200px", "200px");
-
-    createHorizBarChart(d3.select('#CLIP_Chart'), details.clip, priorityLabels, priorityColors, '%');
-    createHorizBarChart(d3.select('#Bio_Chart'), details.bio, priorityLabels, priorityColors, '%');
-    createHorizBarChart(d3.select('#BioRareSpp_Chart'), details.bio_rare_spp, priorityLabels4, priorityColors4, '%');
-    createHorizBarChart(d3.select('#BioSHCA_Chart'), details.bio_shca, priorityLabels4, priorityColors4, '%');
+    createPieChart(d3.select('#CLIP_Chart'), details.clip, priorityLabels, priorityColors, '%');
+    createPieChart(d3.select('#CLIP_Chart'), details.clip, priorityLabels, priorityColors, '%');
+    createPieChart(d3.select('#Bio_Chart'), details.bio, priorityLabels, priorityColors, '%');
+    createPieChart(d3.select('#BioRareSpp_Chart'), details.bio_rare_spp, priorityLabels4, priorityColors4, '%');
+    createPieChart(d3.select('#BioSHCA_Chart'), details.bio_shca, priorityLabels4, priorityColors4, '%');
 
     var tableNode = d3.select('#BioSHCATable');
     tableNode.html('');
@@ -481,7 +506,7 @@ function showDetails(id) {
         if (!values) return;
 
         tableNode.append('h5').text(priorityLabels4[i]);
-        createThumbnailAreaTable(
+        createAreaTable(
             tableNode.append('table').attr('cellspacing', 0).append('tbody'),
             values, sppLabels, speciesLinks
         );
@@ -489,32 +514,40 @@ function showDetails(id) {
 
 
 
-    createHorizBarChart(d3.select('#BioPNC_Chart'), details.bio_pnc, priorityLabels4, priorityColors4, '%');
-    createHorizBarChart(d3.select('#BioSppRich_Chart'), details.bio_spp_rich, priorityLabels, priorityColors, '%');
+    createPieChart(d3.select('#BioPNC_Chart'), details.bio_pnc, priorityLabels4, priorityColors4, '%');
+    createPieChart(d3.select('#BioSppRich_Chart'), details.bio_spp_rich, priorityLabels, priorityColors, '%');
+
 
     tableNode = d3.select('#BioSppRichTable');
     tableNode.html('');
-    var groups = {};
-    d3.keys(details.bio_spp_rich2).forEach(function(d){
-        var group = species[d].split('|')[1] || 0;
-        if (groups[group] == null){
-            groups[group] = {};
-        }
-        groups[group][d] = details.bio_spp_rich2[d];
-    });
-    d3.range(1, 6).concat([0]).forEach(function(d, i){
-        if (groups[d] == null) return;
-
-        tableNode.append('h5').text(priorityLabels[i]);
-        createThumbnailAreaTable(
+    if (details.bio_spp_rich2){
+        tableNode.append('h5').text('Species Present');
+        createAreaTable(
             tableNode.append('table').attr('cellspacing', 0).append('tbody'),
-            groups[d], sppLabels, speciesLinks
+            details.bio_spp_rich2, sppLabels, speciesLinks, true
         );
-    });
+    }
+    //var groups = {};
+    //d3.keys(details.bio_spp_rich2).forEach(function(d){
+    //    var group = species[d].split('|')[1] || 0;
+    //    if (groups[group] == null){
+    //        groups[group] = {};
+    //    }
+    //    groups[group][d] = details.bio_spp_rich2[d];
+    //});
+    //d3.range(1, 6).concat([0]).forEach(function(d, i){
+    //    if (groups[d] == null) return;
+    //
+    //    tableNode.append('h5').text(priorityLabels[i]);
+    //    createThumbnailAreaTable(
+    //        tableNode.append('table').attr('cellspacing', 0).append('tbody'),
+    //        groups[d], sppLabels, speciesLinks
+    //    );
+    //});
 
 
-    createHorizBarChart(d3.select('#Land_Chart'), details.land, priorityLabels, priorityColors, '%');
-    createHorizBarChart(d3.select('#Water_Chart'), details.water, priorityLabels, priorityColors, '%');
+    createPieChart(d3.select('#Land_Chart'), details.land, priorityLabels, priorityColors, '%');
+    createPieChart(d3.select('#Water_Chart'), details.water, priorityLabels, priorityColors, '%');
 
     //if (d3.sum(details.ownership)) {
     //    createHorizBarChart(
@@ -531,89 +564,108 @@ function showDetails(id) {
 
 }
 
-function createHorizBarChart(node, data, labels, colors, units){
+
+
+//data needs value, label, color, and percent
+//values input expected to be percents
+function createPieChart(node, data, labels, colors, units){
+    var width = 240,
+        height = 240;
+
+    function formatter(d){
+        if (d >= 5 || Math.round(d) === d){
+            return d3.format('.0f')(d) + units;
+        }
+        return d3.format('.1f')(d) + units;
+    }
+
+
+    data = zipIntoObj(['value', 'label', 'color'], data, labels, colors);
+
     nv.addGraph(function() {
-        var chart = nv.models.multiBarHorizontalChart()
+        var chart = nv.models.pieChart()
+            .margin({top: 0, right: 0, bottom: 0, left: 0})
             .x(function(d) { return d.label })
             .y(function(d) { return d.value })
-            .barColor(colors)
-            .margin({top: 0, right: 0, bottom: 0, left: 100})
             .showLegend(false)
-            .showControls(false)
-            .showValues(true)
-            .valueFormat(function(d){
-                if (Math.round(d) === d){
-                    return d3.format('.0f')(d) + units;
-                }
-                return d3.format('.1f')(d) + units;
-            })
-            .showYAxis(false)
-            .tooltips(false)
-            .duration(0);
-
-
-        chart.yAxis
-            .axisLabel('Percent of Watershed')
-            .tickFormat(d3.format('.0f'));
-
-        chart.tooltip.contentGenerator(function(obj){
-                return '<b>' + obj.data.label + ':</b> ' + obj.data.value + '%';
-            });
+            .showLabels(false)
+            .color(function(d){ return d.color })
+            .valueFormat(formatter);
 
         node.html('');
         node.append('svg')
-            .style({height: 24 * data.length, width: '480'})
-            .datum([{key:'', values: zipIntoObj(['value', 'label'], data, labels)}])
+            .classed('inline-middle', true)
+            .style({
+                width: width + 'px',
+                height: height + 'px'
+            })
+            .datum(data.filter(function(d){return d.value >= 1}))
             .call(chart);
 
-        node.selectAll('.nv-bar text').each(function(d, i){
-            var node = d3.select(this);
-            var x = parseFloat(node.attr('x'));
-            if (x > 100){
-                node.attr('x', x - 10).attr('text-anchor', 'end').style('fill-opacity', 1);
-                if (i < 2) {
-                    node.style('fill', '#FFF');
-                }
-            }
-        });
-
-
-        nv.utils.windowResize(chart.update);
+        node.append('ul')
+            .classed('inline-middle legend', true)
+            .selectAll('li')
+            .data(data)
+            .enter().append('li')
+            .classed('legendElement small', true)
+            .each(function(d){
+                var node = d3.select(this);
+                node.append('div').classed('inline-top', true).style('background', d.color);
+                var label = d.label + ' <span class="quiet small">(' + formatter(d.value) + ')</span>';
+                node.append('div')
+                    .classed('inline-top', true)
+                    .html(label)
+                    .attr('title', 'tooltip would go here');
+            });
 
         return chart;
-      });
+    });
 }
+
+
+
+
+
 
 // labels in this case are an object
 // TODO: probably should be handled better
-function createThumbnailAreaTable(node, data, labels, links){
+function createAreaTable(node, data, labels, links, sortArea){
     node.html('');
 
-    var keys = d3.keys(data);
-    keys.sort(d3.ascending);
+    var entries = d3.entries(data).map(function(d){
+        return _.extend(d, {
+            label: labels[d.key],
+            link: links[d.key]
+        });
+    });
+
+    if (sortArea){
+        entries.sort(function(a, b){ return a.value < b.value});
+    }
+    else {
+        entries.sort(function(a, b){ return d3.ascending(a.label, b.label)});
+    }
+
     var formatter = d3.format(',');
 
-    node.selectAll('tr').data(keys).enter()
+    node.selectAll('tr').data(entries).enter()
         .append('tr')
         .each(function(d, i){
             var node = d3.select(this);
-            node.classed('even', i%2 == 1);
+            //node.classed('even', i%2 == 1);
 
-            var img = (i%2 == 1)? 'http://myfwc.com/media/88306/Eaglets_Nesting_F_TSteffer.jpg': 'http://myfwc.com/media/1389950/Cute-Tortoise.jpg';
-
-            //node.append('td').append('img').attr('src', img);
             node.append('td')
                 .html(function(d){
-                    var html = labels[d];
-                    if (links[d] != null) {
-                        html = '<a href="' + links[d] + '" target="_blank">' + html + '</a>';
+                    var html = d.label;
+                    if (d.link != null) {
+                        html = '<a href="' + d.link + '" target="_blank">' + html + '</a>';
                     }
                     return html;
                 })
                 .classed('col-name', true);
 
             node.append('td')
-                .text(function(d){ return formatter(data[d]) + ' ha' })
+                .text(function(d){ return formatter(d.value) + ' ha' })
                 .classed('col-area', true);
         });
 }
@@ -639,56 +691,6 @@ function barLabels(scale) {
 }
 
 
-//data needs value, label, color, and percent
-function createPieChart(data, node, width, height){
-    node.html('');
-
-    nv.addGraph(function() {
-        var chart = nv.models.pieChart()
-            .margin({top: 0, right: 0, bottom: 0, left: 0})
-            .x(function(d) { return d.label })
-            .y(function(d) { return d.percent })
-            .showLegend(false)
-            .showLabels(false)
-            .color(data.map(function(d){return d.color}))
-            .valueFormat(function(d){return d3.format('.0f')(d) + '%'})
-            .width(width)
-            .height(height);
-
-        node.append('svg')
-            .classed('inline-middle', true)
-            .style({
-                width: width,
-                height: height
-            })
-            .datum(data)
-            .call(chart);
-
-        //var sortedData = data.slice();
-        //sortedData.sort(function(a, b){return a.percent < b.percent});
-        node.append('ul')
-            .classed('inline-middle legend', true)
-            .selectAll('li')
-            .data(data)
-            .enter().append('li')
-            .classed('legendElement small', true)
-            .each(function(d){
-                var node = d3.select(this);
-                node.append('div').classed('inline-top', true).style('background', d.color);
-                var percentLabel = ((d.percent >= 1)? Math.round(d.percent): '< 1') + '%';
-                var label = '<b>' + percentLabel + ' ' + d.label;
-                if (d.value != null){
-                    label += '</b><br/>(' + formatNumber(d.value) + ' acres)';
-                }
-                node.append('div').classed('inline-top', true).html(label);
-                if (d.tooltip){
-                    node.attr('title', d.tooltip);
-                }
-            });
-
-        return chart;
-    });
-}
 
 
 
@@ -750,3 +752,55 @@ function createCountChart(node, dimension, options){
 
 
 
+function createHorizBarChart(node, data, labels, colors, units){
+    nv.addGraph(function() {
+        var chart = nv.models.multiBarHorizontalChart()
+            .x(function(d) { return d.label })
+            .y(function(d) { return d.value })
+            .barColor(colors)
+            .margin({top: 0, right: 0, bottom: 0, left: 100})
+            .showLegend(false)
+            .showControls(false)
+            .showValues(true)
+            .valueFormat(function(d){
+                if (Math.round(d) === d){
+                    return d3.format('.0f')(d) + units;
+                }
+                return d3.format('.1f')(d) + units;
+            })
+            .showYAxis(false)
+            .tooltips(false)
+            .duration(0);
+
+
+        chart.yAxis
+            .axisLabel('Percent of Watershed')
+            .tickFormat(d3.format('.0f'));
+
+        chart.tooltip.contentGenerator(function(obj){
+                return '<b>' + obj.data.label + ':</b> ' + obj.data.value + '%';
+            });
+
+        node.html('');
+        node.append('svg')
+            .style({height: 24 * data.length, width: '480'})
+            .datum([{key:'', values: zipIntoObj(['value', 'label'], data, labels)}])
+            .call(chart);
+
+        node.selectAll('.nv-bar text').each(function(d, i){
+            var node = d3.select(this);
+            var x = parseFloat(node.attr('x'));
+            if (x > 100){
+                node.attr('x', x - 10).attr('text-anchor', 'end').style('fill-opacity', 1);
+                if (i < 2) {
+                    node.style('fill', '#FFF');
+                }
+            }
+        });
+
+
+        nv.utils.windowResize(chart.update);
+
+        return chart;
+      });
+}

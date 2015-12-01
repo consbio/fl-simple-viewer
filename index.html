@@ -107,8 +107,14 @@
                     </div>
                 </div>
                 <div id="DetailsContainer" class="hidden">
-                    <h3 style="margin: 4px 0 0 0">Watershed: <span id="Unit"></span></h3>
-                    <div><span id="UnitArea" class="quiet small"></span> hectares</div>
+                    <h3 id="Unit"></h3>
+                    <div class="quiet small">
+                        <i>
+                            <div class="right">(<span id="UnitArea"></span> hectares)</div>
+                            <div id="UnitID" class="left"></div>
+                            <div class="clear"></div>
+                        </i>
+                    </div>
 
                     <!--<ul id="InnerNav" class="tabs small">-->
                         <!--<li class="active" data-tab="Overview">Overview</li>-->
@@ -118,7 +124,6 @@
 
                     <section style="margin-top: 20px;">
                         <h4>CLIP Overall Priorities:</h4>
-                        <div id="CLIP_PieChart" style="margin-bottom: 30px;"></div>
                         <div id="CLIP_Chart"></div>
                     </section>
 
@@ -135,7 +140,7 @@
                     <section>
                         <h4>Biodiversity - Strategic Habitat Conservation Areas:</h4>
                         <div id="BioSHCA_Chart"></div>
-                        <div id="BioSHCATable" style="margin-top: 20px;"></div>
+                        <div id="BioSHCATable" style="margin-top: 20px;margin-left:20px;"></div>
                     </section>
 
                     <section>

@@ -23,6 +23,7 @@ outdir = '../features'
 
 
 files = [
+    'HUC_12_Names',
     'PFLCCPRByHUC12',
     'CLIPOverallPrioritiesByHUC12',
     'CLIPBiodiversityPrioritesByHUC12',
@@ -37,7 +38,7 @@ files = [
     'NATCOM_L1',
     'PHRICH_L1',
     'PHRICH_L2',
-    'LandOwnershipByHUC12',
+    'LandManagementByHUC12',
     # 'DetailedLandOwnershipByHUC12'
     'ManagedAreas_FNAI_HUC12'
 ]
@@ -53,7 +54,8 @@ for huc in primary_df.index: #[0:500]:
     # print('Processing {}'.format(huc))
     record = primary_df.loc[huc]
     data = {
-        'hectares': int(round(record['ACRES'].item() * 0.404686))
+        'hectares': int(round(record['ACRES'].item() * 0.404686)),
+        'name': dfs['HUC_12_Names'].loc[huc]['Name']
     }
 
     # PFLCC priorities
@@ -140,7 +142,7 @@ for huc in primary_df.index: #[0:500]:
     data['water'] = [round(record[f], 1) for f in fields]
 
     # Overall ownership
-    record = dfs['LandOwnershipByHUC12'].loc[huc]
+    record = dfs['LandManagementByHUC12'].loc[huc]
     fields = ['Federal_H', 'State_H', 'Local_H', 'Private_H']
     values = [int(round(record[f], 0)) for f in fields]
     data['ownership'] = dict([x for x in zip([f.replace('_H', '') for f in fields], values) if x[1] > 0])

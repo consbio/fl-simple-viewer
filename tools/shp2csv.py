@@ -6,7 +6,7 @@ import fiona
 
 # shp = '../../data/DetailedLandOwnershipByHUC12/DetailedLandOwnershipByHUC12.shp'
 indir = r'D:\Projects\PFLCC\Data\PFLCCDataViewerDatasets'
-# indir = r'D:\Projects\PFLCC\Data\FNAI Managed Areas\FNAI Managed Areas'
+indir = r'D:\Projects\PFLCC\Data\LandManagementByHUC12'
 
 outdir = r'D:\Projects\PFLCC\Data\tables'
 

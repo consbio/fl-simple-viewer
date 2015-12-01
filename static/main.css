@@ -317,6 +317,25 @@ input[type=range]:focus::-ms-fill-upper {
 /* End Modal Dialog */
 
 
+/* expandos */
+.expandable{
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 3px;
+}
+.expandable:hover {
+    background: #EEE;
+}
+.expandable .fa {
+    margin-right: 6px;
+}
+/* end expandos */
+
+
+
+
+
+
 /* from http://tobiasahlin.com/spinkit/*/
 .spinner {
     margin: 0 auto;
@@ -381,7 +400,7 @@ input[type=range]:focus::-ms-fill-upper {
 /* End Leaflet overrides */
 
 path.leaflet-interactive {
-    stroke: #EEE;
+    stroke: #333;
     stroke-width: 0.5px;
     stroke-opacity: 0.5;
     fill-opacity: 0.75;
@@ -413,12 +432,12 @@ path.leaflet-interactive.selected {
 .t_75 path.leaflet-interactive {
     fill-opacity: 0.25 !important;
     stroke-opacity: 0.125 !important;
-    stroke: #333;
+    /*stroke: #333;*/
 }
 .t_100 path.leaflet-interactive {
     fill-opacity: 0 !important;
     stroke-opacity: 0.1 !important;
-    stroke: #333;
+    /*stroke: #333;*/
 }
 
 
@@ -591,10 +610,14 @@ div.dc-chart {
     border-top: 1px dotted #EEE;
 }
 
+#Details h3 {
+    border-bottom: 1px solid #DDD;
+    margin: 4px 0 2px 0;
+    padding-bottom: 2px;
+}
 #Details h4, h5 {
     margin: 4px 0;
 }
-
 #Details h5 {
     border-bottom: 1px solid #DDD;
 }
@@ -606,6 +629,10 @@ div.dc-chart {
     margin-top: 0;
     padding-left: 20px;
     font-size: 0.85em;
+}
+
+#Details tr + tr td {
+    border-top: 1px solid #EEE;
 }
 #Details td.col-name {
     width: 248px;
@@ -623,16 +650,18 @@ div.dc-chart {
     vertical-align: middle;
     margin-right: 4px;
 }
-tr.even,
-tr.even {
-    background: #F6F6F6;
-}
+/*tr.even {*/
+    /*background: #F6F6F6;*/
+/*}*/
+
+
 
 
 /* used by pie chart - TODO */
 ul.legend {
     list-style: none;
-    margin-top:0;
+    padding: 0;
+    margin: 0;
 }
 .legendElement {
     padding: 4px 2px;
