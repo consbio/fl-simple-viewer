@@ -5,6 +5,7 @@ body {
     margin: 0;
     padding: 0;
     height: 100%;
+    width: 100%;
     font-family: Verdana, Geneva, sans-serif;
     color: #333;
 }
@@ -114,6 +115,40 @@ input[type=range]:focus::-ms-fill-upper {
 
 
 /* Core classes */
+.pos-rel {
+    position: relative;
+}
+.pos-abs {
+    position: absolute;
+}
+.fullwidth {
+    width: 100%;
+}
+.fullheight{
+    height: 100%;
+}
+
+.table {
+    display: table;
+    table-layout: fixed;
+}
+.table-row {
+    display: table-row;
+}
+.table-cell {
+    display: table-cell;
+}
+
+.fillspace {
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+.scrolly {
+    overflow-y: auto;
+}
+
 .center {
     text-align: center;
 }
@@ -489,17 +524,13 @@ div.dc-chart {
 
 
 /* Page elements */
+
 #Header {
     height:34px;
-    position:absolute;
-    top:0;
-    left:0;
-    right:0;
     background: #587387;
     background: linear-gradient(left, #b8673d 0, #646D5A 60px, #a6b398 100%);
     background: -webkit-linear-gradient(left, #b8673d 0, #646D5A 60px, #a6b398 100%);
     color: white;
-    border-bottom: 2px solid #333;
 }
 #Header img {
     margin: 2px 10px 2px 4px;
@@ -515,10 +546,6 @@ div.dc-chart {
 
 #Footer {
     height:28px;
-    position:absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
     color: white;
     background: #646D5A;
     border-top: 2px solid #333;
@@ -540,84 +567,24 @@ div.dc-chart {
 }
 
 #Main {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 36px;
-    bottom: 30px;
+    border-top: 2px solid #333;
 }
-
-
-/*#SidebarNav {*/
-    /*position: absolute;*/
-    /*z-index: 1000;*/
-    /*top: 0;*/
-    /*left: 0;*/
-    /*height: 30px;*/
-    /*width: 470px;*/
-    /*border-right: 2px solid #333;*/
-    /*background-color: #AAA;*/
-    /*overflow-y: auto;*/
-    /*overflow-x: hidden;*/
-/*}*/
-/*#SidebarNav > div:first-child {*/
-    /*position: absolute;*/
-    /*top: 2px;*/
-    /*right: 4px;*/
-/*}*/
-/*#SidebarNav .button-close {*/
-    /*color: #EEE;*/
-/*}*/
-/*#SidebarNav .button-close:hover {*/
-    /*color: #FFF;*/
-/*}*/
-
 
 #Sidebar {
-    position: absolute;
-    z-index: 1000;
-    top: 0;
-    left: 0;
-    bottom: 0;
     width: 470px;
-    border-right: 2px solid #333;
+    border-right: 2px solid #AAA;
     background-color: #FFF;
-    overflow-y: auto;
-    overflow-x: hidden;
-}
-/*#Sidebar .button-close {*/
-    /*color: #EEE;*/
-/*}*/
-/*#Sidebar .button-close:hover {*/
-    /*color: #FFF;*/
-/*}*/
-
-#SidebarToggle {
-    position: relative;
-    z-index: 100;
-    top: 5px;
-    width: 20px;
-    font-size: 20px;
-    padding: 4px 6px;
-    background-color: #FFF;
-    border-radius: 0 4px 4px 0;
-    box-shadow: 0 1px 5px rgba(0,0,0,0.65);
-    cursor: pointer;
-}
-#SidebarToggle:hover {
-    background-color: #f4f4f4;
+    overflow: hidden;
 }
 
 #Map {
-    position: absolute;
-    top:0;
-    left:0;
-    bottom:0;
-    right:0;
-    z-index: 1;
+    display: table-cell;
+    height: 100%;
 }
 
-
+#MainSidebarHeader ul {
+    padding-top: 6px;
+}
 
 
 #Filter .dc-chart g.row text {
@@ -693,6 +660,11 @@ div.dc-chart {
 #DetailsClose {
     cursor: pointer;
     font-size: 1.5em;
+    margin-right: 8px;
+    color: #AAA;
+}
+#DetailsClose:hover {
+    color: #555;
 }
 
 #DetailsHeader h4 {
@@ -703,15 +675,16 @@ div.dc-chart {
 }
 
 #DetailsHeader ul {
-    padding: 0;
+    padding: 3px 10px;
 }
 
 #DetailsHeader ul li {
-    border-radius: 0;
+    border-radius: 3px;
 }
 
 #DetailsHeader ul li.active {
     background: #EEE;
+    border: 1px solid #999;
 }
 /* used by pie chart - TODO */
 ul.legend {

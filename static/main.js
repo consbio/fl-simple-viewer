@@ -252,7 +252,7 @@ var basemaps = {
 map = L.map('Map', {
     layers: [basemaps['ESRI Topo']],
     maxZoom: 12,
-    center: [27.84, -86.02],
+    center: [27.68, -81.69],
      zoom: 7
     //center: [30.86, -87.51],
     //zoom: 11
