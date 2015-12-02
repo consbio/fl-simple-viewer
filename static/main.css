@@ -295,9 +295,6 @@ input[type=range]:focus::-ms-fill-upper {
     background: #FFF;
     color: #333;
 }
-.tab {
-    padding: 16px;
-}
 .tab-ref {
     padding: 1px 8px;
     background: #AAA;
@@ -353,15 +350,15 @@ input[type=range]:focus::-ms-fill-upper {
 
 
 /* expandos */
-.expandable{
+.expandable h4{
     cursor: pointer;
     padding: 4px;
     border-radius: 3px;
 }
-.expandable:hover {
-    background: #EEE;
+.expandable h4:hover {
+    background: #F6F6F6;
 }
-.expandable .fa {
+.expandable h4 .fa {
     margin-right: 6px;
 }
 /* end expandos */
@@ -586,6 +583,9 @@ div.dc-chart {
     padding-top: 6px;
 }
 
+#MainSidebar .tab {
+    padding: 16px;
+}
 
 #Filter .dc-chart g.row text {
     fill: black;
@@ -605,16 +605,19 @@ div.dc-chart {
     clear: both;
 }
 
-#Details section + section {
-    margin-top: 50px;
-    padding-top: 40px;
-    border-top: 1px dotted #EEE;
-}
+/*#Details section + section {*/
+    /*margin-top: 50px;*/
+    /*padding-top: 40px;*/
+    /*border-top: 1px dotted #EEE;*/
+/*}*/
 
-#Details h3 {
-    border-bottom: 1px solid #DDD;
-    margin: 4px 0 2px 0;
-    padding-bottom: 2px;
+/*#Details h3 {*/
+    /*border-bottom: 1px solid #DDD;*/
+    /*margin: 4px 0 2px 0;*/
+    /*padding-bottom: 2px;*/
+/*}*/
+#Details section h4 + div {
+    margin-bottom: 30px;
 }
 #Details h4, h5 {
     margin: 4px 0;
@@ -622,6 +625,11 @@ div.dc-chart {
 #Details h5 {
     border-bottom: 1px solid #DDD;
 }
+
+#Details .detail-table {
+    margin: 20px 0 0 20px;
+}
+
 #Details table + h5 {
     margin-top: 16px;
 }

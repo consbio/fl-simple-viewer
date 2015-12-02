@@ -12,11 +12,11 @@ var visibleFeatures = d3.map();
 var cf = null;
 var dimensions = {};
 var fieldLabels = {
-    'bio': 'Biodiversity',
-    'clip': 'Overal CLIP',
-    'land': 'Landscape',
+    'bio': 'CLIP Biodiversity',
+    'clip': 'Overall CLIP',
+    'land': 'CLIP Landscape',
     'priority': 'PFLCC Priority Resources',
-    'water': 'Surface Water'
+    'water': 'CLIP Surface Water'
 };
 var barHeight = 20;
 var chartWidth = 420;
@@ -165,41 +165,39 @@ d3.select('#DetailsClose').on('click', function(){
     d3.select('#MainSidebarHeader').classed('hidden', false);
     d3.select('#Details').classed('hidden', true);
     d3.select('#DetailsHeader').classed('hidden', true);
+    //d3.select('#Sidebar').style('width', '470px');
 });
 
 /******** Expandos *****************/
-function initExpando(header, container, open) {
-    header.classed('expandable', true)
+function initExpando(section, open) {
+    var header = section.select('h4');
+    var container = section.select('h4 + div');
+
+    section.classed('expandable', true)
         .classed('expanded', open);
 
     header.html('<i class="fa fa-caret-' + ((open)? 'down': 'right') + '"></i>' + header.html());
     if (!open){
         container.classed('hidden', true);
     }
-    else {
-        header.insert('i', 'first-child').classed('fa fa-caret-down', true);
-    }
 
     header.on('click', function(){
-        //var node = d3.select(this);
-        //console.log(this, container);
-        if (header.classed('expanded')){
+        if (section.classed('expanded')){
             container.classed('hidden', true);
-            header.classed('expanded', false);
+            section.classed('expanded', false);
             header.select('.fa-caret-down').classed('fa-caret-down', false).classed('fa-caret-right', true);
         }
         else {
             container.classed('hidden', false);
-            header.classed('expanded', true);
+            section.classed('expanded', true);
             header.select('.fa-caret-right').classed('fa-caret-right', false).classed('fa-caret-down', true);
         }
     })
 }
-//d3.selectAll('section.expandable h4').on('click', function() {
-//    console.log(d3.event)
-//    console.log(d3.select(d3.event))
-//
-//});
+
+d3.selectAll('section.expandable').each(function(){
+    initExpando(d3.select(this), false);
+});
 
 
 
@@ -345,23 +343,21 @@ function load() {
     .data(summaryFields).enter()
     .append('div')
     .each(function(d, i){
-        var container = d3.select(this);
+        var container = d3.select(this).append('section');
 
         var header = container.append('h4').text(fieldLabels[d]);
-        container = container.append('div');
+        var chartContainer = container.append('div');
 
-        if (i > 1){ //TODO
-            initExpando(header, container);
-        }
+        initExpando(container, i <= 1);
 
-        var chartNode = container.append('div').classed('chart', true);
+        var chartNode = chartContainer.append('div').classed('chart', true);
         chartNode.append('div')
             .append('div')
             .classed('reset small', true)
             .style('display', 'none')
             .text('reset')
             .on('click', handleChartReset);
-        container.append('div').classed('small quiet center', true).text('number of watersheds');
+        chartContainer.append('div').classed('small quiet center', true).text('number of watersheds');
 
         var labels = barLabels(scales[d]);
         createCountChart(chartNode, dimensions[d], {
@@ -458,6 +454,7 @@ function selectUnit(id){
     d3.select('#MainSidebarHeader').classed('hidden', true);
     d3.select('#Details').classed('hidden', false);
     d3.select('#DetailsHeader').classed('hidden', false);
+    //d3.select('#Sidebar').style('width', '600px');
 
     if (pendingRequest != null) {
         pendingRequest.abort();

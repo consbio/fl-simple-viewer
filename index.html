@@ -57,10 +57,12 @@
                                 </div>
                             </div>
                             <ul class="tabs small">
-                                <li class="active" data-tab="">Overview</li>
-                                <li data-tab="">Biodiversity</li>
-                                <li data-tab="">Landscape</li>
-                                <li data-tab="">Water</li>
+                                <li class="active" data-tab="DetailsOverview">Overview</li>
+                                <li data-tab="Biodiversity">Biodiversity</li>
+                                <li data-tab="Landscape">Landscape</li>
+                                <li data-tab="Water">Water</li>
+                                <li data-tab="Threats">Threats</li>
+                                <!--<li data-tab="Ownership">Mgmt</li>-->
                             </ul>
                         </div>
                     </div>
@@ -125,56 +127,76 @@
 
 
                                 <div id="Details" class="hidden">
-                                    <section style="margin-top: 20px;">
-                                        <h4>CLIP Overall Priorities:</h4>
-                                        <div id="CLIP_Chart"></div>
-                                    </section>
 
-                                    <section>
-                                        <h4>Biodiversity:</h4>
-                                        <div id="Bio_Chart"></div>
-                                    </section>
+                                    <div id="DetailsOverview" class="tab">
+                                        <section style="margin-top: 20px;">
+                                            <h4>CLIP Overall Priorities:</h4>
+                                            <div id="CLIP_Chart"></div>
+                                        </section>
+                                    </div>
 
-                                    <section>
-                                        <h4>Biodiversity - Rare Species:</h4>
-                                        <div id="BioRareSpp_Chart"></div>
-                                    </section>
+                                    <div id="Biodiversity" class="tab hidden">
+                                        <section>
+                                            <h4>CLIP Biodiversity:</h4>
+                                            <div id="Bio_Chart"></div>
+                                        </section>
 
-                                    <section>
-                                        <h4>Biodiversity - Strategic Habitat Conservation Areas:</h4>
-                                        <div id="BioSHCA_Chart"></div>
-                                        <div id="BioSHCATable" style="margin-top: 20px;margin-left:20px;"></div>
-                                    </section>
+                                        <section class="expandable">
+                                            <h4>Rare Species:</h4>
+                                            <div id="BioRareSpp_Chart"></div>
+                                        </section>
 
-                                    <section>
-                                        <h4>Biodiversity - Priority Natural Communities:</h4>
-                                        <div id="BioPNC_Chart"></div>
-                                    </section>
+                                        <section class="expandable">
+                                            <h4>Strategic Habitat Conservation Areas:</h4>
+                                            <div>
+                                                <div id="BioSHCA_Chart"></div>
+                                                <div id="BioSHCATable" class="detail-table"></div>
+                                            </div>
+                                        </section>
 
-                                    <section>
-                                        <h4>Biodiversity - Overall Vertebrate Species Richness:</h4>
-                                        <div id="BioSppRich_Chart"></div>
-                                        <div id="BioSppRichTable" style="margin-top: 20px;"></div>
-                                        <!--<h5 style="margin-bottom:4px;">Species Present:</h5>-->
-                                        <!--<table cellspacing="0"><tbody id="BioSppRichList"></tbody></table>-->
-                                    </section>
+                                        <section class="expandable">
+                                            <h4>Priority Natural Communities:</h4>
+                                            <div id="BioPNC_Chart"></div>
+                                        </section>
 
-                                    <section>
-                                        <h4>Landscape:</h4>
-                                        <div id="Land_Chart"></div>
-                                    </section>
+                                        <section class="expandable">
+                                            <h4>Overall Vertebrate Species Richness:</h4>
+                                            <div>
+                                                <div id="BioSppRich_Chart"></div>
+                                                <div id="BioSppRichTable" class="detail-table"></div>
+                                            </div>
+                                        </section>
+                                    </div>
 
-                                    <section>
-                                        <h4>Surface Water:</h4>
-                                        <div id="Water_Chart"></div>
-                                    </section>
+                                    <div id="Landscape" class="tab hidden">
+                                        <section>
+                                            <h4>CLIP Landscape:</h4>
+                                            <div id="Land_Chart"></div>
+                                        </section>
+                                    </div>
 
-                                    <!--<section>-->
-                                        <!--<h4>Overall Ownership:</h4>-->
-                                        <!--<div id="Owner_Chart"></div>-->
-                                    <!--</section>-->
+                                    <div id="Water" class="tab hidden">
+                                        <section>
+                                            <h4>CLIP Surface Water:</h4>
+                                            <div id="Water_Chart"></div>
+                                        </section>
+                                    </div>
+
+                                    <div id="Threats" class="tab hidden">
+                                        <div class="quiet">Coming soon!</div>
+                                        <section>
+                                            <h4></h4>
+                                            <div></div>
+                                        </section>
+                                    </div>
+
+                                    <div id="Ownership" class="tab hidden">
+                                        <section>
+                                            <h4>Overall Ownership:</h4>
+                                            <div id="Owner_Chart"></div>
+                                        </section>
+                                    </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>
