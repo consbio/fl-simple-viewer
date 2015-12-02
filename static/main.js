@@ -196,7 +196,8 @@ function initExpando(section, open) {
 }
 
 d3.selectAll('section.expandable').each(function(){
-    initExpando(d3.select(this), false);
+    var node = d3.select(this);
+    initExpando(node, node.classed('expanded'));
 });
 
 
@@ -527,7 +528,7 @@ function showDetails(id) {
         tableNode.append('h5').text(priorityLabels4[i]);
         createAreaTable(
             tableNode.append('table').attr('cellspacing', 0).append('tbody'),
-            values, sppLabels, speciesLinks
+            values, sppLabels, speciesLinks, true
         );
     });
 
@@ -647,22 +648,21 @@ function createPieChart(node, data, labels, colors, units){
 
 
 // labels in this case are an object
-// TODO: probably should be handled better
 function createAreaTable(node, data, labels, links, sortArea){
     node.html('');
 
     var entries = d3.entries(data).map(function(d){
-        return _.extend(d, {
+        return _.merge({}, d, {
             label: labels[d.key],
             link: links[d.key]
         });
     });
 
     if (sortArea){
-        entries.sort(function(a, b){ return a.value < b.value});
+        entries.sort(function(a, b){ return d3.descending(a.value, b.value) });
     }
     else {
-        entries.sort(function(a, b){ return d3.ascending(a.label, b.label)});
+        entries.sort(function(a, b){ return d3.ascending(a.label, b.label) });
     }
 
     var formatter = d3.format(',');
@@ -671,8 +671,6 @@ function createAreaTable(node, data, labels, links, sortArea){
         .append('tr')
         .each(function(d, i){
             var node = d3.select(this);
-            //node.classed('even', i%2 == 1);
-
             node.append('td')
                 .html(function(d){
                     var html = d.label;
