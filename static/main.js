@@ -27,15 +27,6 @@ var featureCache = {};
 var pendingRequest = null;
 var featuresURL = 'features/';
 
-
-//var filterColors = {
-//    'bio': function(){ return '#006837' },
-//    'clip': function(){ return '#006837' },
-//    'land': function(){ return '#006837' },
-//    'water': function(){ return '#9ecae1' },
-//}
-
-
 //config of data
 priorityLabels = ['Priority 1', 'Priority 2', 'Priority 3', 'Priority 4', 'Priority 5', 'Not a Priority'];
 
@@ -121,10 +112,27 @@ d3.keys(species).forEach(function(d){
     sppLabels[d] = species[d].split('|')[0]
 });
 
-
 var speciesLinks = {
     GTORT: 'http://myfwc.com/wildlifehabitats/profiles/reptiles-and-amphibians/reptiles/gopher-tortoise/'
 };
+
+var priorityResourceLabels = {
+    C: 'Cultural',
+    E: 'Estuarine',
+    FNFW: 'Freshwater Non-forested Wetlands',
+    PFDP: 'Pine Flatwoods and Dry Prairie',
+    HPS: 'High Pine and Scrub',
+    M: 'Marine',
+    WL2: 'Working Lands 2',
+    HFU: 'Hardwood Forested Uplands',
+    FA: 'Freshwater Aquatic',
+    WL1: 'Working Lands 1',
+    FFW: 'Freshwater Forested Wetlands',
+    CU: 'Coastal Uplands'
+};
+
+
+
 
 
 /* DOM interactions powered by D3 */
@@ -340,24 +348,41 @@ var onLoad = _.after(2, load);
 function load() {
     setSelectedField(selectedField);
 
-    d3.select('#Filter').selectAll('div')
+    d3.select('#PriorityFilter').selectAll('div')
     .data(summaryFields).enter()
     .append('div')
     .each(function(d, i){
         var container = d3.select(this).append('section');
 
-        var header = container.append('h4').text(fieldLabels[d]);
+        var header = container.append('h4')
+            .classed('mapped', i == 0)
+            .text(fieldLabels[d]);
         var chartContainer = container.append('div');
 
         initExpando(container, i <= 1);
 
+        var subheading = (i === 0)? 'percent covered by combined priority resources': 'percent covered by Priority 1 &amp; 2';
+        chartContainer.append('div')
+            .classed('quiet small filter-subheading', true)
+            .html(subheading);
+
+        header.append('div')
+            .classed('right', true)
+            .html('<i class="fa fa-map"></i>')
+            .attr('title', 'Click to show on map')
+            .on('click', function(){
+                d3.event.stopPropagation();
+                setSelectedField(d);
+                d3.select('.mapped').classed('mapped', false);
+                header.classed('mapped', true);
+            });
+
         var chartNode = chartContainer.append('div').classed('chart', true);
-        chartNode.append('div')
-            .append('div')
-            .classed('reset small', true)
-            .style('display', 'none')
-            .text('reset')
-            .on('click', handleChartReset);
+        header.append('div')
+            .classed('filter-reset small', true)
+            .text('[clear filter]')
+            .on('click', _.partial(handleChartReset, chartNode));
+
         chartContainer.append('div').classed('small quiet center', true).text('number of watersheds');
 
         var labels = barLabels(scales[d]);
@@ -365,7 +390,7 @@ function load() {
             barHeight: barHeight,
             colors: filterColors,
             label: function(g) { return labels[g.key]},
-            onFilter: updateMap,
+            onFilter: _.partial(onFilter, header),
             width: chartWidth,
             ordering: function(d) { return -d.key }
         });
@@ -375,6 +400,10 @@ function load() {
 
 }
 
+function onFilter(header, chart, filter) {
+    header.classed('filtered', filter != null);
+    updateMap();
+}
 
 
 function updateMap() {
@@ -392,19 +421,19 @@ function updateMap() {
 
 
 // reset handler
-function handleChartReset() {
-    var chartNode = d3.select(this).node().parentNode.parentNode;
-    console.log('chart node', chartNode)
+function handleChartReset(chartNode) {
+    d3.event.stopPropagation();
     var chart = _.find(dc.chartRegistry.list(), function(d){
-        return d.root().node() == chartNode});
+        return d.root().node() == chartNode.node()});
     chart.filterAll();
     chart.redrawGroup();  // for whatever reason, this is not done automatically
+    chartNode.select('h4.filtered').classed('filtered', false);
 }
 
 
-d3.select('#LayerSelect').on('click', function(){
-    setSelectedField(d3.select('#LayerSelect').property('value'));
-});
+//d3.select('#LayerSelect').on('click', function(){
+//    setSelectedField(d3.select('#LayerSelect').property('value'));
+//});
 
 d3.select('#Legend input').on('change', function(){
     var value = d3.select('#Legend input').property('value') * 100;
@@ -448,8 +477,6 @@ function setSelectedField(field) {
 
 function selectUnit(id){
     console.log('select ', id);
-    //selectTab(d3.select('#Nav li[data-tab="Details"]'));
-    //d3.select('#Details > h2').classed('hidden', true);
 
     d3.select('#MainSidebar').classed('hidden', true);
     d3.select('#MainSidebarHeader').classed('hidden', true);
@@ -505,7 +532,20 @@ function showDetails(id) {
     var priorityColors4 = priorityColors.slice(0, 4);
     priorityColors4.push(priorityColors[5]);
 
-    createPieChart(d3.select('#CLIP_Chart'), details.clip, priorityLabels, priorityColors, '%');
+
+    var pr_labels = [];
+    var pr_colors = [];
+    var entries = d3.entries(details.pflcc_pr);
+    entries.sort(function(a, b){ return d3.descending(a.value, b.value) });
+    var prs = entries.map(function(d){
+        pr_labels.push(priorityResourceLabels[d.key]);
+        pr_colors.push('#3182bd');
+        return d.value;
+    });
+
+    createHorizBarChart(d3.select('#PFLCC_PR_Bars'), prs, pr_labels, pr_colors, ' ha', 220);
+    createAreaTable(d3.select('#PFLCC_PR'), details.pflcc_pr, priorityResourceLabels, null, true);
+
     createPieChart(d3.select('#CLIP_Chart'), details.clip, priorityLabels, priorityColors, '%');
     createPieChart(d3.select('#Bio_Chart'), details.bio, priorityLabels, priorityColors, '%');
     createPieChart(d3.select('#BioRareSpp_Chart'), details.bio_rare_spp, priorityLabels4, priorityColors4, '%');
@@ -513,14 +553,6 @@ function showDetails(id) {
 
     var tableNode = d3.select('#BioSHCATable');
     tableNode.html('');
-    //var groups = {};
-    //d3.keys(details.bio_spp_rich2).forEach(function(d){
-    //    var group = species[d].split('|')[1] || 0;
-    //    if (groups[group] == null){
-    //        groups[group] = {};
-    //    }
-    //    groups[group][d] = details.bio_spp_rich2[d];
-    //});
     d3.range(1, 5).forEach(function(d, i){
         var values = details.bio_shca2[d];
         if (!values) return;
@@ -547,24 +579,6 @@ function showDetails(id) {
             details.bio_spp_rich2, sppLabels, speciesLinks, true
         );
     }
-    //var groups = {};
-    //d3.keys(details.bio_spp_rich2).forEach(function(d){
-    //    var group = species[d].split('|')[1] || 0;
-    //    if (groups[group] == null){
-    //        groups[group] = {};
-    //    }
-    //    groups[group][d] = details.bio_spp_rich2[d];
-    //});
-    //d3.range(1, 6).concat([0]).forEach(function(d, i){
-    //    if (groups[d] == null) return;
-    //
-    //    tableNode.append('h5').text(priorityLabels[i]);
-    //    createThumbnailAreaTable(
-    //        tableNode.append('table').attr('cellspacing', 0).append('tbody'),
-    //        groups[d], sppLabels, speciesLinks
-    //    );
-    //});
-
 
     createPieChart(d3.select('#Land_Chart'), details.land, priorityLabels, priorityColors, '%');
     createPieChart(d3.select('#Water_Chart'), details.water, priorityLabels, priorityColors, '%');
@@ -652,10 +666,11 @@ function createAreaTable(node, data, labels, links, sortArea){
     node.html('');
 
     var entries = d3.entries(data).map(function(d){
-        return _.merge({}, d, {
-            label: labels[d.key],
-            link: links[d.key]
-        });
+        var obj = {label: labels[d.key]};
+        if (links && links[d.key]){
+            obj.link = links[d.key];
+        }
+        return _.merge({}, d, obj);
     });
 
     if (sortArea){
@@ -690,20 +705,29 @@ function createAreaTable(node, data, labels, links, sortArea){
 
 
 
+var barLabelPrefix = {
+    4: 'Most',
+    3: 'More',
+    2: 'Intermediate',
+    1: 'Less',
+    0: 'Least'
+};
 
 
 var intFormatter = d3.format('.0f');
 function barLabels(scale) {
     var numBins = scale.range().length;
     return scale.range().map(function(d, i){
+        var prefix = barLabelPrefix[i];
+
         var invert = scale.invertExtent(d);
         var first = intFormatter(invert[0]);
         var last = intFormatter(invert[1]);
-        if (invert[1] === 0) { return '0%' }
-        if (i === 0 || invert[0] == 0){ return 'less than ' + last + '%' }
-        if (i === numBins - 1){ return 'at least ' + first + '%' }
+        if (invert[1] === 0) { return prefix + ' (0%)' }
+        if (i === 0 || invert[0] == 0){ return prefix + ' (<' + last + '%)' }
+        if (i === numBins - 1){ return prefix + ' (>' + first + '%)' }
         last--;
-        return first + " to " + last + '%';
+        return prefix + ' (' + first + " - " + last + '%)';
     });
 }
 
@@ -769,13 +793,13 @@ function createCountChart(node, dimension, options){
 
 
 
-function createHorizBarChart(node, data, labels, colors, units){
+function createHorizBarChart(node, data, labels, colors, units, leftMargin){
     nv.addGraph(function() {
         var chart = nv.models.multiBarHorizontalChart()
             .x(function(d) { return d.label })
             .y(function(d) { return d.value })
             .barColor(colors)
-            .margin({top: 0, right: 0, bottom: 0, left: 100})
+            .margin({top: 0, right: 0, bottom: 0, left: (leftMargin == null)? 100: leftMargin})
             .showLegend(false)
             .showControls(false)
             .showValues(true)
@@ -800,7 +824,7 @@ function createHorizBarChart(node, data, labels, colors, units){
 
         node.html('');
         node.append('svg')
-            .style({height: 24 * data.length, width: '480'})
+            .style({height: 24 * data.length, width: chartWidth})
             .datum([{key:'', values: zipIntoObj(['value', 'label'], data, labels)}])
             .call(chart);
 

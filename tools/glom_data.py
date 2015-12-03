@@ -59,9 +59,10 @@ for huc in primary_df.index: #[0:500]:
     }
 
     # PFLCC priorities
-    # record = dfs['PFLCCPRByHUC12'].loc[huc]
-    # fields = [u'CLIPp_P1', u'CLIPp_P2', u'CLIPp_P3', u'CLIPp_P4', 'CLIPp_P5']
-    # data['priority'] = [round(record[f], 1) for f in fields]
+    record = dfs['PFLCCPRByHUC12'].loc[huc]
+    fields = ['HPS_H', 'HFU_H', 'PFDP_H', 'CU_H', 'FA_H', 'E_H', 'M_H', 'FFW_H', 'FNFW_H', 'WL1_H', 'WL2_H', 'C_H']
+    values = [int(round(record[f], 0)) for f in fields]
+    data['pflcc_pr'] = dict([x for x in zip([f.replace('_H', '') for f in fields], values) if x[1] > 0])
 
     # CLIP priorities
     record = dfs['CLIPOverallPrioritiesByHUC12'].loc[huc]
