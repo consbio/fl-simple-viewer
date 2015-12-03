@@ -15,7 +15,7 @@ var fieldLabels = {
     'bio': 'CLIP Biodiversity',
     'clip': 'Overall CLIP',
     'land': 'CLIP Landscape',
-    'priority': 'PFLCC Priority Resources',
+    'priority': 'PFLCC DRAFT Priority Resources',
     'water': 'CLIP Surface Water'
 };
 var barHeight = 20;
@@ -116,6 +116,8 @@ var speciesLinks = {
     GTORT: 'http://myfwc.com/wildlifehabitats/profiles/reptiles-and-amphibians/reptiles/gopher-tortoise/'
 };
 
+var birds = ['COHA', 'GSHP', 'LOUSP', 'MACSP', 'MACU', 'OWL', 'PLOVR', 'SCRJY', 'SCTSP', 'SNKIT', 'STHA', 'STKI', 'WCPI']; //TODO:
+
 var priorityResourceLabels = {
     C: 'Cultural',
     E: 'Estuarine',
@@ -148,8 +150,10 @@ function selectTab(node){
     node.classed('active', true);
 
     // select all tabs in same container as our target, and toggle visibility
-    d3.select(d3.select('#' + id).node().parentNode)
+    var parentNode = d3.select('#' + id).node().parentNode;
+    d3.select(parentNode)
         .selectAll('.tab')
+        .filter(function(){ return this.parentNode == parentNode })
         .classed('hidden', function(d){
             return d3.select(this).attr('id') != id;
         });
@@ -845,3 +849,46 @@ function createHorizBarChart(node, data, labels, colors, units, leftMargin){
         return chart;
       });
 }
+
+
+
+
+// In progress!
+
+var container = d3.select('#BirdsFilter');
+container.selectAll('div')
+    .data(birds).enter()
+    .append('div')
+    .each(function(d){
+        var node = d3.select(this);
+
+        var max = 19728;
+        var label = node.append('label')
+            .classed('inline-middle', true)
+            .text(species[d].split('|')[0]);
+
+
+        var slider = node.append('input')
+            .classed('inline-middle', true)
+            .attr('type', 'range')
+            .attr('min', 0)
+            .attr('max', max)
+            .attr('step', 10)
+            .property('value', 0);
+
+        var quantity = node.append('div')
+            .classed('inline-middle', true)
+            .text(' 0 ha');
+
+        slider.on('change', function(){
+            var value = slider.property('value');
+            quantity.text(' ' + d3.format(',')(value) + ' ha')
+        })
+
+
+
+
+
+    })
+
+

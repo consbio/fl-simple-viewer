@@ -309,6 +309,22 @@ input[type=range]:focus::-ms-fill-upper {
     color: #FFF;
     border-radius: 3px 3px 0 0;
 }
+.tabs.subtabs {
+    background: #FFF;
+    color: #333;
+}
+.tabs.subtabs > li {
+    border-bottom: 2px solid #FFF;
+}
+.tabs.subtabs > li:hover {
+    background: #FFF;
+    border-bottom-color: #EEE;
+}
+.tabs.subtabs > li.active {
+    border-bottom-color: orange;
+}
+
+
 
 /* End Tabs Widget */
 
@@ -666,6 +682,7 @@ div.dc-chart {
 
 #Details section p {
     margin-left: 10px;
+    font-size: small;
 }
 #Details section + section {
     border-top: 1px solid #EEE;
@@ -707,9 +724,23 @@ div.dc-chart {
 }
 
 
-
-
-
+#SppLUFilter .tab {
+    padding: 16px 0 0 0;
+}
+#SppLUFilter .tab > div {
+    margin-bottom: 8px;
+}
+#SppLUFilter label {
+    width: 210px;
+    font-size: 0.9em;
+}
+#SppLUFilter input {
+    width: 150px;
+}
+#SppLUFilter input + div {
+    width: 70px;
+    font-size: 0.7em;
+}
 
 
 

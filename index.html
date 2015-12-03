@@ -113,14 +113,48 @@
                                         </div>
                                     </div>
                                     <div id="PriorityFilter" class="tab hidden">
-                                        <h5 style="margin-bottom: 10px; color: #AAA;">
-                                            Click on a bar to filter watersheds on the map that meet that condition.
-                                            Click other bars to add filters.
-                                        </h5>
+                                        <!--<h5 style="margin-bottom: 10px; color: #AAA;">-->
+                                            <!--Click on a bar to filter watersheds on the map that meet that condition.-->
+                                            <!--Click other bars to add filters.-->
+                                        <!--</h5>-->
+                                        <p class="small" style="color: #AAA;">
+                                            Each factor below represents a different conservation related measure.
+                                            Each factor is broken into 5 classes.  Each class has an associated range of
+                                            values that represent the area of a factor within the watershed (HUC 12).
+                                            The bars represent the number of watersheds that fall into each class.
+                                            The initial setting divides the number of watersheds approximately equally
+                                            across the 5 classes for each factor.
+                                        </p>
                                     </div>
                                     <div id="SppLUFilter" class="tab hidden">
+                                        <ul class="tabs subtabs small" style="margin-top: 0; margin-bottom: 16px;padding: 0;">
+                                            <li class="active" data-tab="BirdsFilter">Birds</li>
+                                            <li data-tab="MammalsFilter">Mammals</li>
+                                            <li data-tab="ARFilter">Amphibians &amp; Reptiles</li>
+                                            <li data-tab="LUFilter">Land Use</li>
+                                        </ul>
 
+                                        <div id="BirdsFilter" class="tab">
+
+
+                                        </div>
+
+                                        <div id="MammalsFilter" class="tab hidden">
+
+
+                                        </div>
+
+                                        <div id="ARFilter" class="tab hidden">
+
+
+                                        </div>
+
+                                        <div id="LUFilter" class="tab hidden">
+
+
+                                        </div>
                                     </div>
+
                                     <div id="ThreatsFilter" class="tab hidden">
 
                                     </div>
@@ -129,79 +163,124 @@
 
                                 <div id="Details" class="hidden">
                                     <div id="DetailsOverview" class="tab">
-                                        <section class="expandable expanded">
-                                            <h4>PFLCC Priority Resources</h4>
+                                        <section>
+                                            <h4>PFLCC DRAFT Priority Resources</h4>
                                             <div>
+                                                <p>
+                                                    Priority resources are the set of biological, ecological, and cultural features and ecological processes collaboratively identified as most important, and are the focus of the PFLCC’s planning.  Priority resources will provide a simple way to measure the overall condition of the Peninsular Florida’s complex systems.  There are currently 12 DRAFT Priority Resources, 9 based on land cover types from the Cooperative Land Cover map (v. 3.0): High Pine and Scrub, Pine Flatwoods and Dry Prairie, Freshwater Forested Wetlands, Hardwood Forested Uplands, Coastal Uplands, Freshwater non-forested Wetlands, Estuarine, Marine, Freshwater Aquatic; and 3 non-CLC based resource types:  Landscape Connectivity, Cultural and Socio-economic, and Working Lands.
+                                                </p>
                                                 <div id="PFLCC_PR_Bars"></div>
 
-                                                <div style="margin:20px 0">
-                                                    or as a table...
-                                                </div>
+                                                <!--<div style="margin:20px 0">-->
+                                                    <!--or as a table...-->
+                                                <!--</div>-->
 
-                                                <table cellpadding="0" cellspacing="0"><tbody id="PFLCC_PR"></tbody></table>
+                                                <!--<table cellpadding="0" cellspacing="0"><tbody id="PFLCC_PR"></tbody></table>-->
                                             </div>
                                         </section>
-
-                                        <section class="expandable expanded">
-                                            <h4>CLIP Overall Priorities</h4>
-                                            <div>
-                                                <p class="quiet small">
-                                                    Brief explanation of what this means goes here...
-                                                </p>
-                                                <div id="CLIP_Chart"></div>
-                                            </div>
-                                        </section>
-                                        <div class="quiet">More coming soon!</div>
                                     </div>
 
                                     <div id="DetailsCLIP" class="tab hidden">
-                                        <section class="expandable expanded">
-                                            <h4>Overall CLIP Biodiversity</h4>
-                                            <div id="Bio_Chart"></div>
-                                        </section>
+                                        <ul class="tabs subtabs small" style="margin-top: 0; margin-bottom: 16px;">
+                                            <li class="active" data-tab="CLIPOverall">Overall</li>
+                                            <li data-tab="CLIPBiodiversity">Biodiversity</li>
+                                            <li data-tab="CLIPLandscape">Landscape</li>
+                                            <li data-tab="CLIPWater">Surface Water</li>
+                                        </ul>
 
-                                        <section class="expandable">
-                                            <h4>Rare Species</h4>
-                                            <div id="BioRareSpp_Chart"></div>
-                                        </section>
+                                        <div id="CLIPOverall" class="tab">
+                                            <section>
+                                                <h4>CLIP Overall Priorities</h4>
+                                                <div>
+                                                    <p>
+                                                        The Critical Lands and Waters Identification Project (CLIP) is a collection of spatial data that identify statewide priorities for a broad range of natural resources in Florida. CLIP 3.0 is organized into a set of core natural resource data layers which are combined into resource categories, three of which (biodiversity, landscapes, surface water) have been combined into the Aggregated CLIP model, which identifies five priority levels for natural resource conservation.
+                                                        <br /><br/>
+                                                        ...
+                                                    </p>
+                                                    <div id="CLIP_Chart"></div>
+                                                </div>
+                                            </section>
+                                        </div>
 
-                                        <section class="expandable">
-                                            <h4>Strategic Habitat Conservation Areas</h4>
-                                            <div>
-                                                <div id="BioSHCA_Chart"></div>
-                                                <div id="BioSHCATable" class="detail-table"></div>
-                                            </div>
-                                        </section>
+                                        <div id="CLIPBiodiversity" class="tab hidden">
+                                            <section class="expandable expanded">
+                                                <h4>Overall CLIP Biodiversity</h4>
+                                                <div>
+                                                    <p>
+                                                        This model is a combination of the four CLIP core data layers in the Biodiversity Resource Category: Strategic Habitat Conservation Areas (SHCA), Vertebrate Potential Habitat Richness (VertRich), Rare Species Habitat Conservation Priorities (FNAIHAB), and Priority Natural Communities (Natcom).  (See pg. 14-15 of the <a href="http://www.fnai.org/pdf/CLIP_3_technical_report.pdf" target="_blank">CLIP Technical Report</a> for the rules used to assign the core data layers into the Landscape resource priority model).
+                                                    </p>
+                                                    <div id="Bio_Chart"></div>
+                                                </div>
+                                            </section>
 
-                                        <section class="expandable">
-                                            <h4>Priority Natural Communities</h4>
-                                            <div id="BioPNC_Chart"></div>
-                                        </section>
+                                            <section class="expandable">
+                                                <h4>Rare Species</h4>
+                                                <div>
+                                                    <p>
+                                                        This data layer was created by FNAI originally to inform the Florida Forever environmental land acquisition program, and was prioritized based partly on the amount of species’ habitat currently protected on conservation lands. The CLIP version has been re-prioritized to reflect more general conservation needs for rare species. FNAI modeled suitable habitat around documented locations for 281 species of plants, invertebrates, and vertebrates, including aquatic species.  Highest priorities could indicate a single species with very high conservation need, or multiple species with high conservation need.
+                                                    </p>
+                                                    <div id="BioRareSpp_Chart"></div>
+                                                </div>
+                                            </section>
 
-                                        <section class="expandable">
-                                            <h4>Overall Vertebrate Species Richness</h4>
-                                            <div>
-                                                <div id="BioSppRich_Chart"></div>
-                                                <div id="BioSppRichTable" class="detail-table"></div>
-                                            </div>
-                                        </section>
+                                            <section class="expandable">
+                                                <h4>Strategic Habitat Conservation Areas</h4>
+                                                <div>
+                                                    <p>
+                                                        This data layer was created by FWC to identify gaps in the existing statewide system of wildlife conservation areas, and to inform ongoing land acquisition and conservation efforts. FWC modeled areas of habitat that are essential to sustain viable populations for 34 species of terrestrial (land-based) vertebrates that are not adequately protected on existing conservation lands. The CLIP version also identifies habitat on conservation lands for all 62 species analyzed for the project.
+                                                    </p>
+                                                    <div id="BioSHCA_Chart"></div>
+                                                    <div id="BioSHCATable" class="detail-table"></div>
+                                                </div>
+                                            </section>
+
+                                            <section class="expandable">
+                                                <h4>Priority Natural Communities</h4>
+                                                <div>
+                                                    <p>
+                                                        This data layer was created by FNAI originally to inform the Florida Forever environmental land acquisition program. The natural communities were mapped primarily based on the FNAI/FWC Cooperative Land Cover (CLC) data layer.  This layer includes 12 priority natural community types: upland glades, pine rocklands, seepage slopes, scrub, sandhill, sandhill upland lakes, rockland hammock, coastal uplands, imperiled coastal lakes, dry prairie, upland pine, pine flatwoods, upland hardwood forest, or coastal wetlands. These natural communities are prioritized by a combination of their heritage global status rank (G-rank) and landscape context, based on the Land Use Intensity Index (subset of CLIP Landscape Integrity Index) and FNAI Potential Natural Areas.
+                                                    </p>
+                                                    <div id="BioPNC_Chart"></div>
+                                                </div>
+
+                                            </section>
+
+                                            <section class="expandable">
+                                                <h4>Overall Vertebrate Species Richness</h4>
+                                                <div>
+                                                    <p>
+                                                        Potential habitat for one or more rare or vulnerable vertebrate species. Richness refers to the number of species overlapping at any location.  FWC modeled potential habitat for 62 species of terrestrial (land-based) vertebrates that may not be adequately protected on existing conservation lands.  The most overlapping species in this model is 13.
+                                                    </p>
+                                                    <div id="BioSppRich_Chart"></div>
+                                                    <div id="BioSppRichTable" class="detail-table"></div>
+                                                </div>
+                                            </section>
+                                        </div>
+
+                                        <div id="CLIPLandscape" class="tab hidden">
+                                            <section>
+                                                <h4>CLIP Landscape</h4>
+                                                <div>
+                                                    <p>
+                                                        This model is a combination of the two core data layers in the Landscapes Resource Category: Florida Ecological Greenways Network, and Landscape Integrity Index. (See pg. 14 of the <a href="http://www.fnai.org/pdf/CLIP_3_technical_report.pdf" target="_blank">CLIP Technical Report</a> for the rules used to assign the core data layers into the Biodiversity resource priority model).
+                                                    </p>
+                                                    <div id="Land_Chart"></div>
+                                                </div>
+                                            </section>
+                                        </div>
+
+                                        <div id="CLIPWater" class="tab hidden">
+                                            <section>
+                                                <h4>CLIP Surface Water</h4>
+                                                <div>
+                                                    <p>
+                                                        This model is a combination of the three core data layers in the Surface Water Resource Category: Significant Surface Waters, Natural Floodplain, and Wetlands.  (See pg. 15 of the <a href="http://www.fnai.org/pdf/CLIP_3_technical_report.pdf" target="_blank">CLIP Technical Report</a> for the rules used to assign the core data layers into the Surface Water resource priority model).
+                                                    </p>
+                                                    <div id="Water_Chart"></div>
+                                                </div>
+                                            </section>
+                                        </div>
                                     </div>
-
-                                    <!--<div id="Landscape" class="tab hidden">-->
-                                        <!--<section class="expandable expanded">-->
-                                            <!--<h4>CLIP Landscape</h4>-->
-                                            <!--<div id="Land_Chart"></div>-->
-                                            <!--<div class="quiet">More coming soon!</div>-->
-                                        <!--</section>-->
-                                    <!--</div>-->
-
-                                    <!--<div id="Water" class="tab hidden">-->
-                                        <!--<section class="expandable expanded">-->
-                                            <!--<h4>CLIP Surface Water</h4>-->
-                                            <!--<div id="Water_Chart"></div>-->
-                                            <!--<div class="quiet">More coming soon!</div>-->
-                                        <!--</section>-->
-                                    <!--</div>-->
 
                                     <div id="DetailsLandUse" class="tab hidden">
                                         <div class="quiet">More coming soon!</div>

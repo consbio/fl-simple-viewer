@@ -4,9 +4,8 @@ import os
 import fiona
 
 
-# shp = '../../data/DetailedLandOwnershipByHUC12/DetailedLandOwnershipByHUC12.shp'
 indir = r'D:\Projects\PFLCC\Data\PFLCCDataViewerDatasets'
-indir = r'D:\Projects\PFLCC\Data\LandManagementByHUC12'
+indir = r'D:\Projects\PFLCC\Data\SHCA Species List By HUC 12'
 
 outdir = r'D:\Projects\PFLCC\Data\tables'
 
