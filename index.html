@@ -2,7 +2,8 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>Peninsular Florida LCC - Critical Lands and Water Identification Project v3.0</title>
+    <title>Peninsular Florida LCC - Simple Map Viewer</title>
+    <link rel="stylesheet" href="https://cdn.rawgit.com/theus/chart.css/v1.0.0/dist/chart.css" />
     <link rel="stylesheet" href="deps/fontawesome/css/font-awesome.min.css" />
     <link rel="stylesheet" href="deps/leaflet.css" />
     <link rel="stylesheet" href="deps/L.Control.Geonames.css" />
@@ -26,7 +27,7 @@
         <div id="Header" class="table-row fullwidth">
             <div id="LearnMoreButton" class="right button small button-open" data-target="LearnMorePopup">Learn More</div>
             <img src="static/img/logo.png" align="left" />
-            <h3 class="left">Peninsular Florida LCC - Critical Lands and Water Identification Project v3.0</h3>
+            <h3 class="left">Peninsular Florida LCC - Simple Map Viewer</h3>
             <div class="clear"></div>
         </div>
 
@@ -134,25 +135,10 @@
                                             <li data-tab="LUFilter">Land Use</li>
                                         </ul>
 
-                                        <div id="BirdsFilter" class="tab">
-
-
-                                        </div>
-
-                                        <div id="MammalsFilter" class="tab hidden">
-
-
-                                        </div>
-
-                                        <div id="ARFilter" class="tab hidden">
-
-
-                                        </div>
-
-                                        <div id="LUFilter" class="tab hidden">
-
-
-                                        </div>
+                                        <div id="BirdsFilter" class="tab"></div>
+                                        <div id="MammalsFilter" class="tab hidden"></div>
+                                        <div id="ARFilter" class="tab hidden"></div>
+                                        <div id="LUFilter" class="tab hidden"></div>
                                     </div>
 
                                     <div id="ThreatsFilter" class="tab hidden">
@@ -169,7 +155,7 @@
                                                 <p>
                                                     Priority resources are the set of biological, ecological, and cultural features and ecological processes collaboratively identified as most important, and are the focus of the PFLCC’s planning.  Priority resources will provide a simple way to measure the overall condition of the Peninsular Florida’s complex systems.  There are currently 12 DRAFT Priority Resources, 9 based on land cover types from the Cooperative Land Cover map (v. 3.0): High Pine and Scrub, Pine Flatwoods and Dry Prairie, Freshwater Forested Wetlands, Hardwood Forested Uplands, Coastal Uplands, Freshwater non-forested Wetlands, Estuarine, Marine, Freshwater Aquatic; and 3 non-CLC based resource types:  Landscape Connectivity, Cultural and Socio-economic, and Working Lands.
                                                 </p>
-                                                <div id="PFLCC_PR_Bars"></div>
+                                                <div id="PFLCC_PR_Bars" class="small"></div>
 
                                                 <!--<div style="margin:20px 0">-->
                                                     <!--or as a table...-->
@@ -383,7 +369,7 @@
         <!--</div>-->
     <!--</div>-->
 
-
+    <script src="static/config.js"></script>
     <script src="static/utils.js"></script>
     <script src="static/main.js"></script>
 </body>

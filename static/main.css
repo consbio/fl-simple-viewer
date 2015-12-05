@@ -266,7 +266,18 @@ input[type=range]:focus::-ms-fill-upper {
     font-family: "Trebuchet MS", Helvetica, sans-serif;
 }
 
+.bar {
+    border: 1px solid #DDD;
+    height: 2em;
+    /*border-radius: 0 6px 6px 0;*/
+    opacity: 0.75;
+}
 
+.bar + label {
+    margin-left: 4px;
+    color: #AAA;
+    font-size: 0.8em;
+}
 
 
 /* intended to be setup as a leaflet control to coordinate layout with other controls */
@@ -721,6 +732,23 @@ div.dc-chart {
 
 #PFLCC_PR_Bars .nvd3 text {
     font-size: 0.7em;
+}
+
+#PFLCC_PR_Bars {
+    line-height: 1;
+    margin: 20px 10px 10px 10px;
+    background: #F6F6F2;
+    border: 1px solid #EEE;
+    padding: 10px 10px 10px 0
+}
+
+#PFLCC_PR_Bars > div + div {
+    /*margin-top: 12px;*/
+    padding: 16px 0 0 0;
+}
+
+#PFLCC_PR_Bars .bar {
+    border-left: none;
 }
 
 

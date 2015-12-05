@@ -12,15 +12,6 @@ version = "0.01"
 # files / directories to push into version
 deps = [
     "deps",
-    # "deps/leaflet.css",
-    # "deps/L.Control.Geonames.css",
-    # "deps/L.Control.ZoomBox.css",
-    # "deps/leaflet.js",
-    # "deps/leaflet-omnivore.min.js",
-    # "deps/L.Control.Geonames.min.js",
-    # "deps/L.Control.ZoomBox.min.js",
-    # "deps/d3.min.js",
-    # "deps/lodash.min.js",
     "static",
     "index.html",
     "features"
