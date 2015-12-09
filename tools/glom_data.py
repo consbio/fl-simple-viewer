@@ -38,6 +38,7 @@ files = [
     'NATCOM_L1',
     'PHRICH_L1',
     'PHRICH_L2',
+    'ConsolidatedCLCByHUC12',
     'LandManagementByHUC12',
     # 'DetailedLandOwnershipByHUC12'
     'ManagedAreas_FNAI_HUC12'
@@ -142,7 +143,16 @@ for huc in primary_df.index: #[0:500]:
     fields = ['SWp_P1', 'SWp_P2', 'SWp_P3', 'SWp_P4', 'SWp_P5', 'SWp_0']
     data['water'] = [round(record[f], 1) for f in fields]
 
+
+    # Land Use
+    record = dfs['ConsolidatedCLCByHUC12'].loc[huc]
+    fields = ['LU_1000_H', 'LU_2000_H', 'LU_3000_H', 'LU_6000_H', 'LU_7000_H', 'LU_8000_H', 'LU_8500_H', 'LU_9000_H']
+    values = [int(round(record[f], 0)) for f in fields]
+    data['land_use'] = dict([x for x in zip([f.replace('_H', '').replace('LU_', '')[:2] for f in fields], values) if x[1] > 0])
+
+
     # Overall ownership
+    # TODO: may not need this given the below detailed ownership
     record = dfs['LandManagementByHUC12'].loc[huc]
     fields = ['Federal_H', 'State_H', 'Local_H', 'Private_H']
     values = [int(round(record[f], 0)) for f in fields]
@@ -158,31 +168,30 @@ for huc in primary_df.index: #[0:500]:
             for i in range(records.shape[0]):
                 record = records.ix[i]
                 owner_type = record['MATYPE2']
-                owner_inst = record['MGRINST']
+                # owner_inst = record['MGRINST']
                 prop_name = record['MANAME']
                 hectares = int(round(record['ActAREA_H']))
-                if not owner_type in ownership:
-                    ownership[owner_type] = {}
-                if not owner_inst in ownership[owner_type]:
-                    ownership[owner_type][owner_inst] = {}
-                ownership[owner_type][owner_inst][prop_name] = hectares
+                if hectares:
+                    if not owner_type in ownership:
+                        ownership[owner_type] = {}
+                    # if not owner_inst in ownership[owner_type]:
+                    #     ownership[owner_type][owner_inst] = {}
+                    # ownership[owner_type][owner_inst][prop_name] = hectares
+                    ownership[owner_type][prop_name] = hectares
 
         else:
             record = records
-            ownership = {
-                record['MATYPE2']: {
-                    record['MGRINST']: {record['MANAME']: int(round(record['ActAREA_H']))}
+            hectares = int(round(record['ActAREA_H']))
+            if hectares:
+                ownership = {
+                    record['MATYPE2']: {
+                        # record['MGRINST']: {record['MANAME']: int(round(record['ActAREA_H']))}
+                        record['MANAME']: hectares
+                    }
                 }
-            }
 
         if ownership:
             data['ownership_detailed'] = ownership
-
-
-
-    # record = dfs[''].loc[huc]
-    # fields = []
-    # data[''] = [round(record[f], 1) for f in fields]
 
 
     with open(os.path.join(outdir, '{0}.json'.format(huc)), 'w') as outfile:

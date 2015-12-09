@@ -11,7 +11,6 @@ var cf = null;
 var dimensions = {};
 var barHeight = 20;
 var chartWidth = 420;
-var colors = ['#ffffcc','#c2e699','#78c679','#31a354','#006837'];  //lowest to hightest
 function filterColors(){ return '#9ecae1' }
 var transparency = 25;  //on 0-100% scale
 var featureCache = {};
@@ -206,21 +205,21 @@ d3.csv('static/summary.csv',
     function(rows){
         data = rows;
 
-        var classes = d3.range(numClasses);
-        // TODO: tune these loops
-        summaryFields.forEach(function(d){
-            var values = rows.map(function(r){ return r[d] });
-            scales[d] = d3.scale.quantile().range(classes).domain(values);  //d3.scale.quantile().range((d != 'land')? classes: d3.range(3)).domain(values);
-            //scales[d] = d3.scale.threshold().domain([20, 40, 60, 80, 101]).range([0, 1, 2, 3, 4]);
-            rows.forEach(function(r) {
-                r[d + '_q'] = scales[d](r[d]);
-            });
-        });
+        //var classes = d3.range(numClasses);
+        //// TODO: tune these loops
+        //summaryFields.forEach(function(d){
+        //    var values = rows.map(function(r){ return r[d] });
+        //    scales[d] = d3.scale.quantile().range(classes).domain(values);  //d3.scale.quantile().range((d != 'land')? classes: d3.range(3)).domain(values);
+        //    //scales[d] = d3.scale.threshold().domain([20, 40, 60, 80, 101]).range([0, 1, 2, 3, 4]);
+        //    rows.forEach(function(r) {
+        //        r[d + '_q'] = scales[d](r[d]);
+        //    });
+        //});
 
         cf = crossfilter(rows);
         dimensions.id = cf.dimension(function(r){ return r['id']});
-        summaryFields.forEach(function(d){
-            dimensions[d] = cf.dimension(function(r){ return r[d + '_q']});
+        d3.keys(quantiles).forEach(function(d){
+            dimensions[d] = cf.dimension(function(r){ return r[d]});
         });
 
 
@@ -232,59 +231,69 @@ d3.csv('static/summary.csv',
 // Use lodash to call load function after 2 prior async requests are complete
 var onLoad = _.after(2, load);
 function load() {
-    setSelectedField(selectedField);
+    setSelectedField(selectedField, 'priority');
 
     d3.select('#PriorityFilter').selectAll('div')
-    .data(summaryFields).enter()
-    .append('div')
-    .each(function(d, i){
-        var container = d3.select(this).append('section');
+        .data(summaryFields.priority).enter()
+        .append('div')
+        .each(function(d, i){
+            var container = d3.select(this).append('section');
 
-        var header = container.append('h4')
-            .classed('mapped', i == 0)
-            .text(fieldLabels[d]);
-        var chartContainer = container.append('div');
+            var header = container.append('h4')
+                .classed('mapped', i == 0)
+                .text(fieldLabels[d]);
+            var chartContainer = container.append('div');
 
-        initExpando(container, i <= 1);
+            initExpando(container, i <= 1);
 
-        var subheading = (i === 0)? 'percent covered by combined priority resources': 'percent covered by Priority 1 &amp; 2';
-        chartContainer.append('div')
-            .classed('quiet small filter-subheading', true)
-            .html(subheading);
+            var subheading = (i === 0)? 'percent covered by combined priority resources': 'percent covered by Priority 1 &amp; 2';
+            chartContainer.append('div')
+                .classed('quiet small filter-subheading', true)
+                .html(subheading);
 
-        header.append('div')
-            .classed('right', true)
-            .html('<i class="fa fa-map"></i>')
-            .attr('title', 'Click to show on map')
-            .on('click', function(){
-                d3.event.stopPropagation();
-                setSelectedField(d);
-                d3.select('.mapped').classed('mapped', false);
-                header.classed('mapped', true);
+            header.append('div')
+                .classed('right', true)
+                .html('<i class="fa fa-map"></i>')
+                .attr('title', 'Click to show on map')
+                .on('click', function(){
+                    d3.event.stopPropagation();
+                    setSelectedField(d, 'priority');
+                    d3.select('.mapped').classed('mapped', false);
+                    header.classed('mapped', true);
+                });
+
+            var chartNode = chartContainer.append('div').classed('chart', true);
+            header.append('div')
+                .classed('filter-reset small', true)
+                .text('[clear filter]')
+                .on('click', _.partial(handleChartReset, chartNode));
+
+            chartContainer.append('div').classed('small quiet center', true).text('number of watersheds');
+
+            var labels = barLabels(d);
+            createCountChart(chartNode, dimensions[d], {
+                barHeight: barHeight,
+                colors: filterColors,
+                label: function(g) { return labels[g.key]},
+                onFilter: _.partial(onFilter, header),
+                width: chartWidth,
+                ordering: function(d) { return -d.key }
             });
 
-        var chartNode = chartContainer.append('div').classed('chart', true);
-        header.append('div')
-            .classed('filter-reset small', true)
-            .text('[clear filter]')
-            .on('click', _.partial(handleChartReset, chartNode));
-
-        chartContainer.append('div').classed('small quiet center', true).text('number of watersheds');
-
-        var labels = barLabels(scales[d]);
-        createCountChart(chartNode, dimensions[d], {
-            barHeight: barHeight,
-            colors: filterColors,
-            label: function(g) { return labels[g.key]},
-            onFilter: _.partial(onFilter, header),
-            width: chartWidth,
-            ordering: function(d) { return -d.key }
         });
-
-    });
 
 
 }
+
+
+function setupFilterBars(node, fields) {
+
+}
+
+
+
+
+
 
 function onFilter(header, chart, filter) {
     header.classed('filtered', filter != null);
@@ -317,10 +326,6 @@ function handleChartReset(chartNode) {
 }
 
 
-//d3.select('#LayerSelect').on('click', function(){
-//    setSelectedField(d3.select('#LayerSelect').property('value'));
-//});
-
 d3.select('#Legend input').on('change', function(){
     var value = d3.select('#Legend input').property('value') * 100;
     d3.select('.leaflet-overlay-pane')
@@ -329,29 +334,40 @@ d3.select('#Legend input').on('change', function(){
     transparency = value;
 });
 
-function setSelectedField(field) {
+function setSelectedField(field, group) {
     selectedField = field;
+    selectedGroup = group;
+    var colors = colorMap[group];
     features.getLayers().forEach(function(feature){
         var record = index.get(feature.feature.id);
         feature.setStyle({
-            fillColor: colors[record[selectedField + '_q']]
+            //TODO: cleanup assignment of color!
+            fillColor: colors[4 - record[selectedField]]
         });
     });
 
+    d3.select('#Legend > h4').text(fieldLabels[field]);
     var legendNode = d3.select('#Legend > div');
     legendNode.html('');
-    var labels = barLabels(scales[selectedField]);
+    var labels = barLabels(selectedField);
     legendNode.selectAll('div')
-        .data(scales.clip.range().slice().reverse())
+        .data([4, 3, 2, 1, 0])// quantile indices, in reverse order
         .enter()
         .append('div')
-        .each(function(d){
+        .each(function(d, i){
             var node = d3.select(this);
             node.append('div')
                 .classed('colorpatch', true)
-                .style('background', function(d){return colors[d]});
+                .style('background', function(d){return colors[i]});
+
+            var label = labels[d].split(' ')[0];
+            var modifier = labels[d].replace(label, '');
+
             node.append('div')
-                .text(labels[d]);
+                .text(label)
+                .append('span')
+                .classed('quieter small', true)
+                .text(modifier);
 
         });
 
@@ -411,24 +427,10 @@ function showDetails(id) {
     d3.select('#UnitID').text('HUC 12: ' + id);
     d3.select('#UnitArea').text(d3.format(',')(details.hectares));
 
-    //var priorityColors = ["#006837", "#31a354", "#78c679", "#c2e699", "#ffffcc", '#EEE']; //green
-    var priorityColors = ["#08519c", "#3182bd", "#6baed6", "#bdd7e7", "#eff3ff", '#ffffcc']; //blue
-    var priorityLabels4 = priorityLabels.slice(0, 4);
-    priorityLabels4.push(priorityLabels[5]);
-    var priorityColors4 = priorityColors.slice(0, 4);
-    priorityColors4.push(priorityColors[5]);
+    var chartColors = colorMap.general;
+    var chartColors4 = chartColors.slice(0, 4).concat(chartColors[5]);
 
-
-    //var pr_labels = [];
-    //var pr_colors = [];
-    //var entries = d3.entries(details.pflcc_pr);
-    //entries.sort(function(a, b){ return d3.descending(a.value, b.value) });
-    //var prs = entries.map(function(d){
-    //    pr_labels.push(priorityResourceLabels[d.key]);
-    //    pr_colors.push('#3182bd');
-    //    return d.value;
-    //});
-
+    // Priority resources tab
     var pr_data = d3.entries(details.pflcc_pr).map(function(d) {
         return {
             value: d.value,
@@ -436,17 +438,14 @@ function showDetails(id) {
             color: priorityResourceColors[d.key]
         }
     });
+    createInlineBarChart(d3.select('#PFLCC_PR_Bars'), pr_data, ' ha', true);
 
-
-    createHorizBarChart2(d3.select('#PFLCC_PR_Bars'), pr_data, ' ha', true);
-
-    //createHorizBarChart(d3.select('#PFLCC_PR_Bars'), prs, pr_labels, pr_colors, ' ha', 220);
-    //createAreaTable(d3.select('#PFLCC_PR'), details.pflcc_pr, priorityResourceLabels, null, true);
-
-    createPieChart(d3.select('#CLIP_Chart'), details.clip, priorityLabels, priorityColors, '%');
-    createPieChart(d3.select('#Bio_Chart'), details.bio, priorityLabels, priorityColors, '%');
-    createPieChart(d3.select('#BioRareSpp_Chart'), details.bio_rare_spp, priorityLabels4, priorityColors4, '%');
-    createPieChart(d3.select('#BioSHCA_Chart'), details.bio_shca, priorityLabels4, priorityColors4, '%');
+    // CLIP tab
+    data =
+    createPieChart(d3.select('#CLIP_Chart'), zipIntoObj(['value', 'label', 'color'], details.clip, priorityLabels, chartColors), '%');
+    createPieChart(d3.select('#Bio_Chart'), zipIntoObj(['value', 'label', 'color'], details.bio, priorityLabels, chartColors), '%');
+    createPieChart(d3.select('#BioRareSpp_Chart'), zipIntoObj(['value', 'label', 'color'], details.bio_rare_spp, priorityLabels4, chartColors4), '%');
+    createPieChart(d3.select('#BioSHCA_Chart'), zipIntoObj(['value', 'label', 'color'], details.bio_shca, priorityLabels4, chartColors4), '%');
 
     var tableNode = d3.select('#BioSHCATable');
     tableNode.html('');
@@ -455,30 +454,82 @@ function showDetails(id) {
         if (!values) return;
 
         tableNode.append('h5').text(priorityLabels4[i]);
-        createAreaTable(
-            tableNode.append('table').attr('cellspacing', 0).append('tbody'),
-            values, sppLabels, speciesLinks, true
-        );
+        createAreaTable(tableNode.append('table').attr('cellspacing', 0).append('tbody'), speciesTable(values), true);
     });
 
-
-
-    createPieChart(d3.select('#BioPNC_Chart'), details.bio_pnc, priorityLabels4, priorityColors4, '%');
-    createPieChart(d3.select('#BioSppRich_Chart'), details.bio_spp_rich, priorityLabels, priorityColors, '%');
-
+    createPieChart(d3.select('#BioPNC_Chart'), zipIntoObj(['value', 'label', 'color'], details.bio_pnc, priorityLabels4, chartColors4), '%');
+    createPieChart(d3.select('#BioSppRich_Chart'), zipIntoObj(['value', 'label', 'color'], details.bio_spp_rich, priorityLabels, chartColors), '%');
 
     tableNode = d3.select('#BioSppRichTable');
     tableNode.html('');
     if (details.bio_spp_rich2){
         tableNode.append('h5').text('Species Present');
-        createAreaTable(
-            tableNode.append('table').attr('cellspacing', 0).append('tbody'),
-            details.bio_spp_rich2, sppLabels, speciesLinks, true
-        );
+        createAreaTable(tableNode.append('table').attr('cellspacing', 0).append('tbody'), speciesTable(details.bio_spp_rich2), true);
     }
 
-    createPieChart(d3.select('#Land_Chart'), details.land, priorityLabels, priorityColors, '%');
-    createPieChart(d3.select('#Water_Chart'), details.water, priorityLabels, priorityColors, '%');
+
+    // Landscape tab
+    createPieChart(d3.select('#Land_Chart'), zipIntoObj(['value', 'label', 'color'], details.land, priorityLabels, chartColors), '%');
+
+    // Surface water tab
+    createPieChart(d3.select('#Water_Chart'), zipIntoObj(['value', 'label', 'color'], details.water, priorityLabels, chartColors), '%');
+
+
+
+    // Land use tab
+
+
+
+    // Threats tab
+
+
+
+    // Partners tab
+    tableNode = d3.select('#Owner_Table');
+    tableNode.html('');
+    var ownershipData = [];
+    var totalManaged = 0;
+    ownershipTypes.forEach(function(d, i){
+        if (details.ownership_detailed && details.ownership_detailed[d.type] != null) {
+            var values = details.ownership_detailed[d.type];
+            var totalByOwnerType = d3.sum(d3.values(values));
+            totalManaged += totalByOwnerType;
+            ownershipData.push(
+                {
+                    value: totalByOwnerType,
+                    label: d.label,
+                    color: chartColors4[i]
+                }
+            );
+
+            var detailedOwnerData = d3.entries(details.ownership_detailed[d.type]).map(function(d){
+                return {
+                    label: d.key,
+                    value: d.value
+                }
+            });
+
+            tableNode.append('h5').text(d.label);
+            createAreaTable(tableNode.append('table').attr('cellspacing', 0).append('tbody'), detailedOwnerData, true);
+        }
+    });
+    if (totalManaged < details.hectares) {
+        ownershipData.push({label: 'Other Private Land', value: details.hectares - totalManaged, color: chartColors4[4]});
+    }
+    var total = d3.sum(_.pluck(ownershipData, 'value'));
+    ownershipData = ownershipData.map(function(d){
+        d.value = 100 * d.value / total;
+        return d;
+    });
+
+    createPieChart(d3.select('#Owner_Chart'), ownershipData, '%');
+
+
+
+
+
+
+
 
     //if (d3.sum(details.ownership)) {
     //    createHorizBarChart(
@@ -496,15 +547,27 @@ function showDetails(id) {
 }
 
 
+// meant to be called from an object of spp: area
+// returns data ready to put into a table
+function speciesTable(values){
+    return d3.entries(values).map(function(d) {
+        var label = species[d.key].split('|')[0];
+        return {
+            value: d.value,
+            label: (speciesLinks[d.key]) ? '<a href="' + speciesLinks[d.key] + '" target="_blank">' + label + '</a>' : label
+        }
+    });
+}
+
+
+
 // expects array of objects with value, label, color already present
-function createHorizBarChart2(node, data, units, sortByValue) {
+function createInlineBarChart(node, data, units, sortByValue) {
     width = 324;
 
     var formatter = d3.format(',');
     var values = data.map(function(d){ return d.value });
     var scale = d3.scale.linear().range([0, width]).domain(d3.extent(values));
-
-    data.forEach(function(d){ console.log(scale(d.value)) })
 
     if (sortByValue){
         data.sort(function(a, b){ return d3.descending(a.value, b.value) });
@@ -532,6 +595,7 @@ function createHorizBarChart2(node, data, units, sortByValue) {
                 .style('background-color', d.color);
 
             row.append('label')
+                .classed('quieter', true)
                 .text(formatter(d.value) + units)
 
         });
@@ -541,13 +605,7 @@ function createHorizBarChart2(node, data, units, sortByValue) {
 
 
 
-
-
-
-
-//data needs value, label, color, and percent
-//values input expected to be percents
-function createPieChart(node, data, labels, colors, units){
+function createPieChart(node, data, units){
     var width = 240,
         height = 240;
 
@@ -557,9 +615,6 @@ function createPieChart(node, data, labels, colors, units){
         }
         return d3.format('.1f')(d) + units;
     }
-
-
-    data = zipIntoObj(['value', 'label', 'color'], data, labels, colors);
 
     nv.addGraph(function() {
         var chart = nv.models.pieChart()
@@ -581,6 +636,7 @@ function createPieChart(node, data, labels, colors, units){
             .datum(data.filter(function(d){return d.value >= 1}))
             .call(chart);
 
+
         node.append('ul')
             .classed('inline-middle legend', true)
             .selectAll('li')
@@ -589,12 +645,18 @@ function createPieChart(node, data, labels, colors, units){
             .classed('legendElement small', true)
             .each(function(d){
                 var node = d3.select(this);
-                node.append('div').classed('inline-top', true).style('background', d.color);
-                var label = d.label + ' <span class="quiet small">(' + formatter(d.value) + ')</span>';
-                node.append('div')
-                    .classed('inline-top', true)
-                    .html(label)
-                    .attr('title', 'tooltip would go here');
+
+                if (d.value > 0) {
+                    node.append('div').classed('inline-top', true).style('background', d.color);
+                    node.append('div').classed('inline-top', true).html(d.label)
+                        .append('span').classed('small quiet', true).text(' (' + formatter(d.value) + ')');
+                }
+                else {
+                    //absent
+                    node.append('div').classed('inline-top', true).style({background: 'none', 'border-color': '#EEE'});
+                    node.append('div').classed('inline-top quieter', true).html(d.label)
+                        .append('span').classed('small quieter', true).text(' (absent)');
+                }
             });
 
         return chart;
@@ -607,16 +669,8 @@ function createPieChart(node, data, labels, colors, units){
 
 
 // labels in this case are an object
-function createAreaTable(node, data, labels, links, sortArea){
+function createAreaTable(node, entries, sortArea){
     node.html('');
-
-    var entries = d3.entries(data).map(function(d){
-        var obj = {label: labels[d.key]};
-        if (links && links[d.key]){
-            obj.link = links[d.key];
-        }
-        return _.merge({}, d, obj);
-    });
 
     if (sortArea){
         entries.sort(function(a, b){ return d3.descending(a.value, b.value) });
@@ -632,13 +686,7 @@ function createAreaTable(node, data, labels, links, sortArea){
         .each(function(d, i){
             var node = d3.select(this);
             node.append('td')
-                .html(function(d){
-                    var html = d.label;
-                    if (d.link != null) {
-                        html = '<a href="' + d.link + '" target="_blank">' + html + '</a>';
-                    }
-                    return html;
-                })
+                .html(d.label)
                 .classed('col-name', true);
 
             node.append('td')
@@ -660,19 +708,27 @@ var barLabelPrefix = {
 
 
 var intFormatter = d3.format('.0f');
-function barLabels(scale) {
-    var numBins = scale.range().length;
-    return scale.range().map(function(d, i){
+function barLabels(field) {
+    //var numBins = scale.range().length;
+    //return scale.range().map(function(d, i){
+    var breaks = quantiles[field];
+    return breaks.map(function(d, i){
         var prefix = barLabelPrefix[i];
 
-        var invert = scale.invertExtent(d);
-        var first = intFormatter(invert[0]);
-        var last = intFormatter(invert[1]);
-        if (invert[1] === 0) { return prefix + ' (0%)' }
-        if (i === 0 || invert[0] == 0){ return prefix + ' (<' + last + '%)' }
-        if (i === numBins - 1){ return prefix + ' (>' + first + '%)' }
-        last--;
-        return prefix + ' (' + first + " - " + last + '%)';
+        var first = (i === 0)? 0: breaks[i-1];
+        var last = breaks[i];
+
+        var firstLabel = intFormatter(first);
+        var lastLabel = intFormatter(last)
+
+        //var invert = scale.invertExtent(d);
+        //var first = intFormatter(invert[0]);
+        //var last = intFormatter(invert[1]);
+        if (last === 0) { return prefix + ' (0%)' }
+        if (i === 0 || first == 0){ return prefix + ' (<' + lastLabel + '%)' }
+        if (i === breaks.length - 1){ return prefix + ' (>' + firstLabel + '%)' }
+        lastLabel--;
+        return prefix + ' (' + firstLabel + " - " + lastLabel + '%)';
     });
 }
 

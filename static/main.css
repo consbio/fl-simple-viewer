@@ -165,6 +165,9 @@ input[type=range]:focus::-ms-fill-upper {
 .quiet {
     color: #666;
 }
+.quieter {
+    color: #AAA;
+}
 
 .italic {
     font-style: italic;
@@ -275,7 +278,6 @@ input[type=range]:focus::-ms-fill-upper {
 
 .bar + label {
     margin-left: 4px;
-    color: #AAA;
     font-size: 0.8em;
 }
 
@@ -694,6 +696,8 @@ div.dc-chart {
 #Details section p {
     margin-left: 10px;
     font-size: small;
+    color: #555;
+    text-align: justify;
 }
 #Details section + section {
     border-top: 1px solid #EEE;
@@ -752,25 +756,42 @@ div.dc-chart {
 }
 
 
-#SppLUFilter .tab {
+#SppFilter .tab {
     padding: 16px 0 0 0;
 }
-#SppLUFilter .tab > div {
+#SppFilter .tab > div {
     margin-bottom: 8px;
 }
-#SppLUFilter label {
+#SppFilter label {
     width: 210px;
     font-size: 0.9em;
 }
-#SppLUFilter input {
-    width: 150px;
+#SppFilter input {
+    width: 120px;
 }
-#SppLUFilter input + div {
+#SppFilter input + div {
     width: 70px;
     font-size: 0.7em;
 }
 
-
+/* TODO */
+#ThreatsFilter .button {
+    font-weight: bold;
+    color: #666;
+}
+#ThreatsFilter .button.active {
+    color: #333;
+    border-color: #333;
+}
+.slr1 {
+    background: -webkit-linear-gradient(top, #F6F6F6 70%, rgba(8, 81, 156, 0.2) 75%, rgba(8, 81, 156, 0.5) 100%);
+}
+.slr2 {
+    background: -webkit-linear-gradient(top, #F6F6F6 50%, rgba(8, 81, 156, 0.2) 55%, rgba(8, 81, 156, 0.5) 100%);
+}
+.slr3 {
+    background: -webkit-linear-gradient(top, #F6F6F6 20%, rgba(8, 81, 156, 0.3) 25%, rgba(8, 81, 156, 0.5) 100%);
+}
 
 
 /* used by pie chart - TODO */
@@ -820,6 +841,10 @@ ul.legend {
 
 #Legend {
     font-size: 1.2em;
+    width: 190px;
+}
+#Legend h4 {
+    margin-top: 0;
 }
 #Legend > select {
     border: none;
@@ -827,7 +852,7 @@ ul.legend {
 }
 #Legend > div {
     clear: both;
-    padding: 6px 4px;
+    padding: 0 4px;
     margin-top: 4px;
     /*border-top: 1px solid #CCC;*/
 }

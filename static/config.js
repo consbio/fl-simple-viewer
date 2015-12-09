@@ -1,16 +1,61 @@
-var summaryFields = ['priority', 'clip', 'bio', 'land', 'water'];
+/** Colors **/
+// highest to lowest
+var colorMap = {
+    priority: ["#006837", "#31a354", "#78c679", "#c2e699", "#ffffcc"],
+    dev: ["#993404", "#d95f0e", "#fe9929", "#fed98e", "#ffffd4"],
+    slr: ["#253494", "#2c7fb8", "#41b6c4", "#a1dab4", "#ffffcc"],
+    general: ["#08519c", "#3182bd", "#6baed6", "#bdd7e7", "#eff3ff", '#ffffcc'] //blue
+};
+
+
+// These represent the breaks between quantile classes.  q=0 where value <= bin[0]
+var quantiles = {
+    priority: [51, 73, 84, 93, 100],
+    bio: [11, 24, 46, 73, 100],
+    land: [0, 12, 49, 81, 100],
+    water: [7, 18, 33, 55, 100],
+    clip: [23, 45, 70, 92, 100],
+
+    devCur: [2, 6, 14, 32, 100],
+    dev2020: [2, 7, 19, 44, 100],
+    dev2040: [4, 12, 30, 57, 100],
+    dev2060: [6, 19, 41, 65, 100],
+
+    slr1: [0, 3, 9, 24, 100],
+    slr2: [0, 4, 14, 32, 100],
+    slr3: [0, 6, 20, 46, 100]
+};
+
+var summaryFields = {
+    priority: ['priority', 'clip', 'bio', 'land', 'water'],
+    threats: ['devCur', 'dev2020', 'dev2040', 'dev2060', 'slr1', 'slr2', 'slr3']
+};
+
 var selectedField = 'priority';
+var selectedGroup = 'priority';
 
 var fieldLabels = {
     'bio': 'CLIP Biodiversity',
     'clip': 'Overall CLIP',
     'land': 'CLIP Landscape',
     'priority': 'PFLCC DRAFT Priority Resources',
-    'water': 'CLIP Surface Water'
+    'water': 'CLIP Surface Water',
+
+    devCur: 'Existing Urban Area',
+    dev2020: 'Projected Development (2020)',
+    dev2040: 'Projected Development (2040)',
+    dev2060: 'Projected Development (2060)',
+
+    slr1: 'Projected Sea Level Rise (1m)',
+    slr2: 'Projected Sea Level Rise (2m)',
+    slr3: 'Projected Sea Level Rise (3m)'
 };
 
 
-priorityLabels = ['Priority 1', 'Priority 2', 'Priority 3', 'Priority 4', 'Priority 5', 'Not a Priority'];
+
+var priorityLabels = ['Priority 1', 'Priority 2', 'Priority 3', 'Priority 4', 'Priority 5', 'Not a Priority'];
+var priorityLabels4 = priorityLabels.slice(0, 4).concat(priorityLabels[5]);
+
 
 // common name|priority(4 levels, not 5)
 var species = {
@@ -133,3 +178,46 @@ var priorityResourceColors = {
 };
 
 
+var ownershipTypes = [
+    {
+        type: 'F',
+        label: 'Federal'
+    },
+    {
+        type: 'S',
+        label: 'State'
+    },
+    {
+        type: 'L',
+        label: 'Local'
+    },
+    {
+        type: 'P',
+        label: 'Private Conserved Land'
+    }
+
+];
+
+
+// in sorted order
+var landUseLabels = {
+    10: 'Natural Upland',
+    20: 'Wetland',
+    30: 'Freshwater Aquatic',
+    60: 'Marine',
+    70: 'Rural (High Intensity)',
+    80: 'Rural (Low Intensity)',
+    85: 'Tree Plantations',
+    90: 'Developed / Altered'
+};
+
+var landUseColors = {
+    10: d3.rgb(35, 150, 0).toString(),
+    20: d3.rgb(160, 250, 255).toString(),
+    30: d3.rgb(25, 150, 100).toString(),
+    60: d3.rgb(0, 95, 120).toString(),
+    70: d3.rgb(255, 150, 25).toString(),
+    80: d3.rgb(255, 255, 125).toString(),
+    85: d3.rgb(0, 85, 0).toString(),
+    90: d3.rgb(165, 165, 165).toString()
+};

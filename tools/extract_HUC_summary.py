@@ -1,47 +1,63 @@
 import os
-import csv
-import fiona
+import pandas as pd
+import numpy
+import pprint
 
 
-working_dir = r'D:\Projects\PFLCC\Data\PFLCCDataViewerDatasets'
+QUINTILES = [0.2, 0.4, 0.6, 0.8, 1.0]
+QUARTILES = [0.25, 0.5, 0.75, 1.0]
 
-# file root: field name
+working_dir = r'D:\Projects\PFLCC\Data\tables'
+
+# [file root, field name]
 metrics = {
-    'clip': 'CLIPOverallPrioritiesByHUC12:CLIPp_P1P2',
-    'bio': 'CLIPBiodiversityPrioritesByHUC12:BioDp_P1P2',
-    'land': 'CLIPLanScpPrioritiesByHUC12:Lanp_P1P2',
-    'priority': 'PFLCCPRByHUC12:ALL_PR_pH',
-    'water': 'CLIPSrfWatPrioritiesByHUC12:SWp_P1P2'
+    # Priorities
+    'clip': ['CLIPOverallPrioritiesByHUC12', 'CLIPp_P1P2'],
+    'bio': ['CLIPBiodiversityPrioritesByHUC12', 'BioDp_P1P2'],
+    'land': ['CLIPLanScpPrioritiesByHUC12', 'Lanp_P1P2'],
+    'priority': ['PFLCCPRByHUC12', 'ALL_PR_pH'],
+    'water': ['CLIPSrfWatPrioritiesByHUC12', 'SWp_P1P2'],
+
+    # Threats
+    # Sea level rise 1m ... 3m
+    'slr1': ['SLRProjections', '1M_H'],
+    'slr2': ['SLRProjections', '2M_H'],
+    'slr3': ['SLRProjections', '3M_H'],
+
+    # Development
+    'devCur': ['Florida2060', 'ExUrban_H'],
+    'dev2020': ['Florida2060', '2020_H_Cum'],
+    'dev2040': ['Florida2060', '2040_H_Cum'],
+    'dev2060': ['Florida2060', '2060_H_Cum'],
 }
+fields = metrics.keys()
 
-id_field = 'HUC_12'
 
-results = dict()
-
+binsObj = {}
+quantiles = {}
 for metric in metrics:
-    print('Processing {0}'.format(metric))
-    filename, field = metrics[metric].split(':')
-    with fiona.open(os.path.join(working_dir, '{0}.shp'.format(filename))) as src:
-        for f in src:
-            props = f['properties']
-            id = props[id_field]
+    src_df = pd.read_csv(os.path.join(working_dir, metrics[metric][0] + '.csv'), dtype={'HUC_12': str}).set_index('HUC_12')
+    series = src_df[metrics[metric][1]]
 
-            if not id in results:
-                results[id] = dict()
+    if 'dev' in metric or 'slr' in metric:
+        # Calculate percent
+        series = (100.0 * series) / src_df['HECTARES']
 
-            value = int(round(props[field], 0))
-            results[id][metric] = value
+    if metric == 'land' or 'slr' in metric:
+        # have to force 0 into its own class
+        bins = [0] + series[series > 0].quantile(QUARTILES).tolist()
 
+    else:
+        bins = series.quantile(QUINTILES)
 
-with open('../static/summary.csv', 'wb') as outfile:
-    writer = csv.writer(outfile)
+    bins = numpy.ceil(bins).astype('uint8').tolist()
 
-    fields = metrics.keys()
-    writer.writerow(['id'] + fields)
+    quantiles[metric] = pd.Series(numpy.digitize(series, bins, right=True), index=series.index)
+    if (quantiles[metric].max() > 4): print metric
+    binsObj[metric] = bins
 
-    ids = results.keys()
-    ids.sort()
+df = pd.DataFrame(quantiles)
+df.to_csv('../static/summary.csv', index_label='id', float_format='%.0f')  # force writing as integers
 
-    for id in ids:
-        result = results[id]
-        writer.writerow([id] + [result[field] for field in fields])
+print('Bins:')
+pprint.pprint(binsObj, indent=4)

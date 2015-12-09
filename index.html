@@ -39,7 +39,8 @@
                         <ul id="MainSidebarHeader" class="tabs">
                             <li class="active" data-tab="Intro">Info</li>
                             <li data-tab="PriorityFilter">Priorities</li>
-                            <li data-tab="SppLUFilter">Species &amp; Land Use</li>
+                            <li data-tab="SppFilter">Species</li>
+                            <li data-tab="LandUseFilter">Land Use</li>
                             <li data-tab="ThreatsFilter">Threats</li>
                         </ul>
 
@@ -90,7 +91,6 @@
                                         <div class="divider divider-light"></div>
 
                                         <div>
-
                                             <h4 class="nomargin"><span class="badge">1</span> Compare Key Characteristics across Florida</h4>
                                             <p class="inset" style="font-size: small">
                                                 Use one of the tabs above to explore
@@ -114,10 +114,6 @@
                                         </div>
                                     </div>
                                     <div id="PriorityFilter" class="tab hidden">
-                                        <!--<h5 style="margin-bottom: 10px; color: #AAA;">-->
-                                            <!--Click on a bar to filter watersheds on the map that meet that condition.-->
-                                            <!--Click other bars to add filters.-->
-                                        <!--</h5>-->
                                         <p class="small" style="color: #AAA;">
                                             Each factor below represents a different conservation related measure.
                                             Each factor is broken into 5 classes.  Each class has an associated range of
@@ -127,7 +123,7 @@
                                             across the 5 classes for each factor.
                                         </p>
                                     </div>
-                                    <div id="SppLUFilter" class="tab hidden">
+                                    <div id="SppFilter" class="tab hidden">
                                         <ul class="tabs subtabs small" style="margin-top: 0; margin-bottom: 16px;padding: 0;">
                                             <li class="active" data-tab="BirdsFilter">Birds</li>
                                             <li data-tab="MammalsFilter">Mammals</li>
@@ -138,11 +134,31 @@
                                         <div id="BirdsFilter" class="tab"></div>
                                         <div id="MammalsFilter" class="tab hidden"></div>
                                         <div id="ARFilter" class="tab hidden"></div>
-                                        <div id="LUFilter" class="tab hidden"></div>
                                     </div>
 
-                                    <div id="ThreatsFilter" class="tab hidden">
+                                    <div id="LandUseFilter" class="tab hidden"></div>
 
+                                    <div id="ThreatsFilter" class="tab hidden">
+                                        <p class="small" style="color: #AAA;">
+                                            Each factor below represents a different conservation related measure.
+                                            Each factor is broken into 5 classes.  Each class has an associated range of
+                                            values that represent the area of a factor within the watershed (HUC 12).
+                                            The bars represent the number of watersheds that fall into each class.
+                                            The initial setting divides the number of watersheds approximately equally
+                                            across the 5 classes for each factor.
+                                        </p>
+
+                                        <section>
+                                            <h4>Sea Level Rise</h4>
+                                            <div>
+                                                <div class="button active inline-middle slr1" data-filter="slr1">1 Meter</div>
+                                                <div class="button inline-middle slr2" data-filter="slr1">2 Meter</div>
+                                                <div class="button inline-middle slr3" data-filter="slr1">3 Meter</div>
+                                            </div>
+                                            <div id="SLRFilter"></div>
+                                        </section>
+
+                                        <div id="DevFilter"></div>
                                     </div>
                                 </div>
 
@@ -156,12 +172,6 @@
                                                     Priority resources are the set of biological, ecological, and cultural features and ecological processes collaboratively identified as most important, and are the focus of the PFLCC’s planning.  Priority resources will provide a simple way to measure the overall condition of the Peninsular Florida’s complex systems.  There are currently 12 DRAFT Priority Resources, 9 based on land cover types from the Cooperative Land Cover map (v. 3.0): High Pine and Scrub, Pine Flatwoods and Dry Prairie, Freshwater Forested Wetlands, Hardwood Forested Uplands, Coastal Uplands, Freshwater non-forested Wetlands, Estuarine, Marine, Freshwater Aquatic; and 3 non-CLC based resource types:  Landscape Connectivity, Cultural and Socio-economic, and Working Lands.
                                                 </p>
                                                 <div id="PFLCC_PR_Bars" class="small"></div>
-
-                                                <!--<div style="margin:20px 0">-->
-                                                    <!--or as a table...-->
-                                                <!--</div>-->
-
-                                                <!--<table cellpadding="0" cellspacing="0"><tbody id="PFLCC_PR"></tbody></table>-->
                                             </div>
                                         </section>
                                     </div>
@@ -288,6 +298,7 @@
                                         <section>
                                             <h4>Overall Ownership</h4>
                                             <div id="Owner_Chart"></div>
+                                            <div id="Owner_Table" class="detail-table"></div>
                                         </section>
                                     </div>
                                 </div>
@@ -319,14 +330,7 @@
 
 
     <div id="Legend" class="map-panel">
-        <!--<label for="LayerSelect">View: </label>-->
-        <!--<select id="LayerSelect">-->
-            <!--<option value="priority">PFLCC Priorities</option>-->
-            <!--<option value="clip">Overall CLIP</option>-->
-            <!--<option value="bio">Biodiversity</option>-->
-            <!--<option value="land">Landscape</option>-->
-            <!--<option value="water">Surface Water</option>-->
-        <!--</select>-->
+        <h4></h4>
         <div></div>
         <div>
             <i class="fa fa-eye"></i>

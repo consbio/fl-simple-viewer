@@ -5,7 +5,7 @@ import fiona
 
 
 indir = r'D:\Projects\PFLCC\Data\PFLCCDataViewerDatasets'
-indir = r'D:\Projects\PFLCC\Data\SHCA Species List By HUC 12'
+indir = r'D:\Projects\PFLCC\Data\Consolidated LU By HUC12'
 
 outdir = r'D:\Projects\PFLCC\Data\tables'
 
