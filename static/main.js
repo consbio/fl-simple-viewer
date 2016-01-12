@@ -18,6 +18,13 @@ var pendingRequest = null;
 var featuresURL = 'features/';
 
 
+// store current level of threat filters
+var threatLevel = {
+    slr: summaryFields['slr'][0],
+    dev: summaryFields['dev'][0]
+};
+
+
 /* DOM interactions powered by D3 */
 //TODO: these have been updated, migrate to leaflet-quickstart and dm-quickstart
 /******* Tabs *********/
@@ -216,6 +223,8 @@ d3.csv('static/summary.csv',
         //    });
         //});
 
+        //summary data contain pre-calculated quantiles
+
         cf = crossfilter(rows);
         dimensions.id = cf.dimension(function(r){ return r['id']});
         d3.keys(quantiles).forEach(function(d){
@@ -262,40 +271,128 @@ function load() {
                     header.classed('mapped', true);
                 });
 
-            var chartNode = chartContainer.append('div').classed('chart', true);
+            var chartID = 'FilterChart-' + d;
+            var chartNode = chartContainer.append('div').classed('chart', true).attr('id', chartID);
             header.append('div')
                 .classed('filter-reset small', true)
                 .text('[clear filter]')
-                .on('click', _.partial(handleChartReset, chartNode));
+                .on('click', _.partial(handleChartReset, chartID));
 
             chartContainer.append('div').classed('small quiet center', true).text('number of watersheds');
 
-            var labels = barLabels(d);
-            createCountChart(chartNode, dimensions[d], {
-                barHeight: barHeight,
-                colors: filterColors,
-                label: function(g) { return labels[g.key]},
-                onFilter: _.partial(onFilter, header),
-                width: chartWidth,
-                ordering: function(d) { return -d.key }
-            });
-
+            //var labels = barLabels(d);
+            //createCountChart(chartNode, dimensions[d], {
+            //    barHeight: barHeight,
+            //    colors: filterColors,
+            //    label: function(g) { return labels[g.key]},
+            //    onFilter: _.partial(onFilter, header),
+            //    width: chartWidth,
+            //    ordering: function(d) { return -d.key }
+            //});
+            createFilterChart(chartNode, d, header);
         });
 
 
+    //Threats
+    d3.select('#ThreatsFilter').selectAll('div')
+        .data(['slr', 'dev']).enter()
+        .append('div')
+        .each(function(d, i){
+            var curLevel = summaryFields[d][0];
+
+            var container = d3.select(this).append('section').attr('id', 'Filter-' + d);
+
+            var header = container.append('h4').text(fieldLabels[d]);
+            var chartContainer = container.append('div');
+
+            initExpando(container, true);
+
+            header.append('div')
+                .classed('right', true)
+                .html('<i class="fa fa-map"></i>')
+                .attr('title', 'Click to show on map')
+                .on('click', function(d){
+                    d3.event.stopPropagation();
+                    setSelectedField(threatLevel[d], d);
+                    d3.select('.mapped').classed('mapped', false);
+                    header.classed('mapped', true);
+                });
+
+            chartContainer.append('div').classed('filter-radio-container', true)
+                .selectAll('span')
+                .data(summaryFields[d]).enter()
+                .append('span')
+                .each(function(e, j){
+                    var node = d3.select(this);
+                    node.append('input')
+                        .attr('type', 'radio')
+                        .attr('name', d)
+                        .property('checked', j === 0)
+                        .on('click', function(level){
+                            console.log('radio clicked', arguments)
+                            var threat = level.slice(0, 3);
+                            var curLevel = threatLevel[threat];
+
+                            if (level === curLevel) return;
+
+                            // reset filter and map
+                            dimensions[curLevel].filterAll();
+                            updateMap();
+
+                            // recreate chart
+                            var chartID = 'FilterChart-' + threat;
+                            var chart = _.find(dc.chartRegistry.list(), function(d){ return d.root().node().id === chartID });
+                            dc.deregisterChart(chart);  // have to deregister manually, otherwise it sticks around
+                            var chartNode = d3.select(chart.root().node());
+                            chartNode.empty();
+                            createFilterChart(chartNode, level, header);
+
+                            // update header and map
+                            var h = d3.select('#Filter-' + threat + ' h4').classed('filtered', false);
+                            if (h.classed('mapped')) {
+                                setSelectedField(level, threat);
+                            }
+
+                            threatLevel[threat] = level;
+                        });
+
+                    node.append('label').text(fieldLabels[e]);
+                });
+
+            var subheading = (i === 0 )? 'percent of watershed inundated': 'percent of watershed with urban / suburban development';
+            chartContainer.append('div')
+                .classed('quiet small filter-subheading', true)
+                .html(subheading);
+
+            var chartID = 'FilterChart-' + d;
+            var chartNode = chartContainer.append('div').classed('chart', true).attr('id', chartID);
+            createFilterChart(chartNode, curLevel, header);
+            header.append('div')
+                .classed('filter-reset small', true)
+                .text('[clear filter]')
+                .on('click', _.partial(handleChartReset, chartID));
+
+            chartContainer.append('div').classed('small quiet center', true).text('number of watersheds');
+        });
 }
 
 
-function setupFilterBars(node, fields) {
-
+function createFilterChart(node, dimension, header) {
+    var labels = barLabels(dimension);
+    createCountChart(node, dimensions[dimension], {
+        barHeight: barHeight,
+        colors: filterColors,
+        label: function(g) { return labels[g.key]},
+        onFilter: _.partial(onFilter, header),
+        width: chartWidth,
+        ordering: function(d) { return -d.key }
+    });
 }
-
-
-
 
 
 
 function onFilter(header, chart, filter) {
+    console.log("onfilter", arguments)
     header.classed('filtered', filter != null);
     updateMap();
 }
@@ -316,13 +413,13 @@ function updateMap() {
 
 
 // reset handler
-function handleChartReset(chartNode) {
+function handleChartReset(id) {
+    console.log('reset', id)
     d3.event.stopPropagation();
-    var chart = _.find(dc.chartRegistry.list(), function(d){
-        return d.root().node() == chartNode.node()});
+    var chart = _.find(dc.chartRegistry.list(), function(d){ return d.root().node().id === id });
     chart.filterAll();
     chart.redrawGroup();  // for whatever reason, this is not done automatically
-    chartNode.select('h4.filtered').classed('filtered', false);
+    d3.select('#' + id).select('h4.filtered').classed('filtered', false);
 }
 
 
@@ -346,7 +443,9 @@ function setSelectedField(field, group) {
         });
     });
 
-    d3.select('#Legend > h4').text(fieldLabels[field]);
+
+    var prefix = (group === 'slr' || group === 'dev')? fieldLabels[group] + ':<br/>': '';
+    d3.select('#Legend > h4').html(prefix + fieldLabels[field]);
     var legendNode = d3.select('#Legend > div');
     legendNode.html('');
     var labels = barLabels(selectedField);
@@ -370,9 +469,6 @@ function setSelectedField(field, group) {
                 .text(modifier);
 
         });
-
-
-
 }
 
 
@@ -514,7 +610,7 @@ function showDetails(id) {
         }
     });
     if (totalManaged < details.hectares) {
-        ownershipData.push({label: 'Other Private Land', value: details.hectares - totalManaged, color: chartColors4[4]});
+        ownershipData.push({label: 'Other Lands', value: details.hectares - totalManaged, color: chartColors4[4]});
     }
     var total = d3.sum(_.pluck(ownershipData, 'value'));
     ownershipData = ownershipData.map(function(d){

@@ -4,3 +4,4 @@ syntax: glob
 media/*
 features/*
 tools/deploy_settings.py
+v*/*

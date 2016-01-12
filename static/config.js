@@ -28,7 +28,9 @@ var quantiles = {
 
 var summaryFields = {
     priority: ['priority', 'clip', 'bio', 'land', 'water'],
-    threats: ['devCur', 'dev2020', 'dev2040', 'dev2060', 'slr1', 'slr2', 'slr3']
+    threats: ['slr1', 'slr2', 'slr3', 'devCur', 'dev2020', 'dev2040', 'dev2060'],
+    slr: ['slr1', 'slr2', 'slr3'],
+    dev: ['devCur', 'dev2020', 'dev2040', 'dev2060']
 };
 
 var selectedField = 'priority';
@@ -41,16 +43,24 @@ var fieldLabels = {
     'priority': 'PFLCC DRAFT Priority Resources',
     'water': 'CLIP Surface Water',
 
-    devCur: 'Existing Urban Area',
-    dev2020: 'Projected Development (2020)',
-    dev2040: 'Projected Development (2040)',
-    dev2060: 'Projected Development (2060)',
+    dev: 'Urban Development / Population Growth',
+    devCur: 'Existing',
+    dev2020: '2020',
+    dev2040: '2040',
+    dev2060: '2060',
+    //devCur: 'Existing Urban Area',
+    //dev2020: 'Projected Development (2020)',
+    //dev2040: 'Projected Development (2040)',
+    //dev2060: 'Projected Development (2060)',
 
-    slr1: 'Projected Sea Level Rise (1m)',
-    slr2: 'Projected Sea Level Rise (2m)',
-    slr3: 'Projected Sea Level Rise (3m)'
+    slr: 'Projected Sea Level Rise',
+    slr1: '1 meter',
+    slr2: '2 meters',
+    slr3: '3 meters'
+    //slr1: 'Projected Sea Level Rise (1m)',
+    //slr2: 'Projected Sea Level Rise (2m)',
+    //slr3: 'Projected Sea Level Rise (3m)'
 };
-
 
 
 var priorityLabels = ['Priority 1', 'Priority 2', 'Priority 3', 'Priority 4', 'Priority 5', 'Not a Priority'];
