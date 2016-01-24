@@ -361,47 +361,87 @@ function load() {
 
     // Species
     var sppGroupsList = d3.keys(sppGroups);
-    d3.select('#SppFilter ul').selectAll('li')
-        .data(sppGroupsList).enter()
-        .append('li')
-        .classed('active', function(d, i){ return i === 0} )
-        .attr('data-tab', function(d){ return 'Filter-' + d} )
-        .html(function(d){ return sppGroupLabels[d]})
-        .on('click', function(d) {
-            selectTab(d3.select(this));
-        });
+    //d3.select('#SppFilter ul').selectAll('li')
+    //    .data(sppGroupsList).enter()
+    //    .append('li')
+    //    .classed('active', function(d, i){ return i === 0} )
+    //    .attr('data-tab', function(d){ return 'Filter-' + d} )
+    //    .html(function(d){ return sppGroupLabels[d]})
+    //    .on('click', function(d) {
+    //        selectTab(d3.select(this));
+    //    });
 
-    d3.select('#SppFilter').selectAll('div')
+    var itemsList = d3.select('#SppFilter .slider-list');
+
+    d3.select('#SppFilter > div').selectAll('div')
         .data(sppGroupsList).enter()
         .append('div')
-        .classed('tab', true)
-        .each(function(group, i) {
+        .classed('select-row', true)
+        .each(function(group, i){
             var node = d3.select(this);
-            node.attr('id', 'Filter-' + group);
+            node.append('label').html(sppGroupLabels[group]);
+            var selector = node.append('select');
+            selector.selectAll('option')
+                .data(['-'].concat(sppGroups[group])).enter()
+                .append('option')
+                .attr('value', function(d){ return d })
+                .html(function(d, i){ return (i === 0)? 'choose a species': species[d].split('|')[0]})
+                .classed('quiet italic', function(d, i){ return i === 0 });
 
-            if (i > 0) {
-                node.classed('hidden', true);
-            }
+            selector.on('change', function() {
+                var self = d3.select(this);
+                var spp = self.property('value');
+                if (spp === '-') { return }
 
-            node.append('div')
-                .classed('small', true)
-                .style({
-                    margin: '0 0 14px 110px',
-                    'font-weight': 'bold'
-                })
-                .text('Show only watersheds with at least:');
+                // TODO: remove from list and /or prevent from duplicate add
+                //temporary hack
+                if (dimensions[spp] != null) { return; }
 
-            // TODO: sort these alphabetically or grouped by priority class
-            var container = node.append('div').classed('table-slider', true);
-            container.selectAll('div').data(sppGroups[group]).enter()
-                .append('div').classed('table-row', true)
-                .each(function(d) {
-                    var node = d3.select(this);
-                    var dimension = dimensions[d];
-                    var label = species[d].split('|')[0];
-                    //createSliderFilter(node, dimension, group, label);
-                });
+                // TODO: find a nicer UI for this
+                if (d3.keys(dimensions).length >= 32) {
+                    alert('We are sorry, there is a limit to the number of species that you can combine.  Please remove ' +
+                        'a species to make room for another');
+                    return;
+                }
+                console.log('add spp filter', spp);
+
+                var dimension = cf.dimension(function(d){ return d[spp] });
+                dimensions[spp] = dimension;
+                createSliderFilter2(itemsList.append('li').attr('id', 'Filter-' + spp), dimension, spp, species[spp].split('|')[0]);
+                self.select('option[value="' + spp + '"]').property('disabled', true);
+                self.property('value', '-');
+            })
         });
+
+
+        //.classed('tab', true)
+        //.each(function(group, i) {
+        //    var node = d3.select(this);
+        //    node.attr('id', 'Filter-' + group);
+        //
+        //    if (i > 0) {
+        //        node.classed('hidden', true);
+        //    }
+        //
+        //    node.append('div')
+        //        .classed('small', true)
+        //        .style({
+        //            margin: '0 0 14px 110px',
+        //            'font-weight': 'bold'
+        //        })
+        //        .text('Show only watersheds with at least:');
+        //
+        //    // TODO: sort these alphabetically or grouped by priority class
+        //    var container = node.append('div').classed('table-slider', true);
+        //    container.selectAll('div').data(sppGroups[group]).enter()
+        //        .append('div').classed('table-row', true)
+        //        .each(function(d) {
+        //            var node = d3.select(this);
+        //            var dimension = dimensions[d];
+        //            var label = species[d].split('|')[0];
+        //            //createSliderFilter(node, dimension, group, label);
+        //        });
+        //});
 
 
     // Land use
@@ -467,6 +507,63 @@ function createNumberSpinnerTable(node, dimension, label) {
 }
 
 
+function createSliderFilter2(node, dimension, spp, label) {
+    var extent = d3.extent(_.map(dimension.group().all(), 'key')); // TODO: round ranges to nicer values
+
+    node.append('h4')
+        .text(label)
+        //remove link
+        .append('span').classed('small italic', true).text('[remove]')
+        .on('click', function(){
+
+            d3.select('#Filter-' + spp).remove();
+            d3.select('option[value="' + spp + '"]').property('disabled', false);  // TODO: optimize select
+            dimensions[spp].dispose();
+            delete dimensions[spp];
+            updateMap();
+        });
+
+    var sliderContainer = node.append('div');
+    //sliderContainer.append('span').classed('small', true).text(d3.format(',')(extent[0]) + ' ha');
+
+    var slider = sliderContainer.append('input')
+        .attr('type', 'range')
+        .attr('min', extent[0])
+        .attr('max', extent[1])
+        .attr('step', 1)
+        .property('value', extent[0])
+        .on('change', function(){
+            console.log('event', d3.event)
+            var self = d3.select(this);
+            //var quantityNode = d3.select(self.node().parentNode).select('.slider-tooltip');
+            var quantityNode = d3.select(self.node().parentNode).select('.slider-value');
+            quantityNode.html('');
+            var value = slider.property('value');
+            if (value == 0) {
+                dimension.filterAll();
+            }
+            else {
+                //filter range from value to max
+                dimension.filterRange([value, extent[1] + 1]);
+            }
+            quantityNode.text(d3.format(',')(value) + ' ha');
+
+
+            //coordinateFilters(group);
+            dc.redrawAll();
+            updateMap();
+        });
+    sliderContainer.append('div').classed('inline-middle slider-value', true).text(d3.format(',')(extent[0]) + ' ha');
+
+    //sliderContainer.append('span').classed('small', true).text(d3.format(',')(extent[1]) + ' ha');
+
+    var labelContainer = node.append('div').style('width', '300px');
+    var formatter = d3.format(',');
+    labelContainer.append('span').classed('small', true).text(d3.format(',')(extent[0]) + ' ha');
+    labelContainer.append('span').classed('small right', true).text(d3.format(',')(extent[1]) + ' ha');
+}
+
+
 
 function createSliderFilter(node, dimension, group, label) {
     var extent = [0, d3.max(_.map(dimension.group().all(), 'key'))];
@@ -497,7 +594,7 @@ function createSliderFilter(node, dimension, group, label) {
                 quantityNode.text(d3.format(',')(value) + ' ha')
             }
 
-            coordinateFilters(group);
+            //coordinateFilters(group);
             dc.redrawAll();
             updateMap();
         });
@@ -567,7 +664,20 @@ function updateMap() {
             d3.select(featureIndex.get(id)._path).classed('hidden', !isVisible);
             visibleFeatures.set(id, isVisible);
         }
-    })
+    });
+
+    // Update legend with count of visible watersheds
+    var visibleCount = visibleIDs.size();
+    var totalCount = index.size();
+    var countNode = d3.select('#Legend > h5');
+    if (visibleCount < totalCount) {
+        countNode.classed('hidden', false);
+        var formatter = d3.format(',');
+        countNode.html(formatter(visibleCount) + ' of ' + formatter(totalCount) + ' watersheds visible')
+    }
+    else {
+        countNode.classed('hidden', true);
+    }
 }
 
 

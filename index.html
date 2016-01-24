@@ -124,14 +124,22 @@
                                         </p>
                                     </div>
                                     <div id="SppFilter" class="tab hidden">
-                                        <ul class="tabs subtabs" style="margin-top: 0; margin-bottom: 16px;padding: 0;">
-                                        </ul>
+                                        <p class="small" style="color: #AAA;">
+                                            Select one or more species below to select watersheds that have at least the amount
+                                            of potential habitat you specify.  Values range from 0 to the maximum amount of potential
+                                            habitat area found for that species.
+                                        </p>
+                                        <!--<ul class="tabs subtabs" style="margin-top: 0; margin-bottom: 16px;padding: 0;"></ul>-->
+                                        <div></div>  <!-- selectors -->
+                                        <ul class="slider-list"></ul> <!-- items -->
                                     </div>
 
                                     <div id="LandUseFilter" class="tab hidden">
                                         <!--<div id="LandUseChart"></div>-->
                                         <p class="small" style="color: #AAA;">
-                                            some text goes here
+                                            Use one or more of the sliders below to select watersheds that contain at least the amount
+                                            you specify of these general land use categories.  The categories were generalized from the
+                                            78 state level land cover types outlined in the Florida Cooperative Land Cover Map (CLC, version 3.1)
                                         </p>
                                         <div class="small" style="margin: 0 0 14px 160px;font-weight: bold;">Show only watersheds with at least:</div>
                                         <div class="table table-slider"></div>
@@ -334,6 +342,7 @@
             <input type="range" min="0" max="1" defaultValue="0.3" value="0.25" step="0.25"/>
             <i class="fa fa-eye-slash"></i>
         </div>
+        <h5 class="hidden"></h5>
     </div>
 
     <div id="LearnMorePopup" class="modal hidden">

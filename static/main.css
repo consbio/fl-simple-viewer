@@ -955,3 +955,60 @@ h4.mapped .filter-reset {
     margin-left: 4px;
     font-size: 0.8em;
 }
+
+#SppFilter .select-row + .select-row {
+    margin-top: 10px;
+}
+#SppFilter label {
+    width: 200px;
+    display: inline-block;
+    text-align: right;
+    margin: 0 10px 0 0;
+}
+#SppFilter select {
+    width: 210px;
+}
+#SppFilter .slider-list {
+    list-style: none;
+    margin: 24px 0 0 0;
+    /*padding: 4px 10px 0;*/
+    padding: 0;
+}
+
+#SppFilter .slider-list li {
+    /*border-top: 1px solid #DDD;*/
+    padding-top: 20px;
+    position: relative;
+}
+
+#SppFilter input[type=range] {
+    width: 300px;
+    margin: 0;
+}
+#SppFilter .slider-list h4 span {
+    color: #AAA;
+    font-weight: normal;
+    margin-left: 8px;
+    cursor: pointer;
+}
+
+/* idea from: http://codepen.io/thelifemgmt/pen/CeLqA */
+.slider-value {
+    background: #555;
+    color: white;
+    position: relative;
+    border-radius: 10px;
+    padding: 4px 8px;
+    margin-left: 10px;
+}
+.slider-value::before {
+    position: absolute;
+    content: "";
+    height: 0;
+    width: 0;
+    left: -6px;
+    border-right: 12px solid #555;
+    border-top: 9px solid transparent;
+    border-bottom: 10px solid transparent;
+
+}
