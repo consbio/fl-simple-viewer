@@ -154,7 +154,18 @@ var speciesLinks = {
 };
 
 // subsets of the species into taxa
-var birds = ['COHA', 'GSHP', 'LOUSP', 'MACSP', 'MACU', 'OWL', 'PLOVR', 'SCRJY', 'SCTSP', 'SNKIT', 'STHA', 'STKI', 'WCPI']; //TODO:
+var sppGroups = {
+    birds: ["COHA", "GSHP", "LOUSP", "MACSP", "MACU", "OWL", "PLOVR", "SCRJY", "SCTSP", "SNKIT", "STHA", "STKI", "WCPI"],
+    mammals: ["AIBM", "BCFS", "BEAR", "CHBM", "FLOMO", "GBAT", "KDEER", "LKMR", "PANT", "SABM", "SAVOL", "SEBM", "SIRAT", "SRRAT"],
+    herps: ["ASMS", "CROC", "GSMS", "NEWT", "PBTF", "SESAL", "SSKNK"]
+};
+
+var sppGroupLabels = {
+    birds: 'Birds',
+    mammals: 'Mammals',
+    herps: 'Amphibians &amp; Reptiles'
+};
+
 
 
 var priorityResourceLabels = {
@@ -220,7 +231,7 @@ var landUseLabels = {
     85: 'Tree Plantations',
     90: 'Developed / Altered'
 };
-
+var landUseTypes = d3.keys(landUseLabels);
 var landUseColors = {
     10: d3.rgb(35, 150, 0).toString(),
     20: d3.rgb(160, 250, 255).toString(),
@@ -231,3 +242,14 @@ var landUseColors = {
     85: d3.rgb(0, 85, 0).toString(),
     90: d3.rgb(165, 165, 165).toString()
 };
+
+var partnerLabels = {
+    'llp_conp': 'Longleaf Pine Ecosystem Geodatabase Protection Priorities|http://www.freshfromflorida.com/Divisions-Offices/Florida-Forest-Service/Our-Forests/The-Florida-Longleaf-Pine-Ecosystem-Geodatabase',
+    'tnc_a': 'The Nature Conservancy Ecoregional Priority Areas|http://www.landscope.org/focus/understand/tnc_portfolio/',
+    'gcconvis': 'Land Conservation Vision for the Gulf of Mexico Region|http://gulfpartnership.org/index.php/site/issue/strategic-conservation',
+    'salcc': 'South Atlantic LCC Conservation Blueprint|http://www.southatlanticlcc.org/blueprint/',
+    'acjv': 'Atlantic Coast Joint Venture|http://acjv.org/planning/bird-conservation-regions/sambi/',
+    'epaprishd': 'Environmental Protection Agency Priority Watersheds|http://nepis.epa.gov/Exe/ZyNET.exe/P100BF0Q.TXT?ZyActionD=ZyDocument&Client=EPA&Index=2011+Thru+2015&Docs=&Query=&Time=&EndTime=&SearchMethod=1&TocRestrict=n&Toc=&TocEntry=&QField=&QFieldYear=&QFieldMonth=&QFieldDay=&IntQFieldOp=0&ExtQFieldOp=0&XmlQuery=&File=D%3A%5Czyfiles%5CIndex%20Data%5C11thru15%5CTxt%5C00000001%5CP100BF0Q.txt&User=ANONYMOUS&Password=anonymous&SortMethod=h%7C-&MaximumDocuments=1&FuzzyDegree=0&ImageQuality=r75g8/r75g8/x150y150g16/i425&Display=p%7Cf&DefSeekPage=x&SearchBack=ZyActionL&Back=ZyActionS&BackDesc=Results%20page&MaximumPages=1&ZyEntry=1&SeekPage=x&ZyPURL',
+    'tnc_r': 'The Nature Conservancy Above Average Terrestrial Resilient Sites|https://www.conservationgateway.org/ConservationByGeography/NorthAmerica/UnitedStates/edc/reportsdata/terrestrial/resilience/Pages/default.aspx'
+};
+var partners = ['acjv', 'epaprishd', 'gcconvis', 'llp_conp_', 'salcc', 'tnc_a', 'tnc_r'];

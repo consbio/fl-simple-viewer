@@ -8,7 +8,9 @@ var index = d3.map();
 var featureIndex = d3.map();
 var visibleFeatures = d3.map();
 var cf = null;
+var cfs = {};
 var dimensions = {};
+var idDimensions = [];
 var barHeight = 20;
 var chartWidth = 420;
 function filterColors(){ return '#9ecae1' }
@@ -133,18 +135,6 @@ var basemaps = {
         minZoom: 1,
         maxZoom: 16,
         ext: 'png'
-    }),
-    'Mapbox Light': L.tileLayer('http://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-        attribution: 'Imagery from <a href="http://mapbox.com/about/maps/">MapBox</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-        subdomains: 'abcd',
-        id: 'mapbox.light',
-        accessToken: 'pk.eyJ1IjoiYmN3YXJkIiwiYSI6InJ5NzUxQzAifQ.CVyzbyOpnStfYUQ_6r8AgQ'
-    }),
-    'Mapbox Satellite': L.tileLayer('http://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-        attribution: 'Imagery from <a href="http://mapbox.com/about/maps/">MapBox</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-        subdomains: 'abcd',
-        id: 'mapbox.streets-satellite',
-        accessToken: 'pk.eyJ1IjoiYmN3YXJkIiwiYSI6InJ5NzUxQzAifQ.CVyzbyOpnStfYUQ_6r8AgQ'
     })
 };
 
@@ -153,8 +143,6 @@ map = L.map('Map', {
     maxZoom: 12,
     center: [27.68, -81.69],
      zoom: 7
-    //center: [30.86, -87.51],
-    //zoom: 11
 });
 map.zoomControl.setPosition('topright');
 map.addControl(L.control.zoomBox({modal: false, position:'topright'}));
@@ -212,25 +200,29 @@ d3.csv('static/summary.csv',
     function(rows){
         data = rows;
 
-        //var classes = d3.range(numClasses);
-        //// TODO: tune these loops
-        //summaryFields.forEach(function(d){
-        //    var values = rows.map(function(r){ return r[d] });
-        //    scales[d] = d3.scale.quantile().range(classes).domain(values);  //d3.scale.quantile().range((d != 'land')? classes: d3.range(3)).domain(values);
-        //    //scales[d] = d3.scale.threshold().domain([20, 40, 60, 80, 101]).range([0, 1, 2, 3, 4]);
-        //    rows.forEach(function(r) {
-        //        r[d + '_q'] = scales[d](r[d]);
-        //    });
-        //});
-
         //summary data contain pre-calculated quantiles
-
-        cf = crossfilter(rows);
+        cf = crossfilter(rows); // TODO: exclude species
         dimensions.id = cf.dimension(function(r){ return r['id']});
+        idDimensions.push('id');
         d3.keys(quantiles).forEach(function(d){
             dimensions[d] = cf.dimension(function(r){ return r[d]});
         });
 
+        landUseTypes.forEach(function(d) {
+            d = 'lu' + d;
+            dimensions[d] = cf.dimension(function(r){ return r[d] })
+        });
+
+        //d3.keys(sppGroups).forEach(function(g){
+        //    cfs[g] = crossfilter(rows.map(function(row){ return _.pick(row, 'id', sppGroups[g]) }));
+        //    var idDimName = g + '_id';
+        //    dimensions[idDimName] = cfs[g].dimension(function(r){ return r.id });
+        //    idDimensions.push(idDimName);
+        //
+        //    sppGroups[g].forEach(function(d){
+        //        dimensions[d] = cfs[g].dimension(function(r){ return r[d] })
+        //    });
+        //});
 
         onLoad();
         console.log('loaded csv by',new Date().getTime() - pageLoadStart, 'ms');
@@ -280,15 +272,6 @@ function load() {
 
             chartContainer.append('div').classed('small quiet center', true).text('number of watersheds');
 
-            //var labels = barLabels(d);
-            //createCountChart(chartNode, dimensions[d], {
-            //    barHeight: barHeight,
-            //    colors: filterColors,
-            //    label: function(g) { return labels[g.key]},
-            //    onFilter: _.partial(onFilter, header),
-            //    width: chartWidth,
-            //    ordering: function(d) { return -d.key }
-            //});
             createFilterChart(chartNode, d, header);
         });
 
@@ -374,7 +357,158 @@ function load() {
 
             chartContainer.append('div').classed('small quiet center', true).text('number of watersheds');
         });
+
+
+    // Species
+    var sppGroupsList = d3.keys(sppGroups);
+    d3.select('#SppFilter ul').selectAll('li')
+        .data(sppGroupsList).enter()
+        .append('li')
+        .classed('active', function(d, i){ return i === 0} )
+        .attr('data-tab', function(d){ return 'Filter-' + d} )
+        .html(function(d){ return sppGroupLabels[d]})
+        .on('click', function(d) {
+            selectTab(d3.select(this));
+        });
+
+    d3.select('#SppFilter').selectAll('div')
+        .data(sppGroupsList).enter()
+        .append('div')
+        .classed('tab', true)
+        .each(function(group, i) {
+            var node = d3.select(this);
+            node.attr('id', 'Filter-' + group);
+
+            if (i > 0) {
+                node.classed('hidden', true);
+            }
+
+            node.append('div')
+                .classed('small', true)
+                .style({
+                    margin: '0 0 14px 110px',
+                    'font-weight': 'bold'
+                })
+                .text('Show only watersheds with at least:');
+
+            // TODO: sort these alphabetically or grouped by priority class
+            var container = node.append('div').classed('table-slider', true);
+            container.selectAll('div').data(sppGroups[group]).enter()
+                .append('div').classed('table-row', true)
+                .each(function(d) {
+                    var node = d3.select(this);
+                    var dimension = dimensions[d];
+                    var label = species[d].split('|')[0];
+                    //createSliderFilter(node, dimension, group, label);
+                });
+        });
+
+
+    // Land use
+    d3.select('#LandUseFilter .table-slider').selectAll('div.table-row')
+    //d3.select('#LandUseFilterList').selectAll('div')
+        .data(landUseTypes).enter()
+        .append('div').classed('table-row', true)
+        .each(function(d) {
+            var node = d3.select(this);
+            var dimension = dimensions['lu' + d];
+            var label = landUseLabels[d];
+
+            //createNumberSpinnerTable(node, dimension, label);
+            createSliderFilter(node, dimension, null, label); //TODO: LU is in main filters for now
+        });
 }
+
+
+
+function createNumberSpinnerTable(node, dimension, label) {
+    var extent = [0, d3.max(_.map(dimension.group().all(), 'key'))];
+
+    node.append('label')
+        //.classed('table-cell', true)
+        .text(label); // species[d].split('|')[0]
+
+    node.append('input')
+        //.classed('inline-middle', true)
+        .attr('type', 'number')
+        .attr('min', extent[0])
+        .attr('max', extent[1])
+        .attr('step', 10)
+        .property('value', extent[0])
+        .on('change', function(){
+            var self = d3.select(this);
+            var quantityNode = d3.select(self.node().parentNode).select('div');
+            quantityNode.html('');
+            var value = self.property('value');
+            if (value < extent[0]) {
+                value = extent[0];
+                self.property('value', value);
+            }
+            if (value > extent[1]) {
+                value = extent[1];
+                self.property('value', value);
+            }
+
+            console.log('spinner value', value);
+            if (value == 0) {
+                dimension.filterAll();
+            }
+            else {
+                //filter range from value to max
+                dimension.filterRange([value, extent[1] + 1]);
+                //quantityNode.text(d3.format(',')(value) + ' ha')
+            }
+
+            dc.redrawAll();
+            updateMap();
+        });
+
+    node.append('span').text('ha');
+}
+
+
+
+function createSliderFilter(node, dimension, group, label) {
+    var extent = [0, d3.max(_.map(dimension.group().all(), 'key'))];
+
+    node.append('div')
+        .classed('table-cell', true)
+        .text(label);
+
+    var sliderContainer = node.append('div').classed('table-cell', true);
+
+    var slider = sliderContainer.append('input')
+        .attr('type', 'range')
+        .attr('min', extent[0])
+        .attr('max', extent[1])
+        .attr('step', 1)
+        .property('value', extent[0])
+        .on('change', function(){
+            var self = d3.select(this);
+            var quantityNode = d3.select(self.node().parentNode).select('div');
+            quantityNode.html('');
+            var value = slider.property('value');
+            if (value == 0) {
+                dimension.filterAll();
+            }
+            else {
+                //filter range from value to max
+                dimension.filterRange([value, extent[1] + 1]);
+                quantityNode.text(d3.format(',')(value) + ' ha')
+            }
+
+            coordinateFilters(group);
+            dc.redrawAll();
+            updateMap();
+        });
+
+    sliderContainer.append('div');
+
+    node.append('div')
+        .classed('table-cell quiet', true)
+        .text(d3.format(',')(extent[1]) + ' ha');
+}
+
 
 
 function createFilterChart(node, dimension, header) {
@@ -390,16 +524,41 @@ function createFilterChart(node, dimension, header) {
 }
 
 
+// Need a reset case too?
+function coordinateFilters(group) {
+    var idDimName = (group == null)? 'id': group + '_id';
+    var ids = d3.set(_.map(dimensions[idDimName].top(Infinity), 'id'));
+
+    var filterFunc = function(d) { return ids.has(d) };
+
+    idDimensions.forEach(function(d){
+        if (d != idDimName) {
+            // this may or may not be the right thing to do here
+            dimensions[d].filterAll();
+
+
+            dimensions[d].filterFunction(filterFunc);
+        }
+    });
+
+
+    //To coordinate these filters:
+    //var bird_ids = _.map(dimensions.birds_id.top(Infinity), 'id');
+    //dimensions.id.filterFunction(function(d){ return bird_ids.indexOf(d) != -1 });
+}
+
+
 
 function onFilter(header, chart, filter) {
-    console.log("onfilter", arguments)
+    console.log("onfilter", arguments);
     header.classed('filtered', filter != null);
+    coordinateFilters();  // TODO: only applies to main filters
     updateMap();
 }
 
 
 function updateMap() {
-    var visibleIDs = d3.set(dimensions.id.top(Infinity).map(function (d) { return d.id }));
+    var visibleIDs = d3.set(_.map(dimensions.id.top(Infinity), 'id'));
     console.log(visibleIDs.size() + ' now visible');
     featureIndex.keys().forEach(function(id){
         var wasVisible = visibleFeatures.get(id);
@@ -537,7 +696,6 @@ function showDetails(id) {
     createInlineBarChart(d3.select('#PFLCC_PR_Bars'), pr_data, ' ha', true);
 
     // CLIP tab
-    data =
     createPieChart(d3.select('#CLIP_Chart'), zipIntoObj(['value', 'label', 'color'], details.clip, priorityLabels, chartColors), '%');
     createPieChart(d3.select('#Bio_Chart'), zipIntoObj(['value', 'label', 'color'], details.bio, priorityLabels, chartColors), '%');
     createPieChart(d3.select('#BioRareSpp_Chart'), zipIntoObj(['value', 'label', 'color'], details.bio_rare_spp, priorityLabels4, chartColors4), '%');
@@ -573,7 +731,16 @@ function showDetails(id) {
 
 
     // Land use tab
-
+    record = index.get(id); //FIXME: somehow this is getting hijacked before we get here
+    var lu_data = landUseTypes.filter(function(d) { return record['lu' + d] > 0 })
+        .map(function(d) {
+            return {
+                value: record['lu' + d],
+                label: landUseLabels[d],
+                color: landUseColors[d]
+            }
+        });
+    createInlineBarChart(d3.select('#LU_Bars'), lu_data, ' ha', true);
 
 
     // Threats tab
@@ -619,26 +786,6 @@ function showDetails(id) {
     });
 
     createPieChart(d3.select('#Owner_Chart'), ownershipData, '%');
-
-
-
-
-
-
-
-
-    //if (d3.sum(details.ownership)) {
-    //    createHorizBarChart(
-    //        d3.select('#Owner_Chart'), details.ownership,
-    //        ['Federal', 'State', 'Local', 'Private'],
-    //        priorityColors.slice(0, 4),
-    //        '%'
-    //    );
-    //}
-    //else {
-    //    // TODO
-    //    d3.select('#Owner_Chart').html('');
-    //}
 
 }
 
@@ -708,6 +855,9 @@ function createPieChart(node, data, units){
     function formatter(d){
         if (d >= 5 || Math.round(d) === d){
             return d3.format('.0f')(d) + units;
+        }
+        if (d < 1) {
+            return '< 1' + units;
         }
         return d3.format('.1f')(d) + units;
     }
@@ -945,43 +1095,5 @@ function createHorizBarChart(node, data, labels, colors, units, leftMargin){
 
 
 
-
-// In progress!
-
-var container = d3.select('#BirdsFilter');
-container.selectAll('div')
-    .data(birds).enter()
-    .append('div')
-    .each(function(d){
-        var node = d3.select(this);
-
-        var max = 19728;
-        var label = node.append('label')
-            .classed('inline-middle', true)
-            .text(species[d].split('|')[0]);
-
-
-        var slider = node.append('input')
-            .classed('inline-middle', true)
-            .attr('type', 'range')
-            .attr('min', 0)
-            .attr('max', max)
-            .attr('step', 10)
-            .property('value', 0);
-
-        var quantity = node.append('div')
-            .classed('inline-middle', true)
-            .text(' 0 ha');
-
-        slider.on('change', function(){
-            var value = slider.property('value');
-            quantity.text(' ' + d3.format(',')(value) + ' ha')
-        })
-
-
-
-
-
-    })
 
 

@@ -57,6 +57,28 @@ for metric in metrics:
     binsObj[metric] = bins
 
 df = pd.DataFrame(quantiles)
+
+
+# Pull fields out as hectares
+
+# File name: fields
+area_files = {
+    'ConsolidatedCLCByHUC12': ['LU_1000_H', 'LU_2000_H', 'LU_3000_H', 'LU_6000_H', 'LU_7000_H', 'LU_8000_H', 'LU_8500_H', 'LU_9000_H'],
+    'SHCA_Species_List': ['AIBM_H_1', 'ASMS_PH_H', 'CHBM_PH_H', 'GBAT_PH_H', 'GSHP_PH_H', 'KDEER_PH_H', 'LKMR_PH_H', 'PANT_PH_H', 'SABM_PH_H', 'SAVOL_PH_H', 'SIRAT_PH_H', 'BCFS_PH_H', 'BEAR_PH_H', 'CROC_PH_H', 'LOUSP_PH_H', 'MACSP_PH_H', 'NEWT_PH_H', 'PLOVR_PH_H', 'SCRJY_PH_H', 'SESAL_PH_H', 'SNKIT_PH_H', 'SSKNK_PH_H', 'STHA_PH_H', 'SRRAT_PH_H', 'FLOMO_PH_H', 'GSMS_PH_H', 'OWL_PH_H', 'PBTF_PH_H', 'SCTSP_PH_H', 'STKI_PH_H', 'WCPI_PH_H', 'COHA_PH_H', 'MACU_PH_H', 'SEBM_PH_H']
+}
+
+for filename, fields in area_files.items():
+    src_df = pd.read_csv(os.path.join(working_dir, filename + '.csv'), dtype={'HUC_12': str}).set_index('HUC_12')[fields]
+
+    if filename == 'ConsolidatedCLCByHUC12':
+        src_df.columns = [x.replace('LU_', 'lu')[:-4] if 'LU_' in x else x for x in src_df.columns]
+    elif filename == 'SHCA_Species_List':
+        pass
+        src_df.columns = [x.replace('_1', '').replace('_H', '').replace('_PH', '') for x in src_df.columns]
+
+    df = df.join(src_df.round(0))  # hectares
+
+
 df.to_csv('../static/summary.csv', index_label='id', float_format='%.0f')  # force writing as integers
 
 print('Bins:')

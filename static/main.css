@@ -271,8 +271,7 @@ input[type=range]:focus::-ms-fill-upper {
 
 .bar {
     border: 1px solid #DDD;
-    height: 2em;
-    /*border-radius: 0 6px 6px 0;*/
+    height: 1.5em;
     opacity: 0.75;
 }
 
@@ -312,12 +311,14 @@ input[type=range]:focus::-ms-fill-upper {
     padding: 4px 10px 0;
     background-color: #AAA;
     color: white;
+    display: flex;
 }
 .tabs > li {
     display: inline-block;
     padding: 4px 10px;
     cursor: pointer;
     border-radius: 3px 3px 0 0;
+    margin: 0 auto;
 }
 .tabs > li:hover {
     background-color: #BBB;
@@ -742,11 +743,11 @@ div.dc-chart {
 }
 
 
-#PFLCC_PR_Bars .nvd3 text {
+.horiz-bars .nvd3 text {
     font-size: 0.7em;
 }
 
-#PFLCC_PR_Bars {
+.horiz-bars {
     line-height: 1;
     margin: 20px 10px 10px 10px;
     background: #F6F6F2;
@@ -754,33 +755,33 @@ div.dc-chart {
     padding: 10px 10px 10px 0
 }
 
-#PFLCC_PR_Bars > div + div {
+.horiz-bars > div + div {
     /*margin-top: 12px;*/
     padding: 16px 0 0 0;
 }
 
-#PFLCC_PR_Bars .bar {
+.horiz-bars .bar {
     border-left: none;
 }
 
 
-#SppFilter .tab {
-    padding: 16px 0 0 0;
-}
-#SppFilter .tab > div {
-    margin-bottom: 8px;
-}
-#SppFilter label {
-    width: 210px;
-    font-size: 0.9em;
-}
-#SppFilter input {
-    width: 120px;
-}
-#SppFilter input + div {
-    width: 70px;
-    font-size: 0.7em;
-}
+/*#SppFilter .tab {*/
+    /*padding: 16px 0 0 0;*/
+/*}*/
+/*#SppFilter .tab > div {*/
+    /*margin-bottom: 8px;*/
+/*}*/
+/*#SppFilter label {*/
+    /*width: 210px;*/
+    /*font-size: 0.9em;*/
+/*}*/
+/*#SppFilter input {*/
+    /*width: 120px;*/
+/*}*/
+/*#SppFilter input + div {*/
+    /*width: 70px;*/
+    /*font-size: 0.7em;*/
+/*}*/
 
 /* TODO */
 #ThreatsFilter .button {
@@ -907,4 +908,50 @@ h4.mapped,
 h4.mapped:hover {
     background: #1f77b4;
     color: white;
+}
+h4.mapped .filter-reset {
+    color: white;
+}
+
+
+.table-slider .table-row .table-cell {
+    padding-bottom: 14px;
+}
+.table-slider .table-row .table-cell:nth-child(1) {
+    width: 175px;
+    font-size: 1em;
+}
+.table-slider .table-row .table-cell:nth-child(2) {
+    /*width: 130px;*/
+    padding-left: 10px;
+    font-size: 0.8em;
+}
+.table-slider input + div {
+    height: 1em;
+}
+.table-slider .table-row .table-cell:nth-child(3) {
+    font-size: 0.8em;
+}
+/*.table.table-slider .table-cell:nth-child(4) {*/
+    /**/
+/*}*/
+
+#LandUseFilterList div + div {
+    margin-top: 14px;
+}
+
+#LandUseFilterList label {
+    display: inline-block;
+    width: 175px;
+    padding-right: 10px;
+    font-size: 1em;
+}
+#LandUseFilterList input {
+    width: 75px;
+    font-size: 12px;
+}
+
+#LandUseFilterList span {
+    margin-left: 4px;
+    font-size: 0.8em;
 }

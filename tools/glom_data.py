@@ -39,9 +39,10 @@ files = [
     'PHRICH_L1',
     'PHRICH_L2',
     'ConsolidatedCLCByHUC12',
-    'LandManagementByHUC12',
-    # 'DetailedLandOwnershipByHUC12'
-    'ManagedAreas_FNAI_HUC12'
+    # 'LandManagementByHUC12', # obviated by below
+    'ManagedAreas_FNAI_HUC12',
+
+    'PartnerOrgPrioritiesByHUC12'
 ]
 
 dfs = dict()
@@ -153,10 +154,10 @@ for huc in primary_df.index: #[0:500]:
 
     # Overall ownership
     # TODO: may not need this given the below detailed ownership
-    record = dfs['LandManagementByHUC12'].loc[huc]
-    fields = ['Federal_H', 'State_H', 'Local_H', 'Private_H']
-    values = [int(round(record[f], 0)) for f in fields]
-    data['ownership'] = dict([x for x in zip([f.replace('_H', '') for f in fields], values) if x[1] > 0])
+    # record = dfs['LandManagementByHUC12'].loc[huc]
+    # fields = ['Federal_H', 'State_H', 'Local_H', 'Private_H']
+    # values = [int(round(record[f], 0)) for f in fields]
+    # data['ownership'] = dict([x for x in zip([f.replace('_H', '') for f in fields], values) if x[1] > 0])
 
     # Detailed ownership - may be multiple records per HUC.  Nest according to type:managing institution:property name:hectares
     # data issues - this doesn't get classified same as ownership data above
@@ -192,6 +193,13 @@ for huc in primary_df.index: #[0:500]:
 
         if ownership:
             data['ownership_detailed'] = ownership
+
+
+
+    # Partner organizations - just list those present
+    record = dfs['PartnerOrgPrioritiesByHUC12'].loc[huc]
+    fields = ['ACJV_Any', 'EPAPriShd', 'GCConVisF', 'SALCC_Fin', 'TNC_A_Fin', 'TNC_R_Fin', 'LLP_ConP_F']
+    data['partners'] = [x.lower().replace('_any', '').replace('_fin', '').rstrip('f').strip('_') for x in fields if record[x] == 1]
 
 
     with open(os.path.join(outdir, '{0}.json'.format(huc)), 'w') as outfile:

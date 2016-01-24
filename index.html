@@ -124,19 +124,20 @@
                                         </p>
                                     </div>
                                     <div id="SppFilter" class="tab hidden">
-                                        <ul class="tabs subtabs small" style="margin-top: 0; margin-bottom: 16px;padding: 0;">
-                                            <li class="active" data-tab="BirdsFilter">Birds</li>
-                                            <li data-tab="MammalsFilter">Mammals</li>
-                                            <li data-tab="ARFilter">Amphibians &amp; Reptiles</li>
-                                            <li data-tab="LUFilter">Land Use</li>
+                                        <ul class="tabs subtabs" style="margin-top: 0; margin-bottom: 16px;padding: 0;">
                                         </ul>
-
-                                        <div id="BirdsFilter" class="tab"></div>
-                                        <div id="MammalsFilter" class="tab hidden"></div>
-                                        <div id="ARFilter" class="tab hidden"></div>
                                     </div>
 
-                                    <div id="LandUseFilter" class="tab hidden"></div>
+                                    <div id="LandUseFilter" class="tab hidden">
+                                        <!--<div id="LandUseChart"></div>-->
+                                        <p class="small" style="color: #AAA;">
+                                            some text goes here
+                                        </p>
+                                        <div class="small" style="margin: 0 0 14px 160px;font-weight: bold;">Show only watersheds with at least:</div>
+                                        <div class="table table-slider"></div>
+                                        <!--<div id="LandUseFilterList"></div>-->
+
+                                    </div>
 
                                     <div id="ThreatsFilter" class="tab hidden">
                                         <p class="small" style="color: #AAA;">
@@ -147,42 +148,6 @@
                                             The initial setting divides the number of watersheds approximately equally
                                             across the 5 classes for each factor.
                                         </p>
-
-                                        <!--<section>-->
-                                            <!--<h4>Sea Level Rise <i class="wi wi-flood" style="font-size: 2em;"></i></h4>-->
-                                            <!--<div class="quiet small filter-subheading">-->
-                                                <!--percent of watershed inundated-->
-                                            <!--</div>-->
-                                            <!--<div id="SLRLevel">-->
-                                                <!--<input type="radio" name="sea_level_rise" checked="checked">-->
-                                                <!--<label>1 Meter</label>-->
-                                                <!--<input type="radio" name="sea_level_rise">-->
-                                                <!--<label>2 Meters</label>-->
-                                                <!--<input type="radio" name="sea_level_rise">-->
-                                                <!--<label>3 Meters</label>-->
-                                            <!--</div>-->
-                                            <!--<div id="SLRFilter"></div>-->
-                                        <!--</section>-->
-
-                                        <!--<section style="margin-top:20px;">-->
-                                            <!--<h4>Urbanization <i class="fa fa-university" style="font-size: 2em;"></i></h4>-->
-                                            <!--<div class="quiet small filter-subheading">-->
-                                                <!--percent of watershed with urban development-->
-                                            <!--</div>-->
-                                            <!--<div id="DevLevel">-->
-                                                <!--<input type="radio" name="dev" checked="checked">-->
-                                                <!--<label>Existing</label>-->
-                                                <!--<input type="radio" name="dev">-->
-                                                <!--<label>2020</label>-->
-                                                <!--<input type="radio" name="dev">-->
-                                                <!--<label>2040</label>-->
-                                                <!--<input type="radio" name="dev">-->
-                                                <!--<label>2060</label>-->
-                                            <!--</div>-->
-                                            <!--<div id="DevFilter"></div>-->
-                                        <!--</section>-->
-
-                                        <!--<div id="DevFilter"></div>-->
                                     </div>
                                 </div>
 
@@ -195,7 +160,7 @@
                                                 <p>
                                                     Priority resources are the set of biological, ecological, and cultural features and ecological processes collaboratively identified as most important, and are the focus of the PFLCC’s planning.  Priority resources will provide a simple way to measure the overall condition of the Peninsular Florida’s complex systems.  There are currently 12 DRAFT Priority Resources, 9 based on land cover types from the Cooperative Land Cover map (v. 3.0): High Pine and Scrub, Pine Flatwoods and Dry Prairie, Freshwater Forested Wetlands, Hardwood Forested Uplands, Coastal Uplands, Freshwater non-forested Wetlands, Estuarine, Marine, Freshwater Aquatic; and 3 non-CLC based resource types:  Landscape Connectivity, Cultural and Socio-economic, and Working Lands.
                                                 </p>
-                                                <div id="PFLCC_PR_Bars" class="small"></div>
+                                                <div id="PFLCC_PR_Bars" class="horiz-bars small"></div>
                                             </div>
                                         </section>
                                     </div>
@@ -303,10 +268,9 @@
                                     </div>
 
                                     <div id="DetailsLandUse" class="tab hidden">
-                                        <div class="quiet">More coming soon!</div>
                                         <section>
-                                            <h4></h4>
-                                            <div></div>
+                                            <p>These land use categories were generalized from the 78 state level land cover types outlined in the Florida Cooperative Land Cover Map (CLC, version 3.1) currently maintained by FWC and FNAI.  This generalization was performed to make visualization and calculation in this tool manageable.</p>
+                                            <div id="LU_Bars" class="horiz-bars small"></div>
                                         </section>
                                     </div>
 
@@ -319,11 +283,20 @@
                                     </div>
 
                                     <div id="DetailsPartners" class="tab hidden">
-                                        <section>
+                                        <!-- TODO: may refactor into subtabs -->
+                                        <section class="expandable expanded">
                                             <h4>Overall Ownership</h4>
-                                            <div id="Owner_Chart"></div>
-                                            <div id="Owner_Table" class="detail-table"></div>
+                                            <div>
+                                                <div id="Owner_Chart"></div>
+                                                <div id="Owner_Table" class="detail-table"></div>
+                                            </div>
                                         </section>
+
+                                        <!--<section class="expandable expanded">-->
+                                            <!--<h4>Regional / Partner Conservation Efforts</h4>-->
+                                            <!--<div id="Owner_Chart"></div>-->
+                                            <!--<div id="Owner_Table" class="detail-table"></div>-->
+                                        <!--</section>-->
                                     </div>
                                 </div>
                             </div>
