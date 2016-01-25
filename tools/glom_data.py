@@ -42,7 +42,10 @@ files = [
     # 'LandManagementByHUC12', # obviated by below
     'ManagedAreas_FNAI_HUC12',
 
-    'PartnerOrgPrioritiesByHUC12'
+    'PartnerOrgPrioritiesByHUC12',
+    'BobwhiteQByHUC12',
+    'FL_counties_by_HUC12'
+
 ]
 
 dfs = dict()
@@ -200,6 +203,28 @@ for huc in primary_df.index: #[0:500]:
     record = dfs['PartnerOrgPrioritiesByHUC12'].loc[huc]
     fields = ['ACJV_Any', 'EPAPriShd', 'GCConVisF', 'SALCC_Fin', 'TNC_A_Fin', 'TNC_R_Fin', 'LLP_ConP_F']
     data['partners'] = [x.lower().replace('_any', '').replace('_fin', '').rstrip('f').strip('_') for x in fields if record[x] == 1]
+
+    # Add Bobwhite data to above
+    record = dfs['BobwhiteQByHUC12'].loc[huc]
+    if record['NCBI_P_F']:
+        data['partners'].append(['ncbi'])
+
+
+    # For land trusts - extract FIPS code and county name (possibly multiple per HUC)
+    table = dfs['FL_counties_by_HUC12']
+    if huc in table.index:
+        records = table.loc[huc]
+        counties = {}
+        if len(records.shape) > 1:
+            for i in range(records.shape[0]):
+                record = records.ix[i]
+                counties['{0}{1:03d}'.format(record['STATEFP'], int(record['COUNTYFP']))] = record['NAMELSAD']
+        else:
+            record = records
+            counties['{0}{1:03d}'.format(record['STATEFP'], int(record['COUNTYFP']))] = record['NAMELSAD']
+
+        if counties:
+            data['counties'] = counties
 
 
     with open(os.path.join(outdir, '{0}.json'.format(huc)), 'w') as outfile:

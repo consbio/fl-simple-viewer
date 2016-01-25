@@ -250,6 +250,8 @@ var partnerLabels = {
     'salcc': 'South Atlantic LCC Conservation Blueprint|http://www.southatlanticlcc.org/blueprint/',
     'acjv': 'Atlantic Coast Joint Venture|http://acjv.org/planning/bird-conservation-regions/sambi/',
     'epaprishd': 'Environmental Protection Agency Priority Watersheds|http://nepis.epa.gov/Exe/ZyNET.exe/P100BF0Q.TXT?ZyActionD=ZyDocument&Client=EPA&Index=2011+Thru+2015&Docs=&Query=&Time=&EndTime=&SearchMethod=1&TocRestrict=n&Toc=&TocEntry=&QField=&QFieldYear=&QFieldMonth=&QFieldDay=&IntQFieldOp=0&ExtQFieldOp=0&XmlQuery=&File=D%3A%5Czyfiles%5CIndex%20Data%5C11thru15%5CTxt%5C00000001%5CP100BF0Q.txt&User=ANONYMOUS&Password=anonymous&SortMethod=h%7C-&MaximumDocuments=1&FuzzyDegree=0&ImageQuality=r75g8/r75g8/x150y150g16/i425&Display=p%7Cf&DefSeekPage=x&SearchBack=ZyActionL&Back=ZyActionS&BackDesc=Results%20page&MaximumPages=1&ZyEntry=1&SeekPage=x&ZyPURL',
-    'tnc_r': 'The Nature Conservancy Above Average Terrestrial Resilient Sites|https://www.conservationgateway.org/ConservationByGeography/NorthAmerica/UnitedStates/edc/reportsdata/terrestrial/resilience/Pages/default.aspx'
+    'tnc_r': 'The Nature Conservancy Above Average Terrestrial Resilient Sites|https://www.conservationgateway.org/ConservationByGeography/NorthAmerica/UnitedStates/edc/reportsdata/terrestrial/resilience/Pages/default.aspx',
+    'ncbi': 'National Bobwhite Conservation Initiative|http://bringbackbobwhites.org/images/stories/nbci_florida.jpg'
+
 };
 var partners = ['acjv', 'epaprishd', 'gcconvis', 'llp_conp_', 'salcc', 'tnc_a', 'tnc_r'];

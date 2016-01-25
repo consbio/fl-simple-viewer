@@ -135,7 +135,6 @@
                                     </div>
 
                                     <div id="LandUseFilter" class="tab hidden">
-                                        <!--<div id="LandUseChart"></div>-->
                                         <p class="small" style="color: #AAA;">
                                             Use one or more of the sliders below to select watersheds that contain at least the amount
                                             you specify of these general land use categories.  The categories were generalized from the
@@ -144,7 +143,6 @@
                                         <div class="small" style="margin: 0 0 14px 160px;font-weight: bold;">Show only watersheds with at least:</div>
                                         <div class="table table-slider"></div>
                                         <!--<div id="LandUseFilterList"></div>-->
-
                                     </div>
 
                                     <div id="ThreatsFilter" class="tab hidden">
@@ -291,20 +289,33 @@
                                     </div>
 
                                     <div id="DetailsPartners" class="tab hidden">
+                                        <ul class="tabs subtabs small" style="margin-top: 0; margin-bottom: 16px;">
+                                            <li class="active" data-tab="OwnershipTab">Overall Ownership</li>
+                                            <li data-tab="PartnerTab">Partner Conservation Efforts</li>
+                                        </ul>
+
                                         <!-- TODO: may refactor into subtabs -->
-                                        <section class="expandable expanded">
-                                            <h4>Overall Ownership</h4>
-                                            <div>
-                                                <div id="Owner_Chart"></div>
-                                                <div id="Owner_Table" class="detail-table"></div>
-                                            </div>
-                                        </section>
+                                        <!--<section class="expandable expanded">-->
+                                        <div id="OwnershipTab" class="tab">
+                                            <section>
+                                                <!--<h4>Overall Ownership</h4>-->
+                                                <!--<div>-->
+                                                    <div id="Owner_Chart"></div>
+                                                    <div id="Owner_Table" class="detail-table"></div>
+                                                <!--</div>-->
+                                            </section>
+                                        </div>
 
                                         <!--<section class="expandable expanded">-->
-                                            <!--<h4>Regional / Partner Conservation Efforts</h4>-->
-                                            <!--<div id="Owner_Chart"></div>-->
-                                            <!--<div id="Owner_Table" class="detail-table"></div>-->
-                                        <!--</section>-->
+                                        <div id="PartnerTab" class="tab hidden">
+                                            <section style="margin-top: 30px;">
+                                                <h5>Regional / Partner Conservation Efforts</h5>
+                                                <ul id="PartnersList"></ul>
+
+                                                <h5>Land Trusts by County</span></h5>
+                                                <ul id="LTList"></ul>
+                                            </section>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

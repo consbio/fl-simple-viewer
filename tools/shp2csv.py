@@ -6,6 +6,7 @@ import fiona
 
 indir = r'D:\Projects\PFLCC\Data\PFLCCDataViewerDatasets'
 indir = r'D:\Projects\PFLCC\Data\Consolidated LU By HUC12'
+# indir = r'D:\Projects\PFLCC\Data\TIGER_counties'
 
 outdir = r'D:\Projects\PFLCC\Data\tables'
 

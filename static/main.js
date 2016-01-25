@@ -1,5 +1,5 @@
 var pageLoadStart = new Date().getTime();
-
+var foo = false;
 var zoomOpacityScale = d3.scale.linear().domain([5,12]).range([1, 0.35]);
 var features, data;
 var scales = {};
@@ -897,6 +897,35 @@ function showDetails(id) {
 
     createPieChart(d3.select('#Owner_Chart'), ownershipData, '%');
 
+    // Partners
+    console.log('partners', details.partners)
+    var partnersList = d3.select('#PartnersList');
+    partnersList.html('');
+    var partnerNodes = partnersList.selectAll('li').data(details.partners);
+    partnerNodes.enter()
+        .append('li')
+        .html(function(d) {
+            var partnerInfo = partnerLabels[d].split('|');
+            return '<a href="' + partnerInfo[1] + '" target="_blank">' + partnerInfo[0] + '</a>';
+        });
+    //partnerNodes.exit().remove();
+
+    if (partnerNodes.empty()) {
+        partnersList.append('li').classed('quiet', true).html('No information available');
+    }
+
+    // Land trusts
+    var landTrustList = d3.select('#LTList');
+    landTrustList.html('');
+    var landTrustNodes = landTrustList.selectAll('li').data(d3.keys(details.counties || {}));
+    landTrustNodes.enter()
+        .append('li')
+        .html(function(d) {
+            return '<a href="http://findalandtrust.org/counties/' + d + '" target="_blank">' + details.counties[d] + '</a>';
+        });
+    if (landTrustNodes.empty()) {
+        landTrustNodes.append('li').classed('quiet', true).html('No information available');
+    }
 }
 
 
