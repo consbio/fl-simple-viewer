@@ -42,6 +42,10 @@ files = [
     # 'LandManagementByHUC12', # obviated by below
     'ManagedAreas_FNAI_HUC12',
 
+
+    'Florida2060',
+    'SLRProjections',
+
     'PartnerOrgPrioritiesByHUC12',
     'BobwhiteQByHUC12',
     'FL_counties_by_HUC12'
@@ -153,6 +157,20 @@ for huc in primary_df.index: #[0:500]:
     fields = ['LU_1000_H', 'LU_2000_H', 'LU_3000_H', 'LU_6000_H', 'LU_7000_H', 'LU_8000_H', 'LU_8500_H', 'LU_9000_H']
     values = [int(round(record[f], 0)) for f in fields]
     data['land_use'] = dict([x for x in zip([f.replace('_H', '').replace('LU_', '')[:2] for f in fields], values) if x[1] > 0])
+
+
+    # Threats - Sea level rise
+    record = dfs['SLRProjections'].loc[huc]
+    fields = ['1M_H', '2M_H', '3M_H']
+    # values = [int(round(record[f], 0)) for f in fields]
+    data['slr'] = [int(round(record[f], 0)) for f in fields] #dict([x for x in zip(['slr{0}'.format(f.replace('M_H', '')) for f in fields], values)])
+
+    # Threats - Development
+    record = dfs['Florida2060'].loc[huc]
+    fields = ['ExUrban_H', '2020_H_Cum', '2040_H_Cum', '2060_H_Cum']
+    # values = [int(round(record[f], 0)) for f in fields]
+    data['dev'] = [int(round(record[f], 0)) for f in fields] # dict([x for x in zip([f.replace('_H', '').replace('_Cum', '').replace('ExUrban', 'devCur') for f in fields], values)])
+
 
 
     # Overall ownership

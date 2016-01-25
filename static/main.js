@@ -776,10 +776,9 @@ function selectUnit(id){
 
 
 function showDetails(id) {
-    console.log('show details');
     var record = index.get('id');
     var details = featureCache[id];
-    console.log(details);
+    console.log('details', details);
 
     d3.selectAll('path.selected').classed('selected', false);
 
@@ -842,7 +841,7 @@ function showDetails(id) {
 
     // Land use tab
     record = index.get(id); //FIXME: somehow this is getting hijacked before we get here
-    var lu_data = landUseTypes.filter(function(d) { return record['lu' + d] > 0 })
+    var luData = landUseTypes.filter(function(d) { return record['lu' + d] > 0 })
         .map(function(d) {
             return {
                 value: record['lu' + d],
@@ -850,10 +849,54 @@ function showDetails(id) {
                 color: landUseColors[d]
             }
         });
-    createInlineBarChart(d3.select('#LU_Bars'), lu_data, ' ha', true);
+    createInlineBarChart(d3.select('#LU_Bars'), luData, ' ha', true);
 
 
     // Threats tab
+
+    var slrData = [];
+    var slrHa = d3.max(details.slr);
+    var notAffectedBySLR = details.hectares - slrHa;
+    if (slrHa) {
+        slrData = slrLevels.map(function (d, i) {
+            return {
+                value: details.slr[i],
+                label: 'Projected - ' + fieldLabels[d],
+                color: colorMap.slr[i]
+            }
+        });
+    }
+    if (notAffectedBySLR > 0) {
+        slrData.push({
+            value: notAffectedBySLR,
+            label: 'Not affected by up to 3 meters',
+            color: colorMap.slr[4]
+        })
+    }
+    createInlineBarChart(d3.select('#SLR_Bars'), slrData, ' ha', false, true);
+
+
+    var devData = [];
+    var devHa = d3.max(details.dev);
+    var notDeveloped = details.hectares - devHa;
+    if (devHa > 0) {
+        devData = devLevels.map(function (d, i) {
+            return {
+                value: details.dev[i],
+                label: ((i === 0) ? '' : 'Projected - ') + fieldLabels[d],
+                color: colorMap.dev[i]
+            }
+        });
+    }
+    if (notDeveloped > 0) {
+        devData.push({
+            value: notDeveloped,
+            label: 'Not developed by 2060',
+            color: colorMap.dev[4]
+        });
+    }
+    createInlineBarChart(d3.select('#Dev_Bars'), devData, ' ha', false, true);
+
 
 
 
@@ -898,7 +941,6 @@ function showDetails(id) {
     createPieChart(d3.select('#Owner_Chart'), ownershipData, '%');
 
     // Partners
-    console.log('partners', details.partners)
     var partnersList = d3.select('#PartnersList');
     partnersList.html('');
     var partnerNodes = partnersList.selectAll('li').data(details.partners);
@@ -944,18 +986,20 @@ function speciesTable(values){
 
 
 // expects array of objects with value, label, color already present
-function createInlineBarChart(node, data, units, sortByValue) {
+function createInlineBarChart(node, data, units, sortByValue, noSort) {
     width = 324;
 
     var formatter = d3.format(',');
     var values = data.map(function(d){ return d.value });
-    var scale = d3.scale.linear().range([0, width]).domain(d3.extent(values));
+    var scale = d3.scale.linear().range([0, width]).domain([0, d3.max(values)]);
 
-    if (sortByValue){
-        data.sort(function(a, b){ return d3.descending(a.value, b.value) });
-    }
-    else {
-        data.sort(function(a, b){ return d3.ascending(a.label, b.label) });
+    if (!noSort) {
+        if (sortByValue){
+            data.sort(function(a, b){ return d3.descending(a.value, b.value) });
+        }
+        else {
+            data.sort(function(a, b){ return d3.ascending(a.label, b.label) });
+        }
     }
 
     node.html('');

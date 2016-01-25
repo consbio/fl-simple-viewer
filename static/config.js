@@ -62,6 +62,10 @@ var fieldLabels = {
     //slr3: 'Projected Sea Level Rise (3m)'
 };
 
+var slrLevels = ['slr1', 'slr2', 'slr3'];
+var devLevels = ['devCur', 'dev2020', 'dev2040', 'dev2060'];
+
+
 
 var priorityLabels = ['Priority 1', 'Priority 2', 'Priority 3', 'Priority 4', 'Priority 5', 'Not a Priority'];
 var priorityLabels4 = priorityLabels.slice(0, 4).concat(priorityLabels[5]);

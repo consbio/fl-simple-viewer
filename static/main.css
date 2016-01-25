@@ -270,7 +270,7 @@ input[type=range]:focus::-ms-fill-upper {
 }
 
 .bar {
-    border: 1px solid #DDD;
+    border: 1px solid #555;
     height: 1.5em;
     opacity: 0.75;
 }
@@ -750,9 +750,14 @@ div.dc-chart {
 .horiz-bars {
     line-height: 1;
     margin: 20px 10px 10px 10px;
-    background: #F6F6F2;
-    border: 1px solid #EEE;
+    /*background: #F6F6F2;*/
+    /*border: 1px solid #EEE;*/
+    border-left: 1px solid #555;
     padding: 10px 10px 10px 0
+}
+
+.horiz-bars > div > div:first-child {
+    margin-left: 2px;
 }
 
 .horiz-bars > div + div {
