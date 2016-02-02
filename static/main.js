@@ -67,7 +67,6 @@ d3.select('#DetailsClose').on('click', function(){
     d3.select('#MainSidebarHeader').classed('hidden', false);
     d3.select('#Details').classed('hidden', true);
     d3.select('#DetailsHeader').classed('hidden', true);
-    //d3.select('#Sidebar').style('width', '470px');
 });
 
 /******** Expandos *****************/
@@ -162,7 +161,7 @@ legend.onAdd = function (map) {
 };
 legend.addTo(map);
 
-map.addControl(L.control.layers(basemaps, null, {position: 'bottomright'}));
+map.addControl(L.control.layers(basemaps, null, {position: 'bottomright', autoZIndex: false}));
 d3.select('.leaflet-control-layers-toggle').html('<i class="fa fa-globe"></i> basemaps');
 
 
@@ -177,7 +176,7 @@ omnivore.topojson('static/features.json')
             featureIndex.set(id, feature);
             visibleFeatures.set(id, true);
         });
-        this.addTo(map);
+        //this.addTo(map);
         features = this;
 
         onLoad();
@@ -233,6 +232,7 @@ d3.csv('static/summary.csv',
 var onLoad = _.after(2, load);
 function load() {
     setSelectedField(selectedField, 'priority');
+    features.addTo(map);
 
     d3.select('#PriorityFilter').selectAll('div')
         .data(summaryFields.priority).enter()
@@ -361,15 +361,6 @@ function load() {
 
     // Species
     var sppGroupsList = d3.keys(sppGroups);
-    //d3.select('#SppFilter ul').selectAll('li')
-    //    .data(sppGroupsList).enter()
-    //    .append('li')
-    //    .classed('active', function(d, i){ return i === 0} )
-    //    .attr('data-tab', function(d){ return 'Filter-' + d} )
-    //    .html(function(d){ return sppGroupLabels[d]})
-    //    .on('click', function(d) {
-    //        selectTab(d3.select(this));
-    //    });
 
     var itemsList = d3.select('#SppFilter .slider-list');
 
@@ -407,7 +398,18 @@ function load() {
 
                 var dimension = cf.dimension(function(d){ return d[spp] });
                 dimensions[spp] = dimension;
-                createSliderFilter2(itemsList.append('li').attr('id', 'Filter-' + spp), dimension, spp, species[spp].split('|')[0]);
+                createSliderFilter2(
+                    itemsList.append('li').attr('id', 'Filter-' + spp),
+                    dimension,
+                    species[spp].split('|')[0],
+                    function(){
+                        d3.select('#Filter-' + spp).remove();
+                        d3.select('option[value="' + spp + '"]').property('disabled', false);  // TODO: optimize select
+                        dimensions[spp].dispose();
+                        delete dimensions[spp];
+                        updateMap();
+                    }
+                );
                 self.select('option[value="' + spp + '"]').property('disabled', true);
                 self.property('value', '-');
             })
@@ -445,17 +447,16 @@ function load() {
 
 
     // Land use
-    d3.select('#LandUseFilter .table-slider').selectAll('div.table-row')
-    //d3.select('#LandUseFilterList').selectAll('div')
+    //d3.select('#LandUseFilter .table-slider').selectAll('div.table-row')
+
+    d3.select('#LandUseFilterList').selectAll('div')
         .data(landUseTypes).enter()
-        .append('div').classed('table-row', true)
+        .append('div')//.classed('table-row', true)
         .each(function(d) {
             var node = d3.select(this);
             var dimension = dimensions['lu' + d];
             var label = landUseLabels[d];
-
-            //createNumberSpinnerTable(node, dimension, label);
-            createSliderFilter(node, dimension, null, label); //TODO: LU is in main filters for now
+            createSliderFilter2(node.append('li').attr('id', 'Filter-' + d), dimension, label, null);
         });
 }
 
@@ -507,21 +508,15 @@ function createNumberSpinnerTable(node, dimension, label) {
 }
 
 
-function createSliderFilter2(node, dimension, spp, label) {
+function createSliderFilter2(node, dimension, label, removeCallback) {
     var extent = d3.extent(_.map(dimension.group().all(), 'key')); // TODO: round ranges to nicer values
 
-    node.append('h4')
-        .text(label)
-        //remove link
-        .append('span').classed('small italic', true).text('[remove]')
-        .on('click', function(){
+    var header = node.append('h4').text(label);
 
-            d3.select('#Filter-' + spp).remove();
-            d3.select('option[value="' + spp + '"]').property('disabled', false);  // TODO: optimize select
-            dimensions[spp].dispose();
-            delete dimensions[spp];
-            updateMap();
-        });
+    if (removeCallback) {
+        header.append('span').classed('small italic', true).text('[remove]')
+            .on('click', removeCallback);
+    }
 
     var sliderContainer = node.append('div');
     //sliderContainer.append('span').classed('small', true).text(d3.format(',')(extent[0]) + ' ha');
@@ -554,8 +549,6 @@ function createSliderFilter2(node, dimension, spp, label) {
             updateMap();
         });
     sliderContainer.append('div').classed('inline-middle slider-value', true).text(d3.format(',')(extent[0]) + ' ha');
-
-    //sliderContainer.append('span').classed('small', true).text(d3.format(',')(extent[1]) + ' ha');
 
     var labelContainer = node.append('div').style('width', '300px');
     var formatter = d3.format(',');
@@ -622,6 +615,7 @@ function createFilterChart(node, dimension, header) {
 
 
 // Need a reset case too?
+// TODO: not used
 function coordinateFilters(group) {
     var idDimName = (group == null)? 'id': group + '_id';
     var ids = d3.set(_.map(dimensions[idDimName].top(Infinity), 'id'));
@@ -793,6 +787,7 @@ function showDetails(id) {
 
     var chartColors = colorMap.general;
     var chartColors4 = chartColors.slice(0, 4).concat(chartColors[5]);
+    var chartColors6 = ["#08519c", "#3182bd", "#6baed6", "#9ecae1", "#c6dbef", "#eff3ff", '#ffffcc'];  // same version as colorMap.general but over 7 classes
 
     // Priority resources tab
     var pr_data = d3.entries(details.pflcc_pr).map(function(d) {
@@ -833,9 +828,20 @@ function showDetails(id) {
 
     // Landscape tab
     createPieChart(d3.select('#Land_Chart'), zipIntoObj(['value', 'label', 'color'], details.land, priorityLabels, chartColors), '%');
+    createPieChart(d3.select('#Greenways_Chart'), zipIntoObj(['value', 'label', 'color'], details.land_greenways, priorityLabels, chartColors), '%');
+    createPieChart(d3.select('#LI_Chart'), zipIntoObj(['value', 'label', 'color'], details.land_integrity, priorityLabels, chartColors), '%');
 
     // Surface water tab
     createPieChart(d3.select('#Water_Chart'), zipIntoObj(['value', 'label', 'color'], details.water, priorityLabels, chartColors), '%');
+    createPieChart(d3.select('#SSW_Chart'), zipIntoObj(['value', 'label', 'color'], details.water_significant, priorityLabels, chartColors), '%');
+    createPieChart(d3.select('#Floodplain_Chart'), zipIntoObj(['value', 'label', 'color'], details.water_floodplain, priorityLabels, chartColors), '%');
+    createPieChart(d3.select('#Wetlands_Chart'), zipIntoObj(['value', 'label', 'color'], details.water_wetland, priorityLabels, chartColors), '%');
+    if (details.water_aquifer) {
+        createPieChart(d3.select('#Aquifer_Chart'), zipIntoObj(['value', 'label', 'color'], details.water_aquifer, priorityLabels6, chartColors6), '%');
+    }
+    else {
+        d3.select('#Aquifer_Chart').append('div').classed('quiet center', true).html('No data available');
+    }
 
 
 
@@ -986,6 +992,7 @@ function speciesTable(values){
 
 
 // expects array of objects with value, label, color already present
+//redo handling of sort flag or require things to be sorted on input
 function createInlineBarChart(node, data, units, sortByValue, noSort) {
     width = 324;
 

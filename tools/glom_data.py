@@ -38,6 +38,18 @@ files = [
     'NATCOM_L1',
     'PHRICH_L1',
     'PHRICH_L2',
+
+    # Landscapes
+    'GRNWAY_L1',
+    'LSINT_L1',
+
+    # Surface Water
+    'SURWAT_L1',
+    'NATFLDPLN_L1',
+    'WTLND_L1',
+    'RCHRG_L1',
+
+
     'ConsolidatedCLCByHUC12',
     # 'LandManagementByHUC12', # obviated by below
     'ManagedAreas_FNAI_HUC12',
@@ -146,10 +158,41 @@ for huc in primary_df.index: #[0:500]:
     fields = ['Lanp_P1', 'Lanp_P2', 'Lanp_P3', 'Lanp_P4', 'Lanp_P5', 'Lanp_0']
     data['land'] = [round(record[f], 1) for f in fields]
 
+    # Landscapes - Greenways
+    record = dfs['GRNWAY_L1'].loc[huc]
+    fields = ['GRNWAYp_P1', 'GRNWAYp_P3', 'GRNWAYp_P4', 'GRNWAYp_0']
+    data['land_greenways'] = [round(record[f], 1) for f in fields]
+
+    # Landscape integrity
+    record = dfs['LSINT_L1'].loc[huc]
+    fields = ['LSINTp_P2', 'LSINTp_P3', 'LSINTp_P4', 'LSINTp_P5', 'LSINTp_0']
+    data['land_integrity'] = [round(record[f], 1) for f in fields]
+
+
     # Surface water
     record = dfs['CLIPSrfWatPrioritiesByHUC12'].loc[huc]
     fields = ['SWp_P1', 'SWp_P2', 'SWp_P3', 'SWp_P4', 'SWp_P5', 'SWp_0']
     data['water'] = [round(record[f], 1) for f in fields]
+
+    # Significant surface waters
+    record = dfs['SURWAT_L1'].loc[huc]
+    fields = ['SWTRp_P1', 'SWTRp_P2', 'SWTRp_P3', 'SWTRp_P4', 'SWTRp_P5', 'SWTRp_0']
+    data['water_significant'] = [round(record[f], 1) for f in fields]
+
+    # Natural floodplain
+    record = dfs['NATFLDPLN_L1'].loc[huc]
+    fields = ['FLPLp_P1', 'FLPLp_P2', 'FLPLp_P3', 'FLPLp_P4', 'FLPLp_P5', 'FLPLp_0']
+    data['water_floodplain'] = [round(record[f], 1) for f in fields]
+
+    # Wetland
+    record = dfs['WTLND_L1'].loc[huc]
+    fields = ['WTLDp_P1', 'WTLDp_P2', 'WTLDp_P3', 'WTLDp_P4', 'WTLDp_P5', 'WTLDp_0']
+    data['water_wetland'] = [round(record[f], 1) for f in fields]
+
+    # Aquifer / recharge
+    record = dfs['RCHRG_L1'].loc[huc]
+    fields = ['RCH_P1', 'RCH_P2', 'RCH_P3', 'RCH_P4', 'RCH_P5', 'RCH_P6', 'RCH_0']  # These are in sq meters
+    data['water_aquifer'] = [round((100.0 * record[f]) / record['Shape_Area'], 1) for f in fields]
 
 
     # Land Use

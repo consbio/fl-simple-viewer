@@ -25,7 +25,7 @@
 
     <div class="table fullwidth fullheight">
         <div id="Header" class="table-row fullwidth">
-            <div id="LearnMoreButton" class="right button small button-open" data-target="LearnMorePopup">Learn More</div>
+            <!--<div id="LearnMoreButton" class="right button small button-open" data-target="LearnMorePopup">Learn More</div>-->
             <img src="static/img/logo.png" align="left" />
             <h3 class="left">Peninsular Florida LCC - Simple Map Viewer</h3>
             <div class="clear"></div>
@@ -70,7 +70,7 @@
 
                     <!-- content row -->
                     <div class="table-row fullwidth fullheight">
-                        <div class="table-cell pos-rel fullwidth fullheight">
+                        <div class="pos-rel fullwidth fullheight">
                             <div class="pos-abs fillspace scrolly">
 
                                 <div id="MainSidebar">
@@ -140,9 +140,9 @@
                                             you specify of these general land use categories.  The categories were generalized from the
                                             78 state level land cover types outlined in the Florida Cooperative Land Cover Map (CLC, version 3.1)
                                         </p>
-                                        <div class="small" style="margin: 0 0 14px 160px;font-weight: bold;">Show only watersheds with at least:</div>
-                                        <div class="table table-slider"></div>
-                                        <!--<div id="LandUseFilterList"></div>-->
+                                        <!--<div class="small" style="margin: 0 0 14px 160px;font-weight: bold;">Show only watersheds with at least:</div>-->
+                                        <!--<div class="table table-slider"></div>-->
+                                        <div id="LandUseFilterList" class="slider-list"></div>
                                     </div>
 
                                     <div id="ThreatsFilter" class="tab hidden">
@@ -176,7 +176,7 @@
                                             <li class="active" data-tab="CLIPOverall">Overall</li>
                                             <li data-tab="CLIPBiodiversity">Biodiversity</li>
                                             <li data-tab="CLIPLandscape">Landscape</li>
-                                            <li data-tab="CLIPWater">Surface Water</li>
+                                            <li data-tab="CLIPWater">Water Resources</li>
                                         </ul>
 
                                         <div id="CLIPOverall" class="tab">
@@ -249,7 +249,7 @@
                                         </div>
 
                                         <div id="CLIPLandscape" class="tab hidden">
-                                            <section>
+                                            <section  class="expandable expanded">
                                                 <h4>CLIP Landscape</h4>
                                                 <div>
                                                     <p>
@@ -258,10 +258,30 @@
                                                     <div id="Land_Chart"></div>
                                                 </div>
                                             </section>
+
+                                            <section  class="expandable">
+                                                <h4>Florida Ecological Greenways Network</h4>
+                                                <div>
+                                                    <p>
+                                                        This data layer was created by the University of Florida Center for Landscape Conservation Planning to provide an ecological component to the Statewide Greenways System plan developed by the Dept. of Environmental Protection, Office of Greenways and Trails. It is intended to represent a statewide network of ecological hubs and linkages designed to maintain landscape-scale ecological functions and fragmentation sensitive biodiversity throughout the state.
+                                                    </p>
+                                                    <div id="Greenways_Chart"></div>
+                                                </div>
+                                            </section>
+
+                                            <section  class="expandable">
+                                                <h4>Landscape Integrity Index</h4>
+                                                <div>
+                                                    <p>
+                                                        This data layer was created by the University of Florida Center for Landscape Conservation Planning specifically for CLIP. It combines two models: natural land cover patch size and land use intensity. Both are based on the Cooperative Land Cover (CLC) data layer and major roads data from the Florida Department of Transportation (which are used to help delineate patches).  Higher values indicate large expanses of remote, intact natural and semi-natural areas.  Lower values indicate more fragmented landscapes with increasingly intensive land uses from agriculture to urban development.
+                                                    </p>
+                                                    <div id="LI_Chart"></div>
+                                                </div>
+                                            </section>
                                         </div>
 
                                         <div id="CLIPWater" class="tab hidden">
-                                            <section>
+                                            <section class="expandable expanded">
                                                 <h4>CLIP Surface Water</h4>
                                                 <div>
                                                     <p>
@@ -270,6 +290,60 @@
                                                     <div id="Water_Chart"></div>
                                                 </div>
                                             </section>
+
+                                            <section  class="expandable">
+                                                <h4>Significant Surface Waters</h4>
+                                                <div>
+                                                    <p>
+                                                        This data layer was created by FNAI, in consultation with water resource experts, originally to inform the Florida Forever environmental land acquisition program. It identifies buffers to important surface water bodies as well as watersheds that contribute to those water bodies.
+                                                    </p>
+                                                    <div id="SSW_Chart"></div>
+                                                </div>
+                                            </section>
+
+                                            <section  class="expandable">
+                                                <h4>Natural Floodplain</h4>
+                                                <div>
+                                                    <p>
+                                                        This data layer was created by FNAI, in consultation with water resource experts, originally to inform the Florida Forever environmental land acquisition program. It identifies FEMA 100-year floodplain for most counties, or a surrogate model for 100-year floodplain (based on wetlands and soils) where FEMA data isn’t complete.
+                                                    </p>
+                                                    <div id="Floodplain_Chart"></div>
+                                                </div>
+                                            </section>
+
+                                            <section  class="expandable">
+                                                <h4>Wetlands</h4>
+                                                <div>
+                                                    <p>
+                                                        This data layer was created by FNAI, in consultation with water resource experts, originally to inform the Florida Forever environmental land acquisition program. Wetlands were mapped based on the Cooperative Land Cover (CLC) data layer. Highest priorities indicate wetlands within large intact natural landscapes (although the wetlands themselves may be small or large). Lowest priorities indicate wetlands within fragmented landscapes surrounded by intensive agriculture or urban development
+                                                    </p>
+                                                    <div id="Wetlands_Chart"></div>
+                                                </div>
+                                            </section>
+
+                                            <section  class="expandable">
+                                                <h4>Aquifer Recharge</h4>
+                                                <div>
+                                                    <p>
+                                                        This data layer was created by FNAI, in collaboration with Advanced Geospatial, Inc., originally to inform the Florida Forever environmental land acquisition program. AGI developed an initial Recharge Potential model following a similar model to the Florida Aquifer Vulnerability Assessment (FAVA). FNAI removed discharge areas and prioritized the model based on overlap with Springs Protection Areas and buffers to public water supply wells. High priorities indicate high potential for recharge to an underlying aquifer system. The highest priorities indicate high potential for recharge to springs or public water supplies.
+                                                        <br/><br/>
+                                                        (Not included in the CLIP surface waters layer or CLIP’s aggregated priorities).
+                                                    </p>
+                                                    <div id="Aquifer_Chart"></div>
+                                                </div>
+                                            </section>
+
+                                            <!--<section  class="expandable">-->
+                                                <!--<h4></h4>-->
+                                                <!--<div>-->
+                                                    <!--<p>-->
+
+                                                    <!--</p>-->
+                                                    <!--<div id=""></div>-->
+                                                <!--</div>-->
+                                            <!--</section>-->
+
+
                                         </div>
                                     </div>
 
@@ -284,9 +358,20 @@
                                         <!-- TODO: tabs? -->
                                         <section>
                                             <h5>Projected Sea Level Rise</h5>
+                                            <p>
+                                                These sea level rise projections were produced by the University of Florida Geoplan Center.
+                                                These projections measure sea level rise in meter increments up until 3 meters, based on Bathtub sea level rise models.
+                                                The graph below reports the area affected for each of these three scenarios (as well as the area unaffected).
+                                                Time ranges were extrapolated from the High Bathtub Projections (for Mean Sea Level Rise) used in the University of
+                                                Florida GeoPlan Center’s <a href="http://sls.geoplan.ufl.edu/" target="_blank">Sea Level Rise Sketch tool</a>.
+                                                The hectares reported for each of these scenarios are cumulative figures.
+                                            </p>
                                             <div id="SLR_Bars" class="horiz-bars small"></div>
 
                                             <h5 style="margin-top: 30px;">Urban Development / Population Growth</h5>
+                                            <p>
+                                                These development projections are derived from the Florida 2060 development dataset. This projections explores the physical reality and consequences of the population growth from 2005 to 2060 if existing land use policy or population growth patterns do not change.  The land use suitability analysis displayed in this dataset was performed by the University of Florida GeoPlan Center for 1000 Friends of Florida. The graph below reports the area affected for each of the three time steps used in this model, the existing extent of urbanization in 2005, and the area unaffected by urbanization. The hectares reported for each of the three time steps are cumulative figures.
+                                            </p>
                                             <div id="Dev_Bars" class="horiz-bars small"></div>
                                         </section>
                                     </div>
@@ -327,7 +412,7 @@
         <div id="Footer" class="table-row small">
             <ul>
                 <li>
-                    <a href="#" >Access Data</a>
+                    <a href="http://pflcc.databasin.org/" target="_blank">Access Data</a>
                 </li>
                 <li class="small right">
                     Created by the

@@ -54,9 +54,9 @@ var fieldLabels = {
     //dev2060: 'Projected Development (2060)',
 
     slr: 'Projected Sea Level Rise',
-    slr1: '1 meter',
-    slr2: '2 meters',
-    slr3: '3 meters'
+    slr1: '1 meter (2070 - 2090)',
+    slr2: '2 meters (2100 - 2120)',
+    slr3: '3 meters (2130 - 2150)'
     //slr1: 'Projected Sea Level Rise (1m)',
     //slr2: 'Projected Sea Level Rise (2m)',
     //slr3: 'Projected Sea Level Rise (3m)'
@@ -69,6 +69,7 @@ var devLevels = ['devCur', 'dev2020', 'dev2040', 'dev2060'];
 
 var priorityLabels = ['Priority 1', 'Priority 2', 'Priority 3', 'Priority 4', 'Priority 5', 'Not a Priority'];
 var priorityLabels4 = priorityLabels.slice(0, 4).concat(priorityLabels[5]);
+var priorityLabels6 = priorityLabels.slice(0, 5).concat(['Priority 6']).concat(priorityLabels[5]);
 
 
 // common name|priority(4 levels, not 5)
