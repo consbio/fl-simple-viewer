@@ -398,7 +398,7 @@ function load() {
 
                 var dimension = cf.dimension(function(d){ return d[spp] });
                 dimensions[spp] = dimension;
-                createSliderFilter2(
+                createSliderFilter(
                     itemsList.append('li').attr('id', 'Filter-' + spp),
                     dimension,
                     species[spp].split('|')[0],
@@ -415,40 +415,7 @@ function load() {
             })
         });
 
-
-        //.classed('tab', true)
-        //.each(function(group, i) {
-        //    var node = d3.select(this);
-        //    node.attr('id', 'Filter-' + group);
-        //
-        //    if (i > 0) {
-        //        node.classed('hidden', true);
-        //    }
-        //
-        //    node.append('div')
-        //        .classed('small', true)
-        //        .style({
-        //            margin: '0 0 14px 110px',
-        //            'font-weight': 'bold'
-        //        })
-        //        .text('Show only watersheds with at least:');
-        //
-        //    // TODO: sort these alphabetically or grouped by priority class
-        //    var container = node.append('div').classed('table-slider', true);
-        //    container.selectAll('div').data(sppGroups[group]).enter()
-        //        .append('div').classed('table-row', true)
-        //        .each(function(d) {
-        //            var node = d3.select(this);
-        //            var dimension = dimensions[d];
-        //            var label = species[d].split('|')[0];
-        //            //createSliderFilter(node, dimension, group, label);
-        //        });
-        //});
-
-
     // Land use
-    //d3.select('#LandUseFilter .table-slider').selectAll('div.table-row')
-
     d3.select('#LandUseFilterList').selectAll('div')
         .data(landUseTypes).enter()
         .append('div')//.classed('table-row', true)
@@ -456,60 +423,16 @@ function load() {
             var node = d3.select(this);
             var dimension = dimensions['lu' + d];
             var label = landUseLabels[d];
-            createSliderFilter2(node.append('li').attr('id', 'Filter-' + d), dimension, label, null);
+            createSliderFilter(node.append('li').attr('id', 'Filter-' + d), dimension, label, null);
         });
 }
 
 
-
-function createNumberSpinnerTable(node, dimension, label) {
-    var extent = [0, d3.max(_.map(dimension.group().all(), 'key'))];
-
-    node.append('label')
-        //.classed('table-cell', true)
-        .text(label); // species[d].split('|')[0]
-
-    node.append('input')
-        //.classed('inline-middle', true)
-        .attr('type', 'number')
-        .attr('min', extent[0])
-        .attr('max', extent[1])
-        .attr('step', 10)
-        .property('value', extent[0])
-        .on('change', function(){
-            var self = d3.select(this);
-            var quantityNode = d3.select(self.node().parentNode).select('div');
-            quantityNode.html('');
-            var value = self.property('value');
-            if (value < extent[0]) {
-                value = extent[0];
-                self.property('value', value);
-            }
-            if (value > extent[1]) {
-                value = extent[1];
-                self.property('value', value);
-            }
-
-            console.log('spinner value', value);
-            if (value == 0) {
-                dimension.filterAll();
-            }
-            else {
-                //filter range from value to max
-                dimension.filterRange([value, extent[1] + 1]);
-                //quantityNode.text(d3.format(',')(value) + ' ha')
-            }
-
-            dc.redrawAll();
-            updateMap();
-        });
-
-    node.append('span').text('ha');
-}
-
-
-function createSliderFilter2(node, dimension, label, removeCallback) {
+function createSliderFilter(node, dimension, label, removeCallback) {
     var extent = d3.extent(_.map(dimension.group().all(), 'key')); // TODO: round ranges to nicer values
+
+    var scale = d3.scale.linear().domain(extent).range([0, 300]); // based on width of slider
+
 
     var header = node.append('h4').text(label);
 
@@ -519,7 +442,6 @@ function createSliderFilter2(node, dimension, label, removeCallback) {
     }
 
     var sliderContainer = node.append('div');
-    //sliderContainer.append('span').classed('small', true).text(d3.format(',')(extent[0]) + ' ha');
 
     var slider = sliderContainer.append('input')
         .attr('type', 'range')
@@ -528,9 +450,7 @@ function createSliderFilter2(node, dimension, label, removeCallback) {
         .attr('step', 1)
         .property('value', extent[0])
         .on('change', function(){
-            console.log('event', d3.event)
             var self = d3.select(this);
-            //var quantityNode = d3.select(self.node().parentNode).select('.slider-tooltip');
             var quantityNode = d3.select(self.node().parentNode).select('.slider-value');
             quantityNode.html('');
             var value = slider.property('value');
@@ -543,8 +463,6 @@ function createSliderFilter2(node, dimension, label, removeCallback) {
             }
             quantityNode.text(d3.format(',')(value) + ' ha');
 
-
-            //coordinateFilters(group);
             dc.redrawAll();
             updateMap();
         });
@@ -555,51 +473,6 @@ function createSliderFilter2(node, dimension, label, removeCallback) {
     labelContainer.append('span').classed('small', true).text(d3.format(',')(extent[0]) + ' ha');
     labelContainer.append('span').classed('small right', true).text(d3.format(',')(extent[1]) + ' ha');
 }
-
-
-
-function createSliderFilter(node, dimension, group, label) {
-    var extent = [0, d3.max(_.map(dimension.group().all(), 'key'))];
-
-    node.append('div')
-        .classed('table-cell', true)
-        .text(label);
-
-    var sliderContainer = node.append('div').classed('table-cell', true);
-
-    var slider = sliderContainer.append('input')
-        .attr('type', 'range')
-        .attr('min', extent[0])
-        .attr('max', extent[1])
-        .attr('step', 1)
-        .property('value', extent[0])
-        .on('change', function(){
-            var self = d3.select(this);
-            var quantityNode = d3.select(self.node().parentNode).select('div');
-            quantityNode.html('');
-            var value = slider.property('value');
-            if (value == 0) {
-                dimension.filterAll();
-            }
-            else {
-                //filter range from value to max
-                dimension.filterRange([value, extent[1] + 1]);
-                quantityNode.text(d3.format(',')(value) + ' ha')
-            }
-
-            //coordinateFilters(group);
-            dc.redrawAll();
-            updateMap();
-        });
-
-    sliderContainer.append('div');
-
-    node.append('div')
-        .classed('table-cell quiet', true)
-        .text(d3.format(',')(extent[1]) + ' ha');
-}
-
-
 
 function createFilterChart(node, dimension, header) {
     var labels = barLabels(dimension);
@@ -612,33 +485,6 @@ function createFilterChart(node, dimension, header) {
         ordering: function(d) { return -d.key }
     });
 }
-
-
-// Need a reset case too?
-// TODO: not used
-function coordinateFilters(group) {
-    var idDimName = (group == null)? 'id': group + '_id';
-    var ids = d3.set(_.map(dimensions[idDimName].top(Infinity), 'id'));
-
-    var filterFunc = function(d) { return ids.has(d) };
-
-    idDimensions.forEach(function(d){
-        if (d != idDimName) {
-            // this may or may not be the right thing to do here
-            dimensions[d].filterAll();
-
-
-            dimensions[d].filterFunction(filterFunc);
-        }
-    });
-
-
-    //To coordinate these filters:
-    //var bird_ids = _.map(dimensions.birds_id.top(Infinity), 'id');
-    //dimensions.id.filterFunction(function(d){ return bird_ids.indexOf(d) != -1 });
-}
-
-
 
 function onFilter(header, chart, filter) {
     console.log("onfilter", arguments);
