@@ -35,9 +35,15 @@ files = [
     'SHCA_L2_P2',
     'SHCA_L2_P3',
     'SHCA_L2_P4',
-    'NATCOM_L1',
+
     'PHRICH_L1',
     'PHRICH_L2',
+
+    'NATCOM_L1',
+    'NATCOM_L2_P1',
+    'NATCOM_L2_P2',
+    'NATCOM_L2_P3',
+    'NATCOM_L2_P4',
 
     # Landscapes
     'GRNWAY_L1',
@@ -114,7 +120,6 @@ for huc in primary_df.index: #[0:500]:
         shca_level2['1'] = dict([x for x in zip([f.replace('_PH_H', '').replace('_H', '') for f in fields], values) if x[1] > 0])
 
     record = dfs['SHCA_L2_P2'].loc[huc]
-    # TODO: fix duplicate
     fields = ['BCFS_PH_H', 'BEAR_PH_H', 'CROC_PH_H', 'LOUSP_PH_H', 'MACSP_PH_H', 'NEWT_PH_H', 'PLOVR_PH_H', 'SCRJY_PH_H', 'SESAL_PH_H', 'SNKIT_PH_H', 'SSKNK_PH_H', 'STHA_PH_H', 'SRRAT_PH_H']
     values = [int(round(record[f], 0)) for f in fields]
     if sum(values):
@@ -135,11 +140,39 @@ for huc in primary_df.index: #[0:500]:
     data['bio_shca2'] = shca_level2
 
 
-
     # Biodiversity - PNC
     record = dfs['NATCOM_L1'].loc[huc]
     fields = ['NCp_P1', 'NCp_P2', 'NCp_P3', 'NCp_P4', 'NCp_0']
-    data['bio_pnc'] = [round(record[f], 1) for f in fields]
+    data['bio_pnc'] = [round(record[f], 4) for f in fields]
+
+    # Biodiversity - Priority Natural Communities Level 2 (TODO: only write out nonempty fields)
+    pnc_level2 = {}
+    record = dfs['NATCOM_L2_P1'].loc[huc]
+    fields = ['UGvh_h', 'PRvh_h', 'PRh_h', 'SSFvh_h', 'SSFh_h', 'RHvh_h', 'RHh_h', 'DPvh_h', 'DPh_h', 'SSvh_h', 'SSh_h', 'ICLvh_h', 'ICLh_h', 'FCUvh_h', 'FCUh_h', 'Svh_h', 'Sh_h', 'SULvh_h', 'SULh_h', 'UPvh_h', 'Uph_h']
+    values = [int(round(record[f], 0)) for f in fields]
+    if sum(values):
+        pnc_level2['1'] = dict([x for x in zip([f.replace('_h', '') for f in fields], values) if x[1] > 0])
+
+    record = dfs['NATCOM_L2_P2'].loc[huc]
+    fields = ['SSFm_h', 'RHm_h', 'DPm_h', 'ICLm_h', 'FCUm_h', 'Sm_h', 'SULm_h', 'Upm_h', 'PFvh_h', 'PFh_h']
+    values = [int(round(record[f], 0)) for f in fields]
+    if sum(values):
+        pnc_level2['2'] = dict([x for x in zip([f.replace('_h', '') for f in fields], values) if x[1] > 0])
+
+    record = dfs['NATCOM_L2_P3'].loc[huc]
+    fields = ['PFm_h', 'Uhvh_h', 'Uhh_h', 'CWvh_h', 'CWh_h']
+    values = [int(round(record[f], 0)) for f in fields]
+    if sum(values):
+        pnc_level2['3'] = dict([x for x in zip([f.replace('_h', '') for f in fields], values) if x[1] > 0])
+
+    record = dfs['NATCOM_L2_P4'].loc[huc]
+    fields = ['Uhm_h', 'CWm_h']
+    values = [int(round(record[f], 0)) for f in fields]
+    if sum(values):
+        pnc_level2['4'] = dict([x for x in zip([f.replace('_h', '') for f in fields], values) if x[1] > 0])
+
+    data['bio_pnc2'] = pnc_level2
+
 
     # Biodiversity - Spp Richness
     record = dfs['PHRICH_L1'].loc[huc]

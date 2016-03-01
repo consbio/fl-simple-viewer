@@ -76,7 +76,7 @@
                                 <div id="MainSidebar">
                                     <div id="Intro" class="tab">
                                         <p>
-                                            <img src="static/img/8382622720_887e32ea2c_z.jpg" style="width:50%;margin:0 10px 6px 0; border-radius: 10px 0;box-shadow:2px 2px 5px #AAA;" align="left"/>
+                                            <img src="static/img/ScrubJay.jpg" style="width:50%;margin:0 10px 6px 0; border-radius: 10px 0;box-shadow:2px 2px 5px #AAA;" align="left"/>
                                             <span style="font-weight: bold;">
                                                 Welcome to the Peninsular Florida LCC Data Viewer.
                                             </span>
@@ -107,11 +107,6 @@
                                                 To find out more information about a specific watershed, click on it in the map.
                                             </p>
                                         </div>
-
-                                        <div class="divider divider-light"></div>
-                                        <div class="quiet center" style="font-size:x-small;">
-                                            Photo credit: <a href="https://www.flickr.com/photos/allenmcgregor/8382622720/in/album-72157632522466315/" target="_blank">Allen McGregor</a> (creative commons).
-                                        </div>
                                     </div>
                                     <div id="PriorityFilter" class="tab hidden">
                                         <p class="small" style="color: #AAA;">
@@ -129,7 +124,6 @@
                                             of potential habitat you specify.  Values range from 0 to the maximum amount of potential
                                             habitat area found for that species.
                                         </p>
-                                        <!--<ul class="tabs subtabs" style="margin-top: 0; margin-bottom: 16px;padding: 0;"></ul>-->
                                         <div></div>  <!-- selectors -->
                                         <ul class="slider-list"></ul> <!-- items -->
                                     </div>
@@ -162,9 +156,19 @@
                                     <div id="DetailsOverview" class="tab">
                                         <section>
                                             <h4>PFLCC DRAFT Priority Resources</h4>
+                                            <!--  class="js-hasTooltip node-highlight" data-tooltip-title="PFLCC DRAFT Priority Resources" data-tooltip="Priority resources are the set of biological, ecological, and cultural features and ecological processes collaboratively identified as most important, and are the focus of the PFLCC’s planning.  Priority resources will provide a simple way to measure the overall condition of the Peninsular Florida’s complex systems.  There are currently 12 DRAFT Priority Resources, 9 based on land cover types from the Cooperative Land Cover map (v. 3.0): High Pine and Scrub, Pine Flatwoods and Dry Prairie, Freshwater Forested Wetlands, Hardwood Forested Uplands, Coastal Uplands, Freshwater non-forested Wetlands, Estuarine, Marine, Freshwater Aquatic; and 3 non-CLC based resource types:  Landscape Connectivity, Cultural and Socio-economic, and Working Lands." -->
                                             <div>
                                                 <p>
-                                                    Priority resources are the set of biological, ecological, and cultural features and ecological processes collaboratively identified as most important, and are the focus of the PFLCC’s planning.  Priority resources will provide a simple way to measure the overall condition of the Peninsular Florida’s complex systems.  There are currently 12 DRAFT Priority Resources, 9 based on land cover types from the Cooperative Land Cover map (v. 3.0): High Pine and Scrub, Pine Flatwoods and Dry Prairie, Freshwater Forested Wetlands, Hardwood Forested Uplands, Coastal Uplands, Freshwater non-forested Wetlands, Estuarine, Marine, Freshwater Aquatic; and 3 non-CLC based resource types:  Landscape Connectivity, Cultural and Socio-economic, and Working Lands.
+                                                    Priority resources are the set of biological, ecological, and cultural
+                                                    features and ecological processes collaboratively identified as most
+                                                    important, and are the focus of the PFLCC’s planning.  Priority resources
+                                                    will provide a simple way to measure the overall condition of the Peninsular
+                                                    Florida’s complex systems.  There are currently 12 DRAFT Priority Resources,
+                                                    9 based on land cover types from the Cooperative Land Cover map (v. 3.0):
+                                                    High Pine and Scrub, Pine Flatwoods and Dry Prairie, Freshwater Forested Wetlands,
+                                                    Hardwood Forested Uplands, Coastal Uplands, Freshwater non-forested Wetlands,
+                                                    Estuarine, Marine, Freshwater Aquatic; and 3 non-CLC based resource types:
+                                                    Landscape Connectivity, Cultural and Socio-economic, and Working Lands.
                                                 </p>
                                                 <div id="PFLCC_PR_Bars" class="horiz-bars small"></div>
                                             </div>
@@ -180,26 +184,26 @@
                                         </ul>
 
                                         <div id="CLIPOverall" class="tab">
-                                            <section>
+                                            <section class="js-hasTooltip node-highlight" data-tooltip-title="CLIP Overall Priorities" data-tooltip="The Critical Lands and Waters Identification Project (CLIP) is a collection of spatial data that identify statewide priorities for a broad range of natural resources in Florida. CLIP 3.0 is organized into a set of core natural resource data layers which are combined into resource categories, three of which (biodiversity, landscapes, surface water) have been combined into the Aggregated CLIP model, which identifies five priority levels for natural resource conservation.">
                                                 <h4>CLIP Overall Priorities</h4>
                                                 <div>
-                                                    <p>
-                                                        The Critical Lands and Waters Identification Project (CLIP) is a collection of spatial data that identify statewide priorities for a broad range of natural resources in Florida. CLIP 3.0 is organized into a set of core natural resource data layers which are combined into resource categories, three of which (biodiversity, landscapes, surface water) have been combined into the Aggregated CLIP model, which identifies five priority levels for natural resource conservation.
-                                                        <br /><br/>
-                                                        ...
-                                                    </p>
+                                                    <!--<p>-->
+                                                        <!--The Critical Lands and Waters Identification Project (CLIP) is a collection of spatial data that identify statewide priorities for a broad range of natural resources in Florida. CLIP 3.0 is organized into a set of core natural resource data layers which are combined into resource categories, three of which (biodiversity, landscapes, surface water) have been combined into the Aggregated CLIP model, which identifies five priority levels for natural resource conservation.-->
+                                                        <!--<br /><br/>-->
+                                                        <!--...-->
+                                                    <!--</p>-->
                                                     <div id="CLIP_Chart"></div>
                                                 </div>
                                             </section>
                                         </div>
 
                                         <div id="CLIPBiodiversity" class="tab hidden">
-                                            <section class="expandable expanded">
+                                            <section class="expandable expanded js-hasTooltip node-highlight" data-tooltip-title="Overall CLIP Biodiversity" data-tooltip="This model is a combination of the four CLIP core data layers in the Biodiversity Resource Category: Strategic Habitat Conservation Areas (SHCA), Vertebrate Potential Habitat Richness (VertRich), Rare Species Habitat Conservation Priorities (FNAIHAB), and Priority Natural Communities (Natcom).  (See pg. 14-15 of the CLIP Technical Report for the rules used to assign the core data layers into the Biodiversity resource priority model).">
                                                 <h4>Overall CLIP Biodiversity</h4>
                                                 <div>
-                                                    <p>
-                                                        This model is a combination of the four CLIP core data layers in the Biodiversity Resource Category: Strategic Habitat Conservation Areas (SHCA), Vertebrate Potential Habitat Richness (VertRich), Rare Species Habitat Conservation Priorities (FNAIHAB), and Priority Natural Communities (Natcom).  (See pg. 14-15 of the <a href="http://www.fnai.org/pdf/CLIP_3_technical_report.pdf" target="_blank">CLIP Technical Report</a> for the rules used to assign the core data layers into the Landscape resource priority model).
-                                                    </p>
+                                                    <!--<p>-->
+                                                        <!--This model is a combination of the four CLIP core data layers in the Biodiversity Resource Category: Strategic Habitat Conservation Areas (SHCA), Vertebrate Potential Habitat Richness (VertRich), Rare Species Habitat Conservation Priorities (FNAIHAB), and Priority Natural Communities (Natcom).  (See pg. 14-15 of the <a href="http://www.fnai.org/pdf/CLIP_3_technical_report.pdf" target="_blank">CLIP Technical Report</a> for the rules used to assign the core data layers into the Biodiversity resource priority model).-->
+                                                    <!--</p>-->
                                                     <div id="Bio_Chart"></div>
                                                 </div>
                                             </section>
@@ -230,8 +234,11 @@
                                                 <div>
                                                     <p>
                                                         This data layer was created by FNAI originally to inform the Florida Forever environmental land acquisition program. The natural communities were mapped primarily based on the FNAI/FWC Cooperative Land Cover (CLC) data layer.  This layer includes 12 priority natural community types: upland glades, pine rocklands, seepage slopes, scrub, sandhill, sandhill upland lakes, rockland hammock, coastal uplands, imperiled coastal lakes, dry prairie, upland pine, pine flatwoods, upland hardwood forest, or coastal wetlands. These natural communities are prioritized by a combination of their heritage global status rank (G-rank) and landscape context, based on the Land Use Intensity Index (subset of CLIP Landscape Integrity Index) and FNAI Potential Natural Areas.
+                                                        <br/>
+                                                        The qualifiers (Very High, High, Moderate) for the Priority Natural Communities in CLIP were based on the Landscape Integrity Priority Classifications created by FNAI. A more specific description of these prioritization can be found in Appendix D of the CLIP Technical Report.
                                                     </p>
                                                     <div id="BioPNC_Chart"></div>
+                                                    <div id="BioPNC_Table" class="detail-table"></div>
                                                 </div>
 
                                             </section>
@@ -392,6 +399,26 @@
                                         <div id="PartnerTab" class="tab hidden">
                                             <section style="margin-top: 30px;">
                                                 <h5>Regional / Partner Conservation Efforts</h5>
+                                                <p class="quiet">
+                                                    Conservation priorities and potential areas of interest for partner
+                                                    organizations and land trusts. Each partner prioritizes conservation
+                                                    need differently and so these identified areas are not entirely comparable.
+                                                    Nevertheless, an attempt was made to standardize the summarization of
+                                                    these differing efforts. To start, a prioritization was only associated
+                                                    with a HUC12 if it occupied a significant portion of that HUC
+                                                    (greater than a third). In terms of prioritizations, if an organization
+                                                    ranked its priorities, only better than average/normal priority
+                                                    areas were included. For instance, for the National Bobwhite
+                                                    Conservation Initiative, only High and Moderate rankings were included.
+                                                    Or, for the Nature Conservancy Resilient Sites, any above average
+                                                    resiliency area was included (Slightly Above Average, Above Average, and Far Above Average).
+                                                    For other prioritizations, the results were binary such as the Nature
+                                                    Conservancy’s Ecoregional Priorities where all areas designated as
+                                                    priorities or linkages were included. More information about these
+                                                    and other priorities, follow
+                                                    <a href="http://pflcc.databasin.org/articles/ce1f69f0d22b483288d8e4ac025a19b4" target="_blank" >this link </a>
+                                                    or click the corresponding links below.
+                                                </p>
                                                 <ul id="PartnersList"></ul>
 
                                                 <h5>Land Trusts by County</span></h5>
@@ -407,7 +434,6 @@
             </div>
 
             <div id="Map" class="table-cell fullheight"></div>
-
         </div>
         <div id="Footer" class="table-row small">
             <ul>
@@ -423,9 +449,10 @@
         </div>
     </div>
 
-
-
-
+    <div id="Tooltip">
+        <h4></h4>
+        <p class="quiet nomargin small"></p>
+    </div>
 
     <div id="Legend" class="map-panel">
         <h4></h4>
@@ -438,27 +465,27 @@
         <h5 class="hidden"></h5>
     </div>
 
-    <div id="LearnMorePopup" class="modal hidden">
-        <div>
-            <div>
-                <div class="right">
-                    <i class="fa fa-times-circle button-close" data-target="LearnMorePopup"></i>
-                </div>
-                <h3>Title</h3>
-            </div>
-            <div>
-                <p>
-                    The purpose of this viewer is to ...
-                </p>
-                <div class="clear small">
-                    <h5 class="nomargin">Data credits:</h5>
-                    <ul style="margin: 2px 0 14px;">
-                        <li>Credits...</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!--<div id="LearnMorePopup" class="modal hidden">-->
+        <!--<div>-->
+            <!--<div>-->
+                <!--<div class="right">-->
+                    <!--<i class="fa fa-times-circle button-close" data-target="LearnMorePopup"></i>-->
+                <!--</div>-->
+                <!--<h3>Title</h3>-->
+            <!--</div>-->
+            <!--<div>-->
+                <!--<p>-->
+                    <!--The purpose of this viewer is to ...-->
+                <!--</p>-->
+                <!--<div class="clear small">-->
+                    <!--<h5 class="nomargin">Data credits:</h5>-->
+                    <!--<ul style="margin: 2px 0 14px;">-->
+                        <!--<li>Credits...</li>-->
+                    <!--</ul>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
 
 
     <!--<div id="DetailsLoadingScrim" class="hidden">-->

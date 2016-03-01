@@ -18,7 +18,7 @@ var transparency = 25;  //on 0-100% scale
 var featureCache = {};
 var pendingRequest = null;
 var featuresURL = 'features/';
-
+var selectedID = null;
 
 // store current level of threat filters
 var threatLevel = {
@@ -67,6 +67,7 @@ d3.select('#DetailsClose').on('click', function(){
     d3.select('#MainSidebarHeader').classed('hidden', false);
     d3.select('#Details').classed('hidden', true);
     d3.select('#DetailsHeader').classed('hidden', true);
+    deselectUnit();
 });
 
 /******** Expandos *****************/
@@ -99,6 +100,37 @@ function initExpando(section, open) {
 d3.selectAll('section.expandable').each(function(){
     var node = d3.select(this);
     initExpando(node, node.classed('expanded'));
+});
+
+
+/************* Tooltips *******************/
+function connectTooltip(node, data) {
+    node.on('mouseenter', function() {
+        var anchorNode = d3.select(this);
+        var bndRect = anchorNode.node().getBoundingClientRect();
+        var tooltip = d3.select('#Tooltip');
+        tooltip.select('h4').html(data.title);
+        tooltip.select('p').html(data.text); //TODO
+
+        var tooltipBnd = tooltip.node().getBoundingClientRect();
+        var top = bndRect.top + window.pageYOffset;
+        if (top + tooltipBnd.height > window.innerHeight){  // TODO
+            top = top - (top + tooltipBnd.height - window.innerHeight);
+        }
+        tooltip.style({
+            left: bndRect.right + 'px',
+            'top': Math.max(top, 0) + 'px'
+        });
+    })
+    .on('mouseleave', function() {
+        d3.select('#Tooltip').style({'left': '-9999px', 'top': '-9999px'});
+    });
+
+}
+
+d3.selectAll('.js-hasTooltip').each(function() {
+    var node = d3.select(this);
+    connectTooltip(node, {title: node.attr('data-tooltip-title'), text: node.attr('data-tooltip')});
 });
 
 
@@ -176,7 +208,6 @@ omnivore.topojson('static/features.json')
             featureIndex.set(id, feature);
             visibleFeatures.set(id, true);
         });
-        //this.addTo(map);
         features = this;
 
         onLoad();
@@ -246,6 +277,7 @@ function load() {
             var chartContainer = container.append('div');
 
             initExpando(container, i <= 1);
+            connectTooltip(header, {title: fieldLabels[d], text: fieldTooltips[d]});
 
             var subheading = (i === 0)? 'percent covered by combined priority resources': 'percent covered by Priority 1 &amp; 2';
             chartContainer.append('div')
@@ -289,6 +321,7 @@ function load() {
             var chartContainer = container.append('div');
 
             initExpando(container, true);
+            connectTooltip(header, {title: fieldLabels[d], text: fieldTooltips[d]});
 
             header.append('div')
                 .classed('right', true)
@@ -305,6 +338,7 @@ function load() {
                 .selectAll('span')
                 .data(summaryFields[d]).enter()
                 .append('span')
+                .classed('radio-container', true)
                 .each(function(e, j){
                     var node = d3.select(this);
                     node.append('input')
@@ -339,10 +373,13 @@ function load() {
                             threatLevel[threat] = level;
                         });
 
-                    node.append('label').text(fieldLabels[e]);
+                    node.append('label').html(fieldLabels[e].replace('(', '<span class="small quiet">(').replace(')', ')</span>'));
                 });
 
             var subheading = (i === 0 )? 'percent of watershed inundated': 'percent of watershed with urban / suburban development';
+            //if (i === 0) {
+            //    //subheading = "Time ranges were extrapolated from the High Bathtub Projections (for Mean Sea Level Rise) used in the University of Florida GeoPlan Center's <a href='http://sls.geoplan.ufl.edu/' target='_blank'>Sea Level Rise Sketch tool</a>.<br/><br/>" + subheading;
+            //}
             chartContainer.append('div')
                 .classed('quiet small filter-subheading', true)
                 .html(subheading);
@@ -402,6 +439,7 @@ function load() {
                     itemsList.append('li').attr('id', 'Filter-' + spp),
                     dimension,
                     species[spp].split('|')[0],
+                    null,
                     function(){
                         d3.select('#Filter-' + spp).remove();
                         d3.select('option[value="' + spp + '"]').property('disabled', false);  // TODO: optimize select
@@ -423,16 +461,15 @@ function load() {
             var node = d3.select(this);
             var dimension = dimensions['lu' + d];
             var label = landUseLabels[d];
-            createSliderFilter(node.append('li').attr('id', 'Filter-' + d), dimension, label, null);
+            createSliderFilter(node.append('li').attr('id', 'Filter-' + d), dimension, label, landUseTooltips[d], null);
         });
 }
 
 
-function createSliderFilter(node, dimension, label, removeCallback) {
+function createSliderFilter(node, dimension, label, tooltip, removeCallback) {
     var extent = d3.extent(_.map(dimension.group().all(), 'key')); // TODO: round ranges to nicer values
 
     var scale = d3.scale.linear().domain(extent).range([0, 300]); // based on width of slider
-
 
     var header = node.append('h4').text(label);
 
@@ -442,6 +479,11 @@ function createSliderFilter(node, dimension, label, removeCallback) {
     }
 
     var sliderContainer = node.append('div');
+
+    if (tooltip) {
+        node.classed('node-highlight', true);
+        connectTooltip(node, {title:label, text: tooltip});
+    }
 
     var slider = sliderContainer.append('input')
         .attr('type', 'range')
@@ -489,7 +531,6 @@ function createFilterChart(node, dimension, header) {
 function onFilter(header, chart, filter) {
     console.log("onfilter", arguments);
     header.classed('filtered', filter != null);
-    coordinateFilters();  // TODO: only applies to main filters
     updateMap();
 }
 
@@ -614,6 +655,12 @@ function selectUnit(id){
     }
 }
 
+function deselectUnit() {
+    if (!selectedID) { return; }
+    d3.select(featureIndex.get(selectedID)._path).classed('selected', false);
+    selectedID = null;
+}
+
 
 function showDetails(id) {
     var record = index.get('id');
@@ -623,6 +670,7 @@ function showDetails(id) {
     d3.selectAll('path.selected').classed('selected', false);
 
     var feature = featureIndex.get(id);
+    selectedID = id;
     feature.bringToFront();
     var path = d3.select(feature._path);
     path.classed('selected', true);
@@ -640,7 +688,8 @@ function showDetails(id) {
         return {
             value: d.value,
             label: priorityResourceLabels[d.key],
-            color: priorityResourceColors[d.key]
+            color: priorityResourceColors[d.key],
+            tooltip: priorityResourceTooltips[d.key]
         }
     });
     createInlineBarChart(d3.select('#PFLCC_PR_Bars'), pr_data, ' ha', true);
@@ -658,17 +707,29 @@ function showDetails(id) {
         if (!values) return;
 
         tableNode.append('h5').text(priorityLabels4[i]);
-        createAreaTable(tableNode.append('table').attr('cellspacing', 0).append('tbody'), speciesTable(values), true);
+        createAreaTable(tableNode.append('table').attr('cellspacing', 0).append('tbody'), createTableLabeLinks(values, species, speciesLinks), true);
     });
 
     createPieChart(d3.select('#BioPNC_Chart'), zipIntoObj(['value', 'label', 'color'], details.bio_pnc, priorityLabels4, chartColors4), '%');
+
+    tableNode = d3.select('#BioPNC_Table');
+    tableNode.html('');
+    d3.range(1, 5).forEach(function(d, i){
+        var values = details.bio_pnc2[d];
+        if (!values) return;
+
+        tableNode.append('h5').text(priorityLabels4[i]);
+        createAreaTable(tableNode.append('table').attr('cellspacing', 0).append('tbody'), createTableLabeLinks(values, communities, communityLinks), true);
+    });
+
+
     createPieChart(d3.select('#BioSppRich_Chart'), zipIntoObj(['value', 'label', 'color'], details.bio_spp_rich, priorityLabels, chartColors), '%');
 
     tableNode = d3.select('#BioSppRichTable');
     tableNode.html('');
     if (details.bio_spp_rich2){
         tableNode.append('h5').text('Species Present');
-        createAreaTable(tableNode.append('table').attr('cellspacing', 0).append('tbody'), speciesTable(details.bio_spp_rich2), true);
+        createAreaTable(tableNode.append('table').attr('cellspacing', 0).append('tbody'), createTableLabeLinks(details.bio_spp_rich2, species, speciesLinks), true);
     }
 
 
@@ -825,12 +886,12 @@ function showDetails(id) {
 
 // meant to be called from an object of spp: area
 // returns data ready to put into a table
-function speciesTable(values){
+function createTableLabeLinks(values, labels, links){
     return d3.entries(values).map(function(d) {
-        var label = species[d.key].split('|')[0];
+        var label = labels[d.key].split('|')[0];
         return {
             value: d.value,
-            label: (speciesLinks[d.key]) ? '<a href="' + speciesLinks[d.key] + '" target="_blank">' + label + '</a>' : label
+            label: (links[d.key]) ? '<a href="' + links[d.key] + '" target="_blank">' + label + '</a>' : label
         }
     });
 }
@@ -858,12 +919,11 @@ function createInlineBarChart(node, data, units, sortByValue, noSort) {
     node.html('');
     node.selectAll('div')
         .data(data).enter()
-        .append('div')  //.classed('table-row', true)
+        .append('div')
         .each(function(d) {
             node = d3.select(this);
 
             node.append('div')
-                //.classed('table-cell', true)
                 .text(d.label);
 
             var row = node.append('div');
@@ -875,7 +935,14 @@ function createInlineBarChart(node, data, units, sortByValue, noSort) {
 
             row.append('label')
                 .classed('quieter', true)
-                .text(formatter(d.value) + units)
+                .text(formatter(d.value) + units);
+
+            if (d.tooltip) {
+                //node.call(d3.kodama.tooltip().format(function(){ return {title: d.tooltip, gravity: 'south'} }));
+                //console.log('tooltip', d.tooltip)
+                node.classed('node-highlight', true);
+                connectTooltip(node, {title: d.label, text: d.tooltip});
+            }
 
         });
 

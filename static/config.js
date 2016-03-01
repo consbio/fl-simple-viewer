@@ -65,6 +65,26 @@ var fieldLabels = {
 var slrLevels = ['slr1', 'slr2', 'slr3'];
 var devLevels = ['devCur', 'dev2020', 'dev2040', 'dev2060'];
 
+var fieldTooltips = {
+    'bio': 'This model is a combination of the four CLIP core data layers in the Biodiversity Resource Category: Strategic Habitat Conservation Areas (SHCA), Vertebrate Potential Habitat Richness (VertRich), Rare Species Habitat Conservation Priorities (FNAIHAB), and Priority Natural Communities (Natcom).  (See pg. 14-15 of the CLIP Technical Report for the rules used to assign the core data layers into the Landscape resource priority model.',
+    'clip': 'The Critical Lands and Waters Identification Project (CLIP) is a collection of spatial data that identify statewide priorities for a broad range of natural resources in Florida. CLIP 3.0 is organized into a set of core natural resource data layers which are combined into resource categories, three of which (biodiversity, landscapes, surface water) have been combined into the Aggregated CLIP model, which identifies five priority levels for natural resource conservation.',
+    'land': 'This model is a combination of the two core data layers in the Landscapes Resource Category: Florida Ecological Greenways Network, and Landscape Integrity Index. (See pg. 14 of the CLIP Technical Report for the rules used to assign the core data layers into the Biodiversity resource priority model.',
+    'priority': 'Priority resources are the set of biological, ecological, and cultural features and ecological processes collaboratively identified as most important, and are the focus of the PFLCC’s planning.  Priority resources will provide a simple way to measure the overall condition of the Peninsular Florida’s complex systems.  There are currently 12 DRAFT Priority Resources, 9 based on land cover types from the Cooperative Land Cover map (v. 3.0): High Pine and Scrub, Pine Flatwoods and Dry Prairie, Freshwater Forested Wetlands, Hardwood Forested Uplands, Coastal Uplands, Freshwater non-forested Wetlands, Estuarine, Marine, Freshwater Aquatic; and 3 non-CLC based resource types:  Landscape Connectivity, Cultural and Socio-economic, and Working Lands.',
+    'water': 'This model is a combination of the three core data layers in the Surface Water Resource Category: Significant Surface Waters, Natural Floodplain, and Wetlands.  (See pg. 15 of the CLIP Technical Report for the rules used to assign the core data layers into the Surface Water resource priority model.',
+
+    dev: 'These development projections are derived from the Florida 2060 development dataset. This projections explores the physical reality and consequences of the population growth from 2005 to 2060 if existing land use policy or population growth patterns do not change.  The land use suitability analysis displayed in this dataset was performed by the University of Florida GeoPlan Center for 1000 Friends of Florida. The graph below reports the area affected for each of the three time steps used in this model, the existing extent of urbanization in 2005, and the area unaffected by urbanization. The hectares reported for each of the three time steps are cumulative figures.',
+    //devCur: 'Existing',
+    //dev2020: '2020',
+    //dev2040: '2040',
+    //dev2060: '2060',
+
+    slr: "These sea level rise projections were produced by the University of Florida Geoplan Center. These projections measure sea level rise in meter increments up until 3 meters. The graph below reports the area affected for each of these three scenarios (as well as the area unaffected). The hectares reported for each of these scenarios are cumulative figures.  <br/><br/>Time ranges were extrapolated from the High Bathtub Projections (for Mean Sea Level Rise) used in the University of Florida GeoPlan Center's Sea Level Rise Sketch tool",
+    //slr1: '1 meter (2070 - 2090)',
+    //slr2: '2 meters (2100 - 2120)',
+    //slr3: '3 meters (2130 - 2150)'
+};
+
+
 
 
 var priorityLabels = ['Priority 1', 'Priority 2', 'Priority 3', 'Priority 4', 'Priority 5', 'Not a Priority'];
@@ -155,7 +175,23 @@ d3.keys(species).forEach(function(d){
 });
 
 var speciesLinks = {
-    GTORT: 'http://myfwc.com/wildlifehabitats/profiles/reptiles-and-amphibians/reptiles/gopher-tortoise/'
+    GTORT: 'http://myfwc.com/wildlifehabitats/profiles/reptiles-and-amphibians/reptiles/gopher-tortoise/',
+    PANTHER: 'http://myfwc.com/wildlifehabitats/profiles/mammals/land/florida-panther/',
+    PANT: 'http://myfwc.com/wildlifehabitats/profiles/mammals/land/florida-panther/',
+    KDEER: 'http://myfwc.com/wildlifehabitats/profiles/mammals/land/key-deer/',
+    LKMR: 'http://myfwc.com/wildlifehabitats/profiles/mammals/land/marsh-rabbit/',
+    GRAYBAT: 'http://myfwc.com/wildlifehabitats/profiles/mammals/land/bats/',
+    GBAT: 'http://myfwc.com/wildlifehabitats/profiles/mammals/land/bats/',
+    SEBAT: 'http://myfwc.com/wildlifehabitats/profiles/mammals/land/bats/',
+    AMKE: 'http://myfwc.com/wildlifehabitats/profiles/birds/raptors-and-vultures/american-kestrel/',
+    BE: 'http://myfwc.com/wildlifehabitats/profiles/birds/raptors-and-vultures/bald-eagle/',
+    SNKIT: 'http://myfwc.com/wildlifehabitats/profiles/birds/raptors-and-vultures/florida-snail-kite/',
+    SNKITE: 'http://myfwc.com/wildlifehabitats/profiles/birds/raptors-and-vultures/florida-snail-kite/',
+    GRSHPRSP: 'http://myfwc.com/wildlifehabitats/profiles/birds/songbirds/florida-grasshopper-sparrow/',
+    GSHP: 'http://myfwc.com/wildlifehabitats/profiles/birds/songbirds/florida-grasshopper-sparrow/',
+    SCRJY: 'http://myfwc.com/wildlifehabitats/profiles/birds/songbirds/florida-scrub-jay/',
+    LIMK: 'http://myfwc.com/wildlifehabitats/profiles/birds/waterbirds/limpkin/',
+    RCW: 'http://myfwc.com/wildlifehabitats/profiles/birds/woodpeckers/red-cockaded-woodpecker/'
 };
 
 // subsets of the species into taxa
@@ -173,6 +209,51 @@ var sppGroupLabels = {
 
 
 
+var communities = {
+    UGvh:"Upland Glade, very high",
+    PRvh:"Pine Rockland, very high",
+    PRh:"Pine Rockland, high",
+    SSFvh:"Scrub and Scrubby Flatwoods, very high",
+    SSFh:"Scrub and Scrubby Flatwoods, high",
+    SSFm:"Scrub and Scrubby Flatwoods, moderate",
+    RHvh:"Rockland Hammock, very high",
+    RHh:"Rockland Hammock, high",
+    RHm:"Rockland Hammock, moderate",
+    DPvh:"Dry Prairie, very high",
+    DPh:"Dry Prairie, high",
+    DPm:"Dry Prairie, moderate",
+    SSvh:"Seepage Slope, very high",
+    SSh:"Seepage Slope, high",
+    ICLvh:"Imperiled Coastal Lakes, very high",
+    ICLh:"Imperiled Coastal Lakes, high",
+    ICLm:"Imperiled Coastal Lakes, moderate",
+    FCUvh:"Costal Uplands, very high",
+    FCUh:"Coastal Uplands, high",
+    FCUm:"Costal Uplands, moderate",
+    Svh:"Sandhill, very high",
+    Sh:"Sandhill, high",
+    Sm:"Sandhill, moderate",
+    SULvh:"Sandhill Upland Lakes, very high",
+    SULh:"Sandhill Upland Lakes, high",
+    SULm:"Sandhill Upland Lake, moderate",
+    UPvh:"Upland Pine, very high",
+    Uph:"Upland Pine, high",
+    Upm:"Upland Pine, moderate",
+    PFvh:"Pine Flatwoods, very high",
+    PFh:"Pine Flatwoods, high",
+    PFm:"Pine Flatwoods, moderate",
+    Uhvh:"Upland Hardwood Forest, very high",
+    Uhh:"Upland Hardwood Forest, high",
+    Uhm:"Upland Hardwood Forest, moderate",
+    CWvh:"Coastal Wetlands, very high",
+    CWh:"Coastal Wetlands, high",
+    CWm:"Coastal Wetlands, moderate"
+};
+
+var communityLinks = {
+
+};
+
 var priorityResourceLabels = {
     C: 'Cultural',
     E: 'Estuarine',
@@ -187,6 +268,23 @@ var priorityResourceLabels = {
     FFW: 'Freshwater Forested Wetlands',
     CU: 'Coastal Uplands'
 };
+
+var priorityResourceTooltips = {
+    C: 'Important features of the environment or landscape related to social practices, customary beliefs, or economic activity that is influenced by social values.',
+    E: 'Deepwater tidal habitats and adjacent tidal wetlands. Usually semi-enclosed by land with open, partly obstructed, or sporadic ocean access, with ocean derived water at least occasionally diluted by freshwater land runoff. The upstream and landward limit is where ocean-derived salts measure ˂ .5 ppt during average annual low flow. The seaward limit is: 1) an imaginary line closing the mouth of a river, bay, or sound; and 2) the seaward limit of wetland emergents, shrubs, or trees when not included in 1).',
+    FNFW: 'Herbaceous or shrubby palustrine communities in floodplains or depressions; canopy trees, if present, very sparse and often stunted.',
+    PFDP: 'Mesic pine woodland or mesic shrubland on flat sandy or limestone substrates, often with a hard pan that impedes drainage.',
+    HPS: 'Hills with mesic or xeric woodlands or shrublands; canopy, if present, open and consisting of pine or a mixture of pine and deciduous hardwoods.',
+    M: 'Open ocean over the continental shelf, and coastline exposed to waves and currents of the open ocean shoreward to: 1) extreme high water of spring tides; 2) seaward limit of wetland emergents, trees, or shrubs; or 3) seaward limit of the estuarine system, other than vegetation. Salinities exceed 30 parts per thousand (ppt). Includes reef/hardbottom, submersed aquatic vegetation, and unconsolidated sediment habitats.',
+    WL2: 'Landscapes where production of market goods and ecosystem services are mutually reinforcing, such as private agricultural land (Agriculture, Improved Pasture, etc.).',
+    HFU: 'Mesic or xeric forest dominated mainly by hardwood trees.',
+    FA: 'Natural rivers and streams where stream flow, morphometry, and water chemistry are not substantially modified by human activities, or native biota are dominant1. Natural inland lakes and ponds where the trophic state, morphometry, and water chemistry are not substantially modified by human activities, or native biota are dominant.',
+    WL1: 'Landscapes where production of market goods and ecosystem services are mutually reinforcing, such as private agricultural land (Timberland, Unimproved Pasture, etc.).',
+    FFW: 'Floodplain or depression wetlands dominated by hydrophytic trees.',
+    CU: 'Mesic or xeric communities restricted to barrier islands and near shore; woody or herbaceous vegetation, or other communities.'
+};
+
+
 
 var priorityResourceColors = {
     C: d3.rgb(200, 195, 255).toString(),
@@ -247,6 +345,18 @@ var landUseColors = {
     85: d3.rgb(0, 85, 0).toString(),
     90: d3.rgb(165, 165, 165).toString()
 };
+
+var landUseTooltips = {
+    10: 'Includes all upland natural communities and landcover types included in the CLC. (e.g. Sandhill, Dry Prairie, Coastal Strand, Rockland Hammock, etc.).',
+    20: 'Includes all herbaceous/shrub freshwater wetland communities and landcover types (e.g. Marshes, Mixed Shrub/Scrub Wetland, Floating/Emergent Aquatic Vegetation, Non-vegetated Wetland, etc.), all woody freshwater wetland communities and landcover types in the CLC (e.g. Hydric Hammock, Basin Swamp, Cypress, Wet Flatwoods, etc.), and all brackish aquatic communities and landcover types in the CLC (e.g. Tidal Flat, Mangrove Swamp, Salt Marsh, Oyster Bar, etc.).',
+    30: 'Includes all open freshwater communities and landcover types in the CLC. (e.g. Spring-run Stream,  Riverine, Sinkhole Lake, Coastal Dune Lake, etc.).',
+    60: 'Consists of the marine landcover classification in the CLC.',
+    70: 'Includes all high-intensity agriculture and other rural landcover practices in the CLC. (e.g. Croplands/Pasture, Orchards/Groves, Citrus, Improved Pasture, etc.).',
+    80: 'Includes all low-intensity rural landcover practices (excluding timber) in the CLC. (e.g. Rural Open, Unimproved/Woodland Pasture, etc.).',
+    85: 'Includes all tree plantations and timber related landcover practices in the CLC. (e.g. Coniferous Plantations, Hardwood Plantations, etc.).',
+    90: 'Includes all urban and highly developed landcover types in the CLC. (e.g. Transportation, Extractive, High Intensity Urban, Low Intensity Urban, etc.).'
+};
+
 
 var partnerLabels = {
     'llp_conp': 'Longleaf Pine Ecosystem Geodatabase Protection Priorities|http://www.freshfromflorida.com/Divisions-Offices/Florida-Forest-Service/Our-Forests/The-Florida-Longleaf-Pine-Ecosystem-Geodatabase',

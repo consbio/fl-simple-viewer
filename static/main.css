@@ -290,6 +290,10 @@ input[type=range]:focus::-ms-fill-upper {
     margin-left: 24px;
 }
 
+/* used for hover treatment over a node */
+.node-highlight:hover {
+    background: #F6F6F6;
+}
 
 
 /* intended to be setup as a leaflet control to coordinate layout with other controls */
@@ -411,7 +415,6 @@ input[type=range]:focus::-ms-fill-upper {
     margin-right: 6px;
 }
 /* end expandos */
-
 
 
 /* from http://tobiasahlin.com/spinkit/*/
@@ -634,6 +637,36 @@ div.dc-chart {
 }
 
 
+#Tooltip {
+    position: absolute;
+    max-width: 350px;
+    z-index: 10000;
+    background: rgba(255,255,255,1);
+    border: 1px solid #AAA;
+    border-radius: 6px;
+    padding: 0 10px 10px 10px;
+    box-shadow: 2px 2px 6px #555;
+}
+#Tooltip:after {
+    content: '';
+    position: absolute;
+    top: 1em;
+    right: 100%;
+    margin-top: -8px;
+    width: 0; height: 0;
+    border-right: 8px solid #555;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+}
+#Tooltip h4 {
+    border-bottom: 1px solid #DDD;
+}
+#Tooltip p {
+    /*font-size: 0.9em;*/
+    padding: 4px 0;
+}
+
+
 
 
 #Details {
@@ -760,9 +793,8 @@ div.dc-chart {
     margin-left: 2px;
 }
 
-.horiz-bars > div + div {
-    /*margin-top: 12px;*/
-    padding: 16px 0 0 0;
+.horiz-bars > div {
+    padding: 8px 0 8px 0;
 }
 
 .horiz-bars .bar {
@@ -811,12 +843,9 @@ ul.legend {
     border-radius: 3px;
 }
 .legendElement.highlight,
-#IndicatorTooltipContents .highlight
+.tooltipContents .highlight
 {
     background: rgba(252, 249, 142, 0.43);
-}
-.legendElement:hover {
-    background: #F2F2F2;
 }
 .legendElement > div:first-child{
     padding: 4px;
@@ -951,6 +980,14 @@ h4.mapped .filter-reset {
     width: 210px;
 }
 
+#Filter-slr .filter-radio-container .radio-container {
+    display: block;
+}
+
+#Filter-slr .filter-radio-container span + span {
+    margin-left: 0;
+}
+
 
 .slider-list {
     list-style: none;
@@ -961,7 +998,8 @@ h4.mapped .filter-reset {
 
 .slider-list li {
     /*border-top: 1px solid #DDD;*/
-    padding-top: 20px;
+    margin-top: 20px;
+    padding: 4px 0;
     position: relative;
 }
 
