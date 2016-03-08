@@ -48,18 +48,11 @@ var fieldLabels = {
     dev2020: '2020',
     dev2040: '2040',
     dev2060: '2060',
-    //devCur: 'Existing Urban Area',
-    //dev2020: 'Projected Development (2020)',
-    //dev2040: 'Projected Development (2040)',
-    //dev2060: 'Projected Development (2060)',
 
     slr: 'Projected Sea Level Rise',
     slr1: '1 meter (2070 - 2090)',
     slr2: '2 meters (2100 - 2120)',
     slr3: '3 meters (2130 - 2150)'
-    //slr1: 'Projected Sea Level Rise (1m)',
-    //slr2: 'Projected Sea Level Rise (2m)',
-    //slr3: 'Projected Sea Level Rise (3m)'
 };
 
 var slrLevels = ['slr1', 'slr2', 'slr3'];
@@ -71,21 +64,9 @@ var fieldTooltips = {
     'land': 'This model is a combination of the two core data layers in the Landscapes Resource Category: Florida Ecological Greenways Network, and Landscape Integrity Index. (See pg. 14 of the CLIP Technical Report for the rules used to assign the core data layers into the Biodiversity resource priority model.',
     'priority': 'Priority resources are the set of biological, ecological, and cultural features and ecological processes collaboratively identified as most important, and are the focus of the PFLCC’s planning.  Priority resources will provide a simple way to measure the overall condition of the Peninsular Florida’s complex systems.  There are currently 12 DRAFT Priority Resources, 9 based on land cover types from the Cooperative Land Cover map (v. 3.0): High Pine and Scrub, Pine Flatwoods and Dry Prairie, Freshwater Forested Wetlands, Hardwood Forested Uplands, Coastal Uplands, Freshwater non-forested Wetlands, Estuarine, Marine, Freshwater Aquatic; and 3 non-CLC based resource types:  Landscape Connectivity, Cultural and Socio-economic, and Working Lands.',
     'water': 'This model is a combination of the three core data layers in the Surface Water Resource Category: Significant Surface Waters, Natural Floodplain, and Wetlands.  (See pg. 15 of the CLIP Technical Report for the rules used to assign the core data layers into the Surface Water resource priority model.',
-
     dev: 'These development projections are derived from the Florida 2060 development dataset. This projections explores the physical reality and consequences of the population growth from 2005 to 2060 if existing land use policy or population growth patterns do not change.  The land use suitability analysis displayed in this dataset was performed by the University of Florida GeoPlan Center for 1000 Friends of Florida. The graph below reports the area affected for each of the three time steps used in this model, the existing extent of urbanization in 2005, and the area unaffected by urbanization. The hectares reported for each of the three time steps are cumulative figures.',
-    //devCur: 'Existing',
-    //dev2020: '2020',
-    //dev2040: '2040',
-    //dev2060: '2060',
-
-    slr: "These sea level rise projections were produced by the University of Florida Geoplan Center. These projections measure sea level rise in meter increments up until 3 meters. The graph below reports the area affected for each of these three scenarios (as well as the area unaffected). The hectares reported for each of these scenarios are cumulative figures.  <br/><br/>Time ranges were extrapolated from the High Bathtub Projections (for Mean Sea Level Rise) used in the University of Florida GeoPlan Center's Sea Level Rise Sketch tool",
-    //slr1: '1 meter (2070 - 2090)',
-    //slr2: '2 meters (2100 - 2120)',
-    //slr3: '3 meters (2130 - 2150)'
+    slr: "These sea level rise projections were produced by the University of Florida Geoplan Center. These projections measure sea level rise in meter increments up until 3 meters. The graph below reports the area affected for each of these three scenarios (as well as the area unaffected). The hectares reported for each of these scenarios are cumulative figures.  <br/><br/>Time ranges were extrapolated from the High Bathtub Projections (for Mean Sea Level Rise) used in the University of Florida GeoPlan Center's Sea Level Rise Sketch tool"
 };
-
-
-
 
 var priorityLabels = ['Priority 1', 'Priority 2', 'Priority 3', 'Priority 4', 'Priority 5', 'Not a Priority'];
 var priorityLabels4 = priorityLabels.slice(0, 4).concat(priorityLabels[5]);

@@ -117,15 +117,17 @@ function connectTooltip(node, data) {
         if (top + tooltipBnd.height > window.innerHeight){  // TODO
             top = top - (top + tooltipBnd.height - window.innerHeight);
         }
+        top = Math.max(top, 0);
         tooltip.style({
             left: bndRect.right + 'px',
-            'top': Math.max(top, 0) + 'px'
+            'top': top + 'px'
         });
+
+        tooltip.select('.tooltip-pointer').style('top', (Math.abs(bndRect.top - top) + 14) + 'px')
     })
     .on('mouseleave', function() {
         d3.select('#Tooltip').style({'left': '-9999px', 'top': '-9999px'});
     });
-
 }
 
 d3.selectAll('.js-hasTooltip').each(function() {
@@ -277,7 +279,9 @@ function load() {
             var chartContainer = container.append('div');
 
             initExpando(container, i <= 1);
-            connectTooltip(header, {title: fieldLabels[d], text: fieldTooltips[d]});
+
+            container.classed('node-highlight', true);
+            connectTooltip(container, {title: fieldLabels[d], text: fieldTooltips[d]});
 
             var subheading = (i === 0)? 'percent covered by combined priority resources': 'percent covered by Priority 1 &amp; 2';
             chartContainer.append('div')
@@ -321,7 +325,9 @@ function load() {
             var chartContainer = container.append('div');
 
             initExpando(container, true);
-            connectTooltip(header, {title: fieldLabels[d], text: fieldTooltips[d]});
+
+            container.classed('node-highlight', true);
+            connectTooltip(container, {title: fieldLabels[d], text: fieldTooltips[d]});
 
             header.append('div')
                 .classed('right', true)
@@ -759,7 +765,8 @@ function showDetails(id) {
             return {
                 value: record['lu' + d],
                 label: landUseLabels[d],
-                color: landUseColors[d]
+                color: landUseColors[d],
+                tooltip: landUseTooltips[d]
             }
         });
     createInlineBarChart(d3.select('#LU_Bars'), luData, ' ha', true);

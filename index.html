@@ -3,7 +3,8 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>Peninsular Florida LCC - Simple Map Viewer</title>
-    <link rel="stylesheet" href="https://cdn.rawgit.com/theus/chart.css/v1.0.0/dist/chart.css" />
+    <link rel="shortcut icon" type="image/png" href="static/img/favicon.ico" />
+
     <link rel="stylesheet" href="deps/fontawesome/css/font-awesome.min.css" />
     <link rel="stylesheet" href="deps/leaflet.css" />
     <link rel="stylesheet" href="deps/L.Control.Geonames.css" />
@@ -121,8 +122,8 @@
                                     <div id="SppFilter" class="tab hidden">
                                         <p class="small" style="color: #AAA;">
                                             Select one or more species below to select watersheds that have at least the amount
-                                            of potential habitat you specify.  Values range from 0 to the maximum amount of potential
-                                            habitat area found for that species.
+                                            of potential habitat you specify (up to the maximum amount of potential
+                                            habitat area found for that species).
                                         </p>
                                         <div></div>  <!-- selectors -->
                                         <ul class="slider-list"></ul> <!-- items -->
@@ -134,8 +135,6 @@
                                             you specify of these general land use categories.  The categories were generalized from the
                                             78 state level land cover types outlined in the Florida Cooperative Land Cover Map (CLC, version 3.1)
                                         </p>
-                                        <!--<div class="small" style="margin: 0 0 14px 160px;font-weight: bold;">Show only watersheds with at least:</div>-->
-                                        <!--<div class="table table-slider"></div>-->
                                         <div id="LandUseFilterList" class="slider-list"></div>
                                     </div>
 
@@ -154,25 +153,15 @@
 
                                 <div id="Details" class="hidden">
                                     <div id="DetailsOverview" class="tab">
-                                        <section>
+                                        <section class="js-hasTooltip node-highlight" data-tooltip-title="PFLCC DRAFT Priority Resources" data-tooltip="Priority resources are the set of biological, ecological, and cultural features and ecological processes collaboratively identified as most important, and are the focus of the PFLCC’s planning.  Priority resources will provide a simple way to measure the overall condition of the Peninsular Florida’s complex systems.">
                                             <h4>PFLCC DRAFT Priority Resources</h4>
-                                            <!--  class="js-hasTooltip node-highlight" data-tooltip-title="PFLCC DRAFT Priority Resources" data-tooltip="Priority resources are the set of biological, ecological, and cultural features and ecological processes collaboratively identified as most important, and are the focus of the PFLCC’s planning.  Priority resources will provide a simple way to measure the overall condition of the Peninsular Florida’s complex systems.  There are currently 12 DRAFT Priority Resources, 9 based on land cover types from the Cooperative Land Cover map (v. 3.0): High Pine and Scrub, Pine Flatwoods and Dry Prairie, Freshwater Forested Wetlands, Hardwood Forested Uplands, Coastal Uplands, Freshwater non-forested Wetlands, Estuarine, Marine, Freshwater Aquatic; and 3 non-CLC based resource types:  Landscape Connectivity, Cultural and Socio-economic, and Working Lands." -->
                                             <div>
-                                                <p>
-                                                    Priority resources are the set of biological, ecological, and cultural
-                                                    features and ecological processes collaboratively identified as most
-                                                    important, and are the focus of the PFLCC’s planning.  Priority resources
-                                                    will provide a simple way to measure the overall condition of the Peninsular
-                                                    Florida’s complex systems.  There are currently 12 DRAFT Priority Resources,
-                                                    9 based on land cover types from the Cooperative Land Cover map (v. 3.0):
-                                                    High Pine and Scrub, Pine Flatwoods and Dry Prairie, Freshwater Forested Wetlands,
-                                                    Hardwood Forested Uplands, Coastal Uplands, Freshwater non-forested Wetlands,
-                                                    Estuarine, Marine, Freshwater Aquatic; and 3 non-CLC based resource types:
-                                                    Landscape Connectivity, Cultural and Socio-economic, and Working Lands.
-                                                </p>
                                                 <div id="PFLCC_PR_Bars" class="horiz-bars small"></div>
                                             </div>
                                         </section>
+                                        <p class="small quiet">
+                                            Read more about priority resources <a href="http://pflcc.databasin.org/articles/784241b6f9c64be7b51ecd2382919287" target="_blank">here.</a>
+                                        </p>
                                     </div>
 
                                     <div id="DetailsCLIP" class="tab hidden">
@@ -187,11 +176,6 @@
                                             <section class="js-hasTooltip node-highlight" data-tooltip-title="CLIP Overall Priorities" data-tooltip="The Critical Lands and Waters Identification Project (CLIP) is a collection of spatial data that identify statewide priorities for a broad range of natural resources in Florida. CLIP 3.0 is organized into a set of core natural resource data layers which are combined into resource categories, three of which (biodiversity, landscapes, surface water) have been combined into the Aggregated CLIP model, which identifies five priority levels for natural resource conservation.">
                                                 <h4>CLIP Overall Priorities</h4>
                                                 <div>
-                                                    <!--<p>-->
-                                                        <!--The Critical Lands and Waters Identification Project (CLIP) is a collection of spatial data that identify statewide priorities for a broad range of natural resources in Florida. CLIP 3.0 is organized into a set of core natural resource data layers which are combined into resource categories, three of which (biodiversity, landscapes, surface water) have been combined into the Aggregated CLIP model, which identifies five priority levels for natural resource conservation.-->
-                                                        <!--<br /><br/>-->
-                                                        <!--...-->
-                                                    <!--</p>-->
                                                     <div id="CLIP_Chart"></div>
                                                 </div>
                                             </section>
@@ -199,56 +183,41 @@
 
                                         <div id="CLIPBiodiversity" class="tab hidden">
                                             <section class="expandable expanded js-hasTooltip node-highlight" data-tooltip-title="Overall CLIP Biodiversity" data-tooltip="This model is a combination of the four CLIP core data layers in the Biodiversity Resource Category: Strategic Habitat Conservation Areas (SHCA), Vertebrate Potential Habitat Richness (VertRich), Rare Species Habitat Conservation Priorities (FNAIHAB), and Priority Natural Communities (Natcom).  (See pg. 14-15 of the CLIP Technical Report for the rules used to assign the core data layers into the Biodiversity resource priority model).">
-                                                <h4>Overall CLIP Biodiversity</h4>
+                                                <h4>CLIP Biodiversity</h4>
                                                 <div>
-                                                    <!--<p>-->
-                                                        <!--This model is a combination of the four CLIP core data layers in the Biodiversity Resource Category: Strategic Habitat Conservation Areas (SHCA), Vertebrate Potential Habitat Richness (VertRich), Rare Species Habitat Conservation Priorities (FNAIHAB), and Priority Natural Communities (Natcom).  (See pg. 14-15 of the <a href="http://www.fnai.org/pdf/CLIP_3_technical_report.pdf" target="_blank">CLIP Technical Report</a> for the rules used to assign the core data layers into the Biodiversity resource priority model).-->
-                                                    <!--</p>-->
                                                     <div id="Bio_Chart"></div>
                                                 </div>
                                             </section>
 
-                                            <section class="expandable">
+                                            <section class="expandable js-hasTooltip node-highlight" data-tooltip-title="Rare Species" data-tooltip="This data layer was created by FNAI originally to inform the Florida Forever environmental land acquisition program, and was prioritized based partly on the amount of species’ habitat currently protected on conservation lands. The CLIP version has been re-prioritized to reflect more general conservation needs for rare species. FNAI modeled suitable habitat around documented locations for 281 species of plants, invertebrates, and vertebrates, including aquatic species.  Highest priorities could indicate a single species with very high conservation need, or multiple species with high conservation need.">
                                                 <h4>Rare Species</h4>
                                                 <div>
-                                                    <p>
-                                                        This data layer was created by FNAI originally to inform the Florida Forever environmental land acquisition program, and was prioritized based partly on the amount of species’ habitat currently protected on conservation lands. The CLIP version has been re-prioritized to reflect more general conservation needs for rare species. FNAI modeled suitable habitat around documented locations for 281 species of plants, invertebrates, and vertebrates, including aquatic species.  Highest priorities could indicate a single species with very high conservation need, or multiple species with high conservation need.
-                                                    </p>
                                                     <div id="BioRareSpp_Chart"></div>
                                                 </div>
                                             </section>
 
-                                            <section class="expandable">
+                                            <section class="expandable js-hasTooltip node-highlight" data-tooltip-title="Strategic Habitat Conservation Areas" data-tooltip="This data layer was created by FWC to identify gaps in the existing statewide system of wildlife conservation areas, and to inform ongoing land acquisition and conservation efforts. FWC modeled areas of habitat that are essential to sustain viable populations for 34 species of terrestrial (land-based) vertebrates that are not adequately protected on existing conservation lands. The CLIP version also identifies habitat on conservation lands for all 62 species analyzed for the project.">
                                                 <h4>Strategic Habitat Conservation Areas</h4>
                                                 <div>
-                                                    <p>
-                                                        This data layer was created by FWC to identify gaps in the existing statewide system of wildlife conservation areas, and to inform ongoing land acquisition and conservation efforts. FWC modeled areas of habitat that are essential to sustain viable populations for 34 species of terrestrial (land-based) vertebrates that are not adequately protected on existing conservation lands. The CLIP version also identifies habitat on conservation lands for all 62 species analyzed for the project.
-                                                    </p>
                                                     <div id="BioSHCA_Chart"></div>
                                                     <div id="BioSHCATable" class="detail-table"></div>
                                                 </div>
                                             </section>
 
-                                            <section class="expandable">
+                                            <section class="expandable js-hasTooltip node-highlight" data-tooltip-title="Priority Natural Communities" data-tooltip="This data layer was created by FNAI originally to inform the Florida Forever environmental land acquisition program. The natural communities were mapped primarily based on the FNAI/FWC Cooperative Land Cover (CLC) data layer.  This layer includes 12 priority natural community types: upland glades, pine rocklands, seepage slopes, scrub, sandhill, sandhill upland lakes, rockland hammock, coastal uplands, imperiled coastal lakes, dry prairie, upland pine, pine flatwoods, upland hardwood forest, or coastal wetlands. These natural communities are prioritized by a combination of their heritage global status rank (G-rank) and landscape context, based on the Land Use Intensity Index (subset of CLIP Landscape Integrity Index) and FNAI Potential Natural Areas.
+                                                        <br/>
+                                                        The qualifiers (Very High, High, Moderate) for the Priority Natural Communities in CLIP were based on the Landscape Integrity Priority Classifications created by FNAI. A more specific description of these prioritization can be found in Appendix D of the CLIP Technical Report.">
                                                 <h4>Priority Natural Communities</h4>
                                                 <div>
-                                                    <p>
-                                                        This data layer was created by FNAI originally to inform the Florida Forever environmental land acquisition program. The natural communities were mapped primarily based on the FNAI/FWC Cooperative Land Cover (CLC) data layer.  This layer includes 12 priority natural community types: upland glades, pine rocklands, seepage slopes, scrub, sandhill, sandhill upland lakes, rockland hammock, coastal uplands, imperiled coastal lakes, dry prairie, upland pine, pine flatwoods, upland hardwood forest, or coastal wetlands. These natural communities are prioritized by a combination of their heritage global status rank (G-rank) and landscape context, based on the Land Use Intensity Index (subset of CLIP Landscape Integrity Index) and FNAI Potential Natural Areas.
-                                                        <br/>
-                                                        The qualifiers (Very High, High, Moderate) for the Priority Natural Communities in CLIP were based on the Landscape Integrity Priority Classifications created by FNAI. A more specific description of these prioritization can be found in Appendix D of the CLIP Technical Report.
-                                                    </p>
                                                     <div id="BioPNC_Chart"></div>
                                                     <div id="BioPNC_Table" class="detail-table"></div>
                                                 </div>
 
                                             </section>
 
-                                            <section class="expandable">
+                                            <section class="expandable js-hasTooltip node-highlight" data-tooltip-title="Overall Vertebrate Species Richness" data-tooltip="Potential habitat for one or more rare or vulnerable vertebrate species. Richness refers to the number of species overlapping at any location.  FWC modeled potential habitat for 62 species of terrestrial (land-based) vertebrates that may not be adequately protected on existing conservation lands.  The most overlapping species in this model is 13.">
                                                 <h4>Overall Vertebrate Species Richness</h4>
                                                 <div>
-                                                    <p>
-                                                        Potential habitat for one or more rare or vulnerable vertebrate species. Richness refers to the number of species overlapping at any location.  FWC modeled potential habitat for 62 species of terrestrial (land-based) vertebrates that may not be adequately protected on existing conservation lands.  The most overlapping species in this model is 13.
-                                                    </p>
                                                     <div id="BioSppRich_Chart"></div>
                                                     <div id="BioSppRichTable" class="detail-table"></div>
                                                 </div>
@@ -256,130 +225,98 @@
                                         </div>
 
                                         <div id="CLIPLandscape" class="tab hidden">
-                                            <section  class="expandable expanded">
+                                            <section  class="expandable expanded js-hasTooltip node-highlight" data-tooltip-title="CLIP Landscape" data-tooltip="This model is a combination of the two core data layers in the Landscapes Resource Category: Florida Ecological Greenways Network, and Landscape Integrity Index. (See pg. 14 of the CLIP Technical Report for the rules used to assign the core data layers into the Biodiversity resource priority model).">
                                                 <h4>CLIP Landscape</h4>
                                                 <div>
-                                                    <p>
-                                                        This model is a combination of the two core data layers in the Landscapes Resource Category: Florida Ecological Greenways Network, and Landscape Integrity Index. (See pg. 14 of the <a href="http://www.fnai.org/pdf/CLIP_3_technical_report.pdf" target="_blank">CLIP Technical Report</a> for the rules used to assign the core data layers into the Biodiversity resource priority model).
-                                                    </p>
                                                     <div id="Land_Chart"></div>
                                                 </div>
                                             </section>
 
-                                            <section  class="expandable">
+                                            <section  class="expandable js-hasTooltip node-highlight" data-tooltip-title="Florida Ecological Greenways Network" data-tooltip="This data layer was created by the University of Florida Center for Landscape Conservation Planning to provide an ecological component to the Statewide Greenways System plan developed by the Dept. of Environmental Protection, Office of Greenways and Trails. It is intended to represent a statewide network of ecological hubs and linkages designed to maintain landscape-scale ecological functions and fragmentation sensitive biodiversity throughout the state.">
                                                 <h4>Florida Ecological Greenways Network</h4>
                                                 <div>
-                                                    <p>
-                                                        This data layer was created by the University of Florida Center for Landscape Conservation Planning to provide an ecological component to the Statewide Greenways System plan developed by the Dept. of Environmental Protection, Office of Greenways and Trails. It is intended to represent a statewide network of ecological hubs and linkages designed to maintain landscape-scale ecological functions and fragmentation sensitive biodiversity throughout the state.
-                                                    </p>
                                                     <div id="Greenways_Chart"></div>
                                                 </div>
                                             </section>
 
-                                            <section  class="expandable">
+                                            <section  class="expandable js-hasTooltip node-highlight" data-tooltip-title="Landscape Integrity Index" data-tooltip="This data layer was created by the University of Florida Center for Landscape Conservation Planning specifically for CLIP. It combines two models: natural land cover patch size and land use intensity. Both are based on the Cooperative Land Cover (CLC) data layer and major roads data from the Florida Department of Transportation (which are used to help delineate patches).  Higher values indicate large expanses of remote, intact natural and semi-natural areas.  Lower values indicate more fragmented landscapes with increasingly intensive land uses from agriculture to urban development.">
                                                 <h4>Landscape Integrity Index</h4>
                                                 <div>
-                                                    <p>
-                                                        This data layer was created by the University of Florida Center for Landscape Conservation Planning specifically for CLIP. It combines two models: natural land cover patch size and land use intensity. Both are based on the Cooperative Land Cover (CLC) data layer and major roads data from the Florida Department of Transportation (which are used to help delineate patches).  Higher values indicate large expanses of remote, intact natural and semi-natural areas.  Lower values indicate more fragmented landscapes with increasingly intensive land uses from agriculture to urban development.
-                                                    </p>
                                                     <div id="LI_Chart"></div>
                                                 </div>
                                             </section>
                                         </div>
 
                                         <div id="CLIPWater" class="tab hidden">
-                                            <section class="expandable expanded">
+                                            <section class="expandable expanded js-hasTooltip node-highlight" data-tooltip-title="CLIP Surface Water" data-tooltip="This model is a combination of the three core data layers in the Surface Water Resource Category: Significant Surface Waters, Natural Floodplain, and Wetlands.  (See pg. 15 of the CLIP Technical Report for the rules used to assign the core data layers into the Surface Water resource priority model).">
                                                 <h4>CLIP Surface Water</h4>
                                                 <div>
-                                                    <p>
-                                                        This model is a combination of the three core data layers in the Surface Water Resource Category: Significant Surface Waters, Natural Floodplain, and Wetlands.  (See pg. 15 of the <a href="http://www.fnai.org/pdf/CLIP_3_technical_report.pdf" target="_blank">CLIP Technical Report</a> for the rules used to assign the core data layers into the Surface Water resource priority model).
-                                                    </p>
                                                     <div id="Water_Chart"></div>
                                                 </div>
                                             </section>
 
-                                            <section  class="expandable">
+                                            <section  class="expandable js-hasTooltip node-highlight" data-tooltip-title="Significant Surface Waters" data-tooltip="This data layer was created by FNAI, in consultation with water resource experts, originally to inform the Florida Forever environmental land acquisition program. It identifies buffers to important surface water bodies as well as watersheds that contribute to those water bodies.">
                                                 <h4>Significant Surface Waters</h4>
                                                 <div>
-                                                    <p>
-                                                        This data layer was created by FNAI, in consultation with water resource experts, originally to inform the Florida Forever environmental land acquisition program. It identifies buffers to important surface water bodies as well as watersheds that contribute to those water bodies.
-                                                    </p>
                                                     <div id="SSW_Chart"></div>
                                                 </div>
                                             </section>
 
-                                            <section  class="expandable">
+                                            <section  class="expandable js-hasTooltip node-highlight" data-tooltip-title="Natural Floodplain" data-tooltip="This data layer was created by FNAI, in consultation with water resource experts, originally to inform the Florida Forever environmental land acquisition program. It identifies FEMA 100-year floodplain for most counties, or a surrogate model for 100-year floodplain (based on wetlands and soils) where FEMA data isn’t complete.">
                                                 <h4>Natural Floodplain</h4>
                                                 <div>
-                                                    <p>
-                                                        This data layer was created by FNAI, in consultation with water resource experts, originally to inform the Florida Forever environmental land acquisition program. It identifies FEMA 100-year floodplain for most counties, or a surrogate model for 100-year floodplain (based on wetlands and soils) where FEMA data isn’t complete.
-                                                    </p>
                                                     <div id="Floodplain_Chart"></div>
                                                 </div>
                                             </section>
 
-                                            <section  class="expandable">
+                                            <section  class="expandable js-hasTooltip node-highlight" data-tooltip-title="Wetlands" data-tooltip="This data layer was created by FNAI, in consultation with water resource experts, originally to inform the Florida Forever environmental land acquisition program. Wetlands were mapped based on the Cooperative Land Cover (CLC) data layer. Highest priorities indicate wetlands within large intact natural landscapes (although the wetlands themselves may be small or large). Lowest priorities indicate wetlands within fragmented landscapes surrounded by intensive agriculture or urban development">
                                                 <h4>Wetlands</h4>
                                                 <div>
-                                                    <p>
-                                                        This data layer was created by FNAI, in consultation with water resource experts, originally to inform the Florida Forever environmental land acquisition program. Wetlands were mapped based on the Cooperative Land Cover (CLC) data layer. Highest priorities indicate wetlands within large intact natural landscapes (although the wetlands themselves may be small or large). Lowest priorities indicate wetlands within fragmented landscapes surrounded by intensive agriculture or urban development
-                                                    </p>
                                                     <div id="Wetlands_Chart"></div>
                                                 </div>
                                             </section>
 
-                                            <section  class="expandable">
+                                            <section  class="expandable js-hasTooltip node-highlight" data-tooltip-title="Aquifer Recharge" data-tooltip="This data layer was created by FNAI, in collaboration with Advanced Geospatial, Inc., originally to inform the Florida Forever environmental land acquisition program. AGI developed an initial Recharge Potential model following a similar model to the Florida Aquifer Vulnerability Assessment (FAVA). FNAI removed discharge areas and prioritized the model based on overlap with Springs Protection Areas and buffers to public water supply wells. High priorities indicate high potential for recharge to an underlying aquifer system. The highest priorities indicate high potential for recharge to springs or public water supplies.
+                                                        <br/><br/>
+                                                        Note: Not included in the CLIP surface waters layer or CLIP’s aggregated priorities; original raw prioritizations/scores are included here instead.">
                                                 <h4>Aquifer Recharge</h4>
                                                 <div>
-                                                    <p>
-                                                        This data layer was created by FNAI, in collaboration with Advanced Geospatial, Inc., originally to inform the Florida Forever environmental land acquisition program. AGI developed an initial Recharge Potential model following a similar model to the Florida Aquifer Vulnerability Assessment (FAVA). FNAI removed discharge areas and prioritized the model based on overlap with Springs Protection Areas and buffers to public water supply wells. High priorities indicate high potential for recharge to an underlying aquifer system. The highest priorities indicate high potential for recharge to springs or public water supplies.
-                                                        <br/><br/>
-                                                        Note: Not included in the CLIP surface waters layer or CLIP’s aggregated priorities; original raw prioritizations/scores are included here instead.
-                                                    </p>
                                                     <div id="Aquifer_Chart"></div>
                                                 </div>
                                             </section>
-
-                                            <!--<section  class="expandable">-->
-                                                <!--<h4></h4>-->
-                                                <!--<div>-->
-                                                    <!--<p>-->
-
-                                                    <!--</p>-->
-                                                    <!--<div id=""></div>-->
-                                                <!--</div>-->
-                                            <!--</section>-->
-
-
                                         </div>
                                     </div>
 
                                     <div id="DetailsLandUse" class="tab hidden">
-                                        <section>
-                                            <p>These land use categories were generalized from the 78 state level land cover types outlined in the Florida Cooperative Land Cover Map (CLC, version 3.1) currently maintained by FWC and FNAI.  This generalization was performed to make visualization and calculation in this tool manageable.</p>
+                                        <section class="js-hasTooltip node-highlight" data-tooltip-title="Land Use" data-tooltip="These land use categories were generalized from the 78 state level land cover types outlined in the Florida Cooperative Land Cover Map (CLC, version 3.1) currently maintained by FWC and FNAI.  This generalization was performed to make visualization and calculation in this tool manageable.">
+                                            <h4>Land Use</h4>
                                             <div id="LU_Bars" class="horiz-bars small"></div>
                                         </section>
                                     </div>
 
                                     <div id="DetailsThreats" class="tab hidden">
-                                        <!-- TODO: tabs? -->
-                                        <section>
-                                            <h5>Projected Sea Level Rise</h5>
-                                            <p>
-                                                These sea level rise projections were produced by the University of Florida Geoplan Center.
+                                        <section class="expandable expanded js-hasTooltip node-highlight" data-tooltip-title="Projected Sea Level Rise" data-tooltip="These sea level rise projections were produced by the University of Florida Geoplan Center.
                                                 These projections measure sea level rise in meter increments up until 3 meters, based on Bathtub sea level rise models.
                                                 The graph below reports the area affected for each of these three scenarios (as well as the area unaffected).
                                                 Time ranges were extrapolated from the High Bathtub Projections (for Mean Sea Level Rise) used in the University of
-                                                Florida GeoPlan Center’s <a href="http://sls.geoplan.ufl.edu/" target="_blank">Sea Level Rise Sketch tool</a>.
-                                                The hectares reported for each of these scenarios are cumulative figures.
-                                            </p>
-                                            <div id="SLR_Bars" class="horiz-bars small"></div>
-
-                                            <h5 style="margin-top: 30px;">Urban Development / Population Growth</h5>
-                                            <p>
-                                                These development projections are derived from the Florida 2060 development dataset. This projections explores the physical reality and consequences of the population growth from 2005 to 2060 if existing land use policy or population growth patterns do not change.  The land use suitability analysis displayed in this dataset was performed by the University of Florida GeoPlan Center for 1000 Friends of Florida. The graph below reports the area affected for each of the three time steps used in this model, the existing extent of urbanization in 2005, and the area unaffected by urbanization. The hectares reported for each of the three time steps are cumulative figures.
-                                            </p>
-                                            <div id="Dev_Bars" class="horiz-bars small"></div>
+                                                Florida GeoPlan Center's Sea Level Rise Sketch tool.<br/><br/>
+                                                The hectares reported for each of these scenarios are cumulative figures.">
+                                            <h4>Projected Sea Level Rise</h4>
+                                            <div>
+                                                <div id="SLR_Bars" class="horiz-bars small"></div>
+                                                <p class="small quiet">
+                                                    Read more about sea level rise projections and access data <a href="http://pflcc.databasin.org/datasets/dd54d301894f4322a7a30832572c4a7e" target="_blank">here.</a>
+                                                </p>
+                                            </div>
+                                        </section>
+                                        <section class="expandable expanded js-hasTooltip node-highlight" style="margin-top:20px;" data-tooltip-title="Urban Development / Population Growth" data-tooltip="These development projections are derived from the Florida 2060 development dataset. This projections explores the physical reality and consequences of the population growth from 2005 to 2060 if existing land use policy or population growth patterns do not change.  The land use suitability analysis displayed in this dataset was performed by the University of Florida GeoPlan Center for 1000 Friends of Florida. The graph below reports the area affected for each of the three time steps used in this model, the existing extent of urbanization in 2005, and the area unaffected by urbanization. The hectares reported for each of the three time steps are cumulative figures.">
+                                            <h4>Urban Development / Population Growth</h4>
+                                            <div>
+                                                <div id="Dev_Bars" class="horiz-bars small"></div>
+                                                <p class="small quiet">
+                                                    Read more about urban development projections and access data <a href="http://pflcc.databasin.org/datasets/4a1340791089437dae38593f0ef39439" target="_blank">here.</a>
+                                                </p>
+                                            </div>
                                         </section>
                                     </div>
 
@@ -390,17 +327,14 @@
                                         </ul>
 
                                         <div id="OwnershipTab" class="tab">
-                                            <section>
+                                            <section class="js-hasTooltip node-highlight" data-tooltip-title="Overall Ownership" data-tooltip="Land ownership is broken down into Federal, State, Local, Private Conserved Land, and Other Lands categories.">
                                                 <div id="Owner_Chart"></div>
                                                 <div id="Owner_Table" class="detail-table"></div>
                                             </section>
                                         </div>
 
                                         <div id="PartnerTab" class="tab hidden">
-                                            <section style="margin-top: 30px;">
-                                                <h5>Regional / Partner Conservation Efforts</h5>
-                                                <p class="quiet">
-                                                    Conservation priorities and potential areas of interest for partner
+                                            <section style="margin-top: 30px;" class="js-hasTooltip node-highlight" data-tooltip-title="Regional / Partner Conservation Efforts" data-tooltip="Conservation priorities and potential areas of interest for partner
                                                     organizations and land trusts. Each partner prioritizes conservation
                                                     need differently and so these identified areas are not entirely comparable.
                                                     Nevertheless, an attempt was made to standardize the summarization of
@@ -414,14 +348,12 @@
                                                     resiliency area was included (Slightly Above Average, Above Average, and Far Above Average).
                                                     For other prioritizations, the results were binary such as the Nature
                                                     Conservancy’s Ecoregional Priorities where all areas designated as
-                                                    priorities or linkages were included. More information about these
-                                                    and other priorities, follow
-                                                    <a href="http://pflcc.databasin.org/articles/ce1f69f0d22b483288d8e4ac025a19b4" target="_blank" >this link </a>
-                                                    or click the corresponding links below.
-                                                </p>
+                                                    priorities or linkages were included.">
+                                                <h4>Regional / Partner Conservation Efforts</h4>
                                                 <ul id="PartnersList"></ul>
-
-                                                <h5>Land Trusts by County</span></h5>
+                                            </section>
+                                            <section class="js-hasTooltip node-highlight" data-tooltip-title="Land Trusts by County" data-tooltip="Land Trusts are listed by county by the Land Trust Alliance.  You can follow the link for the county to search for land trusts operating in that area.">
+                                                <h4>Land Trusts by County</span></h4>
                                                 <ul id="LTList"></ul>
                                             </section>
                                         </div>
@@ -438,6 +370,9 @@
         <div id="Footer" class="table-row small">
             <ul>
                 <li>
+                    <a href="http://peninsularfloridalcc.org/" target="_blank">Peninsular Florida LCC</a>
+                </li>
+                <li>
                     <a href="http://pflcc.databasin.org/" target="_blank">Access Data</a>
                 </li>
                 <li class="small right">
@@ -449,7 +384,8 @@
         </div>
     </div>
 
-    <div id="Tooltip">
+    <div id="Tooltip" class="tooltip">
+        <div class="tooltip-pointer"></div>
         <h4></h4>
         <p class="quiet nomargin small"></p>
     </div>

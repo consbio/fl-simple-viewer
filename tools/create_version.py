@@ -7,14 +7,14 @@ with a folder name equal to version specified here.
 import os, shutil
 
 # run time variables
-version = "0.1"
+version = "0.2"
 
 # files / directories to push into version
 deps = [
     "deps",
     "static",
     "index.html",
-    # "features" #TODO: uncomment when uploading new data
+    # "features" #TODO: uncomment when uploading new data / new version
 ]
 
 

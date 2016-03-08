@@ -295,6 +295,10 @@ input[type=range]:focus::-ms-fill-upper {
     background: #F6F6F6;
 }
 
+.node-highlight .node-highlight:hover{
+    background: #EEE;
+}
+
 
 /* intended to be setup as a leaflet control to coordinate layout with other controls */
 .map-panel {
@@ -527,6 +531,11 @@ div.dc-chart {
     float: none;
 }
 
+.dc-chart g.row rect:hover {
+    fill-opacity: 0.3;
+    fill: orange;
+}
+
 
 /* NVD3 overrides */
 .nvd3 text {
@@ -637,7 +646,7 @@ div.dc-chart {
 }
 
 
-#Tooltip {
+.tooltip {
     position: absolute;
     max-width: 350px;
     z-index: 10000;
@@ -647,23 +656,22 @@ div.dc-chart {
     padding: 0 10px 10px 10px;
     box-shadow: 2px 2px 6px #555;
 }
-#Tooltip:after {
-    content: '';
+.tooltip h4 {
+    border-bottom: 1px solid #DDD;
+}
+.tooltip p {
+    padding: 4px 0;
+}
+
+.tooltip-pointer {
     position: absolute;
-    top: 1em;
+    top: 14px;
     right: 100%;
     margin-top: -8px;
     width: 0; height: 0;
     border-right: 8px solid #555;
     border-top: 8px solid transparent;
     border-bottom: 8px solid transparent;
-}
-#Tooltip h4 {
-    border-bottom: 1px solid #DDD;
-}
-#Tooltip p {
-    /*font-size: 0.9em;*/
-    padding: 4px 0;
 }
 
 
