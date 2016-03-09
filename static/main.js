@@ -148,34 +148,31 @@ d3.selectAll('.js-hasTooltip').each(function() {
 
 
 /******* Map Configuration *********/
-var basemaps = {
-    'ESRI Topo': L.tileLayer('//{s}.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+var basemaps = [
+    L.tileLayer('//{s}.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
         attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community',
-        subdomains: ['server', 'services']
+        subdomains: ['server', 'services'],
+        label: 'ESRI Topo'
     }),
-    'ESRI Gray': L.tileLayer('//{s}.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+    L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+        label: 'ESRI Imagery'
+    }),
+    L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012',
+        label: 'ESRI Streets'
+    }),
+    L.tileLayer('//{s}.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
         attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
         maxZoom: 16,
-        subdomains: ['server', 'services']
-    }),
-    'ESRI Imagery': L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-    }),
-    'ESRI - National Geographic': L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}', {
-        attribution: 'Tiles &copy; Esri &mdash; National Geographic, Esri, DeLorme, NAVTEQ, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, iPC',
-        maxZoom: 16
-    }),
-    'ESRI Ocean': L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/Ocean_Basemap/MapServer/tile/{z}/{y}/{x}', {
-        attribution: 'Tiles &copy; Esri &mdash; Sources: GEBCO, NOAA, CHS, OSU, UNH, CSUMB, National Geographic, DeLorme, NAVTEQ, and Esri',
-        maxZoom: 13
-    }),
-    'ESRI Streets': L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
-        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012'
+        subdomains: ['server', 'services'],
+        label: 'ESRI Gray'
     })
-};
+];
+
 
 map = L.map('Map', {
-    layers: [basemaps['ESRI Topo']],
+    layers: [basemaps[0]],
     maxZoom: 12,
     center: [27.68, -81.69],
      zoom: 7
@@ -197,8 +194,8 @@ legend.onAdd = function (map) {
 };
 legend.addTo(map);
 
-map.addControl(L.control.layers(basemaps, null, {position: 'bottomright', autoZIndex: false}));
-d3.select('.leaflet-control-layers-toggle').html('<i class="fa fa-globe"></i> <i class="fa fa-globe quiet"></i>'); // basemaps
+//map.addControl(L.control.layers(basemaps, null, {position: 'bottomright', autoZIndex: false}));
+//d3.select('.leaflet-control-layers-toggle').html('<i class="fa fa-globe"></i> <i class="fa fa-globe quiet"></i>'); // basemaps
 
 
 omnivore.topojson('static/features.json')
@@ -1144,5 +1141,88 @@ function createCountChart(node, dimension, options){
 }
 
 
+/**************** NEW BASEMAP CONTROL HERE *****************/
+
+function createControl(domNode, map, config) {
+    var control = L.control(config);
+    control.onAdd = function (map) {
+        var container = domNode;
+        L.DomEvent.disableClickPropagation(container);
+        if (!L.Browser.touch) {
+            L.DomEvent.disableScrollPropagation(container);
+        }
+        this._container = container;
+        return container;
+    };
+    control.addTo(map);
+}
+
+var curBasemap = null;
+
+function initBasemaps(node, map, basemaps){
+    createControl(node.node(), map, {position: 'bottomright'});
+    basemaps.forEach(function(d, i){
+        if (i === 0) {
+            curBasemap = d;
+        }
+
+        var coords = {x:8, y:13};
+
+        //pt = new L.Point(center.lng, center.lat)
 
 
+
+        var zoom = 5; //map.getZoom();
+        //TODO: get center of map and two zooms level out or 0
+
+        var url = L.Util.template(d._url, L.extend({
+			s: d._getSubdomain(coords),
+			x: coords.x,
+			y: d.options.tms ? d._globalTileRange.max.y - coords.y : coords.y,
+			z: zoom
+		}, d.options));
+
+        console.log(url)
+
+        var container = node.append('div').classed('basemap', true).classed('active', i === 0).classed('alt', i === 1);
+        //container.append('h4').classed('center', true).html(d.options.label);
+
+        var img = container.append('img')
+            .attr('src', url)
+            .attr('title', d.options.label);
+
+        container.on('click', function(){
+                console.log(d, i)
+
+                //if different, remove previous basemap, and add new one
+                if (d != curBasemap) {
+                    map.removeLayer(curBasemap);
+                    map.addLayer(d);
+                    map.fire('baselayerchange', curBasemap); //TODO: need to sync up attribution after this
+                    curBasemap = d;
+
+                    d3.selectAll('.basemap.active').classed('active', false);
+                    d3.select(this).classed('active', true);
+
+                    d3.selectAll('.basemap.alt').classed('alt', false);
+                    var altIdx = (i === 0)? 1: 0;
+                    d3.select(d3.selectAll('.basemap')[0][altIdx]).classed('alt', true);
+
+                    //node.classed('closed', true);//.classed('map-panel', false);
+                }
+            });
+
+    });
+
+    node.on('mouseenter', function() {
+            d3.select(this).classed('closed', false);//.classed('map-panel', true);
+        })
+        .on('mouseleave', function() {
+            d3.select(this).classed('closed', true);//.classed('map-panel', false);
+        })
+
+
+}
+
+var selectedBasemapIdx = 0;
+initBasemaps(d3.select('#Basemaps'), map, basemaps);

@@ -989,3 +989,53 @@ h4.mapped .filter-reset {
     font-size: 0.9em;
     padding: 0 0 8px 0;
 }
+
+
+
+/********* new basemaps *********/
+.basemaps {
+    /*border-radius: 32px;*/
+    /*background: rgba(255,255,255,0.7);*/
+    padding: 4px;
+}
+/*.basemaps.closed {*/
+    /*background: transparent;*/
+/*}*/
+.basemaps.closed .basemap {
+    display: none;
+}
+.basemaps.closed .basemap.alt {
+    display: inline-block;
+}
+.basemaps.closed .basemap.alt h4 {
+    display: none;
+}
+.basemaps.closed .basemap.alt img {
+    /*width: 64px;*/
+}
+
+
+.basemap {
+    display: inline-block; /* todo: flexbox? */
+    cursor: pointer;
+}
+.basemap:hover img {
+    /*background: #F6F6F6;*/
+    /*opacity: 0.6;*/
+}
+.basemap.active img {
+    /*background: rgba(255, 165, 0, 0.2);*/
+    border-color: orange;
+    box-shadow: 2px 2px 4px #000;
+}
+.basemap img {
+    width: 64px;
+    border: 2px solid #FFF;
+    margin: 0 2px;
+    border-radius: 40px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.65)
+}
+/*.basemap label {*/
+    /*!*text-align: center*!*/
+    /*font-weight: bold;*/
+/*}*/
