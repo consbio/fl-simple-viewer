@@ -743,8 +743,16 @@ function showDetails(id) {
 
     // Landscape tab
     createPieChart(d3.select('#Land_Chart'), zipIntoObj(['value', 'label', 'color'], details.land, priorityLabels, chartColors), '%');
-    createPieChart(d3.select('#Greenways_Chart'), zipIntoObj(['value', 'label', 'color'], details.land_greenways, priorityLabels, chartColors), '%');
-    createPieChart(d3.select('#LI_Chart'), zipIntoObj(['value', 'label', 'color'], details.land_integrity, priorityLabels, chartColors), '%');
+
+    // greenways have different priority categories
+    var greenwaysLabels = ['Priority 1', 'Priority 3', 'Priority 4', 'Not a Priority'];
+    var greenwaysColors = ["#08519c", "#6baed6", "#bdd7e7", '#ffffcc'];
+    createPieChart(d3.select('#Greenways_Chart'), zipIntoObj(['value', 'label', 'color'], details.land_greenways, greenwaysLabels, greenwaysColors), '%');
+
+    // land integrity has different priority categories
+    var liLabels = ['Priority 2', 'Priority 3', 'Priority 4', 'Priority 5', 'Not a Priority'];
+    var liColors = ["#3182bd", "#6baed6", "#bdd7e7", "#eff3ff", '#ffffcc'];
+    createPieChart(d3.select('#LI_Chart'), zipIntoObj(['value', 'label', 'color'], details.land_integrity, liLabels, liColors), '%');
 
     // Surface water tab
     createPieChart(d3.select('#Water_Chart'), zipIntoObj(['value', 'label', 'color'], details.water, priorityLabels, chartColors), '%');

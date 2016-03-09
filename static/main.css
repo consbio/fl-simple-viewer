@@ -776,15 +776,12 @@ div.dc-chart {
     border-left: 1px solid #555;
     padding: 10px 10px 10px 0
 }
-
 .horiz-bars > div {
     padding: 8px 0 8px 0;
 }
 .horiz-bars .bar {
-    border-left: none;
-}
-.horiz-bars .bar {
     border: 1px solid #555;
+    border-left: none;
     height: 1.5em;
     opacity: 0.75;
 }
