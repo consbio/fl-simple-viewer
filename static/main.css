@@ -35,8 +35,12 @@ input[type=range]{
     -webkit-appearance: none;
     /* fix for FF unable to apply focus style bug  */
     border: 1px solid white;
-    cursor: pointer;
+    /*cursor: pointer;*/
+    cursor: ew-resize;
     opacity: 0.5;
+    margin: 0;
+    padding: 0;
+    vertical-align: middle;
 }
 input[type=range]::-webkit-slider-runnable-track {
     width: 150px;
@@ -57,16 +61,6 @@ input[type=range]::-webkit-slider-thumb {
 input[type=range]:focus {
     outline: none;
 }
-input[type=range]:focus::-webkit-slider-runnable-track {
-    background: #ccc;
-}
-input[type=range]::-moz-range-track {
-    width: 150px;
-    height: 5px;
-    background: #ddd;
-    border: none;
-    border-radius: 3px;
-}
 input[type=range]::-moz-range-thumb {
     border: none;
     height: 16px;
@@ -83,13 +77,10 @@ input[type=range]:focus::-moz-range-track {
     background: #ccc;
 }
 input[type=range]::-ms-track {
-    width: 150px;
-    height: 5px;
-
-    /*remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead */
+    /*!*remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead *!*/
     background: transparent;
 
-    /*leave room for the larger thumb to overflow with a transparent border */
+    /*!*leave room for the larger thumb to overflow with a transparent border *!*/
     border-color: transparent;
     border-width: 6px 0;
 
@@ -117,7 +108,9 @@ input[type=range]:focus::-ms-fill-lower {
 input[type=range]:focus::-ms-fill-upper {
     background: #ccc;
 }
-
+input[type=range]::-ms-tooltip {
+    display: none;
+}
 
 /* Core classes */
 .pos-rel {
@@ -269,16 +262,6 @@ input[type=range]:focus::-ms-fill-upper {
     font-family: "Trebuchet MS", Helvetica, sans-serif;
 }
 
-.bar {
-    border: 1px solid #555;
-    height: 1.5em;
-    opacity: 0.75;
-}
-
-.bar + label {
-    margin-left: 4px;
-    font-size: 0.8em;
-}
 
 
 
@@ -787,56 +770,34 @@ div.dc-chart {
 .horiz-bars .nvd3 text {
     font-size: 0.7em;
 }
-
 .horiz-bars {
     line-height: 1;
     margin: 20px 10px 10px 10px;
-    /*background: #F6F6F2;*/
-    /*border: 1px solid #EEE;*/
     border-left: 1px solid #555;
     padding: 10px 10px 10px 0
-}
-
-.horiz-bars > div > div:first-child {
-    margin-left: 2px;
 }
 
 .horiz-bars > div {
     padding: 8px 0 8px 0;
 }
-
 .horiz-bars .bar {
     border-left: none;
 }
-
-
-/*#SppFilter .tab {*/
-    /*padding: 16px 0 0 0;*/
-/*}*/
-/*#SppFilter .tab > div {*/
-    /*margin-bottom: 8px;*/
-/*}*/
-/*#SppFilter label {*/
-    /*width: 210px;*/
-    /*font-size: 0.9em;*/
-/*}*/
-/*#SppFilter input {*/
-    /*width: 120px;*/
-/*}*/
-/*#SppFilter input + div {*/
-    /*width: 70px;*/
-    /*font-size: 0.7em;*/
-/*}*/
-
-/* TODO */
-#ThreatsFilter .button {
-    font-weight: bold;
-    color: #666;
+.horiz-bars .bar {
+    border: 1px solid #555;
+    height: 1.5em;
+    opacity: 0.75;
 }
-#ThreatsFilter .button.active {
-    color: #333;
-    border-color: #333;
+.horiz-bar-title {
+    margin: 0 0 2px 2px;
 }
+.horiz-bar-label {
+    margin-left: 4px;
+    font-size: 0.8em;
+}
+
+
+
 
 
 /* used by pie chart - TODO */
@@ -911,6 +872,10 @@ ul.legend {
     vertical-align: middle;
 }
 
+#Legend input[type=range] {
+    width: 130px;
+}
+
 
 /* used by filter tabs */
 .filter-subheading {
@@ -956,25 +921,6 @@ h4.mapped .filter-reset {
 }
 
 
-/*.table-slider .table-row .table-cell {*/
-    /*padding-bottom: 14px;*/
-/*}*/
-/*.table-slider .table-row .table-cell:nth-child(1) {*/
-    /*width: 175px;*/
-    /*font-size: 1em;*/
-/*}*/
-/*.table-slider .table-row .table-cell:nth-child(2) {*/
-    /*!*width: 130px;*!*/
-    /*padding-left: 10px;*/
-    /*font-size: 0.8em;*/
-/*}*/
-/*.table-slider input + div {*/
-    /*height: 1em;*/
-/*}*/
-/*.table-slider .table-row .table-cell:nth-child(3) {*/
-    /*font-size: 0.8em;*/
-/*}*/
-
 #SppFilter .select-row + .select-row {
     margin-top: 10px;
 }
@@ -1000,21 +946,18 @@ h4.mapped .filter-reset {
 .slider-list {
     list-style: none;
     margin: 24px 0 0 0;
-    /*padding: 4px 10px 0;*/
     padding: 0;
 }
-
 .slider-list li {
-    /*border-top: 1px solid #DDD;*/
     margin-top: 20px;
     padding: 4px 0;
     position: relative;
 }
-
 .slider-list input[type=range] {
     width: 300px;
-    margin: 0;
+    /*margin: 0;*/
 }
+
 .slider-list h4 span {
     color: #AAA;
     font-weight: normal;

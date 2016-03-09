@@ -17,7 +17,7 @@ Stored in ```/deps```
 
 ## Data processing
 
-Data were obtained from PFLCC staff as a shapefile for each factor.
+Data were obtained from PFLCC staff as a shapefile for each factor, from Oct 2015 to Jan 2016.
 
 1. The main watersheds shapefile was projected to WGS84, and simplified to topojson using mapshaper.org (simplification = 3%).
 Output is `features.json`.

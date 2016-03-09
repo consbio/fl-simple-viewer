@@ -27,6 +27,16 @@ var threatLevel = {
 };
 
 
+// Microsoft dropped IE < 11 so we should too
+if (L.Browser.ielt9 || (L.Browser.ie && ((/MSIE 9/i).test(navigator.userAgent) || (/MSIE 10/i).test(navigator.userAgent)))){
+
+    alert("Unfortunately, you are using an unsupported of Internet Explorer.\n\nPlease upgrade your browser or use Google Chrome!");
+    throw 'UnsupportedBrowser';
+}
+
+
+
+
 /* DOM interactions powered by D3 */
 //TODO: these have been updated, migrate to leaflet-quickstart and dm-quickstart
 /******* Tabs *********/
@@ -161,13 +171,6 @@ var basemaps = {
     }),
     'ESRI Streets': L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
         attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012'
-    }),
-    'Stamen Watercolor': L.tileLayer('http://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.{ext}', {
-        attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-        subdomains: 'abcd',
-        minZoom: 1,
-        maxZoom: 16,
-        ext: 'png'
     })
 };
 
@@ -182,21 +185,20 @@ map.addControl(L.control.zoomBox({modal: false, position:'topright'}));
 map.addControl(L.control.geonames({username: 'cbi.test', position:'topright'}));
 
 // Legend is setup as a control to coordinate layout within Leaflet
+//TODO: changed - add to leaflet-quickstart, dm-quickstart, and other controls
 var legend = L.control({position: 'bottomright'});
 legend.onAdd = function (map) {
     this._container = L.DomUtil.get('Legend');
+    L.DomEvent.disableClickPropagation(this._container);
     if (!L.Browser.touch) {
-        L.DomEvent.disableClickPropagation(this._container);
-        L.DomEvent.on(this._container, 'mousewheel', L.DomEvent.stopPropagation);
-    } else {
-        L.DomEvent.on(this._container, 'click', L.DomEvent.stopPropagation);
+        L.DomEvent.disableScrollPropagation(this._container);
     }
     return this._container;
 };
 legend.addTo(map);
 
 map.addControl(L.control.layers(basemaps, null, {position: 'bottomright', autoZIndex: false}));
-d3.select('.leaflet-control-layers-toggle').html('<i class="fa fa-globe"></i> basemaps');
+d3.select('.leaflet-control-layers-toggle').html('<i class="fa fa-globe"></i> <i class="fa fa-globe quiet"></i>'); // basemaps
 
 
 omnivore.topojson('static/features.json')
@@ -759,7 +761,7 @@ function showDetails(id) {
 
 
     // Land use tab
-    record = index.get(id); //FIXME: somehow this is getting hijacked before we get here
+    record = index.get(id); //FIXME: somehow this variable is getting hijacked before we get here
     var luData = landUseTypes.filter(function(d) { return record['lu' + d] > 0 })
         .map(function(d) {
             return {
@@ -778,13 +780,14 @@ function showDetails(id) {
     var slrHa = d3.max(details.slr);
     var notAffectedBySLR = details.hectares - slrHa;
     if (slrHa) {
+        // only keep nonzero entries
         slrData = slrLevels.map(function (d, i) {
             return {
                 value: details.slr[i],
                 label: 'Projected - ' + fieldLabels[d],
                 color: colorMap.slr[i]
             }
-        });
+        }).filter(function(d){ return d.value > 0});
     }
     if (notAffectedBySLR > 0) {
         slrData.push({
@@ -806,7 +809,7 @@ function showDetails(id) {
                 label: ((i === 0) ? '' : 'Projected - ') + fieldLabels[d],
                 color: colorMap.dev[i]
             }
-        });
+        }).filter(function(d){ return d.value > 0});
     }
     if (notDeveloped > 0) {
         devData.push({
@@ -931,6 +934,7 @@ function createInlineBarChart(node, data, units, sortByValue, noSort) {
             node = d3.select(this);
 
             node.append('div')
+                .classed('horiz-bar-title', true)
                 .text(d.label);
 
             var row = node.append('div');
@@ -941,7 +945,7 @@ function createInlineBarChart(node, data, units, sortByValue, noSort) {
                 .style('background-color', d.color);
 
             row.append('label')
-                .classed('quieter', true)
+                .classed('quieter horiz-bar-label', true)
                 .text(formatter(d.value) + units);
 
             if (d.tooltip) {
@@ -1053,20 +1057,8 @@ function createAreaTable(node, entries, sortArea){
 
 
 
-
-var barLabelPrefix = {
-    4: 'Most',
-    3: 'More',
-    2: 'Intermediate',
-    1: 'Less',
-    0: 'Least'
-};
-
-
 var intFormatter = d3.format('.0f');
 function barLabels(field) {
-    //var numBins = scale.range().length;
-    //return scale.range().map(function(d, i){
     var breaks = quantiles[field];
     return breaks.map(function(d, i){
         var prefix = barLabelPrefix[i];
@@ -1077,9 +1069,6 @@ function barLabels(field) {
         var firstLabel = intFormatter(first);
         var lastLabel = intFormatter(last)
 
-        //var invert = scale.invertExtent(d);
-        //var first = intFormatter(invert[0]);
-        //var last = intFormatter(invert[1]);
         if (last === 0) { return prefix + ' (0%)' }
         if (i === 0 || first == 0){ return prefix + ' (<' + lastLabel + '%)' }
         if (i === breaks.length - 1){ return prefix + ' (>' + firstLabel + '%)' }
@@ -1145,64 +1134,6 @@ function createCountChart(node, dimension, options){
     chart.render();
     return chart;
 }
-
-
-
-
-
-function createHorizBarChart(node, data, labels, colors, units, leftMargin){
-    nv.addGraph(function() {
-        var chart = nv.models.multiBarHorizontalChart()
-            .x(function(d) { return d.label })
-            .y(function(d) { return d.value })
-            .barColor(colors)
-            .margin({top: 0, right: 0, bottom: 0, left: (leftMargin == null)? 100: leftMargin})
-            .showLegend(false)
-            .showControls(false)
-            .showValues(true)
-            .valueFormat(function(d){
-                if (Math.round(d) === d){
-                    return d3.format('.0f')(d) + units;
-                }
-                return d3.format('.1f')(d) + units;
-            })
-            .showYAxis(false)
-            .tooltips(false)
-            .duration(0);
-
-
-        chart.yAxis
-            .axisLabel('Percent of Watershed')
-            .tickFormat(d3.format('.0f'));
-
-        chart.tooltip.contentGenerator(function(obj){
-                return '<b>' + obj.data.label + ':</b> ' + obj.data.value + '%';
-            });
-
-        node.html('');
-        node.append('svg')
-            .style({height: 24 * data.length, width: chartWidth})
-            .datum([{key:'', values: zipIntoObj(['value', 'label'], data, labels)}])
-            .call(chart);
-
-        node.selectAll('.nv-bar text').each(function(d, i){
-            var node = d3.select(this);
-            var x = parseFloat(node.attr('x'));
-            if (x > 100){
-                node.attr('x', x - 10).attr('text-anchor', 'end').style('fill-opacity', 1);
-                if (i < 2) {
-                    node.style('fill', '#FFF');
-                }
-            }
-        });
-
-
-        nv.utils.windowResize(chart.update);
-
-        return chart;
-      });
-}
-
 
 
 

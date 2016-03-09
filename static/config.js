@@ -351,3 +351,12 @@ var partnerLabels = {
 
 };
 var partners = ['acjv', 'epaprishd', 'gcconvis', 'llp_conp_', 'salcc', 'tnc_a', 'tnc_r'];
+
+
+var barLabelPrefix = {
+    4: 'Most',
+    3: 'More',
+    2: 'Intermediate',
+    1: 'Less',
+    0: 'Least'
+};
