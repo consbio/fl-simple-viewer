@@ -7,6 +7,7 @@ body {
     height: 100%;
     width: 100%;
     font-family: Verdana, Geneva, sans-serif;
+    font-size: 16px;
     color: #333;
 }
 
@@ -160,6 +161,16 @@ input[type=range]::-ms-tooltip {
 }
 .quieter {
     color: #AAA;
+}
+
+.dark {
+    background: #666 !important;
+    color: white;
+    width: 75%;
+}
+
+.font-weight-normal {
+    font-weight: normal;
 }
 
 .italic {
@@ -736,6 +747,10 @@ div.dc-chart {
     border-top: 1px solid #EEE;
 }
 
+#Details section.read-more {
+    padding-top: 10px;
+}
+
 #DetailsClose {
     cursor: pointer;
     font-size: 1.5em;
@@ -803,6 +818,12 @@ ul.legend {
     padding: 0;
     margin: 0;
 }
+ul.legend.legend-table {
+    padding-left: 14px;
+    padding-right: 10px;
+}
+
+
 .legendElement {
     padding: 4px 2px;
     cursor: default;
@@ -813,7 +834,7 @@ ul.legend {
 {
     background: rgba(252, 249, 142, 0.43);
 }
-.legendElement > div:first-child{
+.legendElement .colorpatch {
     padding: 4px;
     width: 18px;
     height: 22px;
@@ -823,25 +844,55 @@ ul.legend {
     font-size: 18px;
     text-align: center;
     overflow: hidden;
+    vertical-align: top;
+    display: inline-block;
 }
 .legendElement > div + div {
     width: 150px;
 }
-.legendElement.small > div:first-child {
+.legendElement.small .colorpatch {
+    font-size: 0.9em;
     height: 12px;
     width: 12px;
-    vertical-align: top;
 }
 
-/* used by pie chart - TODO */
-
-
-
+.legend-table .colorpatch {
+    width: 32px;
+    font-size: 0.8em;
+    padding: 4px;
+    border: 1px solid #AAA;
+    border-radius: 3px;
+    text-align: center;
+    overflow: hidden;
+    vertical-align: middle;
+    display: inline-block;
+}
+.legend-table .empty {
+    width: 34px;
+}
+.legend-table h4 {
+    margin: 0 0 0 4px;
+    font-weight: normal;
+    font-size: 1.1em;
+}
+.legend-table .info {
+    margin-top: 4px;
+    margin-bottom: 8px;
+    border-top: 1px solid #DDD;
+    font-size: 0.9em;
+    line-height: 1.1;
+}
+.legend-table li + li {
+    margin-top: 1.2em;
+}
+.legend-table h4 + span {
+    margin-top: 0.5em;
+}
 
 
 #Legend {
     font-size: 1.2em;
-    width: 190px;
+    width: 200px;
 }
 #Legend h4 {
     margin-top: 0;
@@ -901,21 +952,28 @@ ul.legend {
     font-weight: normal;
 }
 
-h4.mapped .fa-map,
-h4:hover .fa-map {
-    visibility: visible;
+h4.mapped .fa-map
+ {
+    /*h4:hover .fa-map*/
+    /*visibility: visible;*/
+    color: #1f77b4 !important;
 }
 h4 .fa-map {
-    visibility: hidden;
+    /*visibility: hidden;*/
+    color: #DDD;
 }
-h4.mapped,
-h4.mapped:hover {
-    background: #1f77b4;
-    color: white;
+h4:hover .fa-map {
+    color: #AAA;
 }
-h4.mapped .filter-reset {
-    color: white;
-}
+
+/*h4.mapped,*/
+/*h4.mapped:hover {*/
+    /*background: #1f77b4;*/
+    /*color: white;*/
+/*}*/
+/*h4.mapped .filter-reset {*/
+    /*color: white;*/
+/*}*/
 
 
 #SppFilter .select-row + .select-row {
@@ -989,7 +1047,6 @@ h4.mapped .filter-reset {
     font-size: 0.9em;
     padding: 0 0 8px 0;
 }
-
 
 
 /********* new basemaps *********/

@@ -138,8 +138,6 @@ d3.keys(species).forEach(function(d){
 });
 
 var speciesLinks = {
-    // official links from myfwc, unofficial from elsewhere
-
     // birds
     AMKE: 'http://myfwc.com/wildlifehabitats/profiles/birds/raptors-and-vultures/american-kestrel/',
     BE: 'http://myfwc.com/wildlifehabitats/profiles/birds/raptors-and-vultures/bald-eagle/',
@@ -255,9 +253,6 @@ var communities = {
     CWm:"Coastal Wetlands, moderate"
 };
 
-var communityLinks = {
-
-};
 
 var priorityResourceLabels = {
     C: 'Cultural',
@@ -384,3 +379,144 @@ var barLabelPrefix = {
     1: 'Less',
     0: 'Least'
 };
+
+
+/* info for categories, ordered from first to last category */
+var clipInfo = [
+    'Highest conservation priorities in the Biodiversity, Landscape, or Surface Water OR high conservation priorities across all categories.',
+    'High conservation priorities in Biodiversity, Landscape, or Surface Water OR moderate conservation priorities across all categories.',
+    'Moderate conservation priorities in Biodiversity, Landscape, or Surface Water.',
+    'Low conservation priorities in Biodiversity, Landscape or Surface Water.',
+    'Lowest conservation priorities Biodiversity, Landscape or Surface Water.',
+    'Not designated as a conservation priority.'
+];
+
+var clipBioInfo = [
+    'Highest conservation priorities for Strategic Habitat Conservation Areas, Vertebrate Habitat Richness, Rare Species, or Priority Natural Communities.',
+    'High conservation priorities for Strategic Habitat Conservation Areas, Vertebrate Habitat Richness, Rare Species, or Priority Natural Communities.',
+    'Moderate conservation priorities for Strategic Habitat Conservation Areas, Vertebrate Habitat Richness, Rare Species, or Priority Natural Communities.',
+    'Lowest conservation priorities Strategic Habitat Conservation Areas, Rare Species, or Priority Natural Communities. Low conservation priorities for Vertebrate Habitat Richness.',
+    'Lowest conservation priorities for Vertebrate Habitat Richness.',
+    'Not designated as a conservation priority.'
+];
+
+var clipLandInfo = [
+    'High conservation priorities for Florida Ecological Greenways Network.',
+    'High conservation priorities for Landscape Integrity Index.',
+    'Moderate conservation priorities for Florida Ecological Greenways or Landscape Integrity Index.',
+    'Low conservation priorities for Florida Ecological Greenways Network or Landscape Integrity Index.',
+    'Lowest conservation priorities for Landscape Integrity Index.',
+    'Not designated as a conservation priority.'
+];
+
+var clipWaterInfo = [
+    'Highest conservation priorities for Significant Surface Waters, Floodplains, or Wetlands.',
+    'High conservation priorities for Significant Surface Waters, Floodplains, or Wetlands.',
+    'Moderate conservation priorities for Significant Surface Waters, Floodplains, or Wetlands.',
+    'Low conservation priorities for Significant Surface Waters, Floodplains, or Wetlands.',
+    'Lowest conservation priorities for Significant Surface Waters, Floodplains, or Wetlands.',
+    'Not designated as a conservation priority.'
+];
+//
+var clipRareSppInfo = [
+    'Highest conservation priorities for rare species habitat.',
+    'High conservation priorities for rare species habitat.',
+    'Moderate conservation priorities for rare species habitat.',
+    'Low Conservation Priorities for rare species habitat.',
+    'Not designated as a conservation priority.'
+];
+
+var clipSHCAInfo = [
+    'SHCAs for species with highest conservation rankings.',
+    'SHCAs for species with high conservation rankings.',
+    'SHCAs for species with moderate conservation rankings.',
+    'SHCAs for species with low conservation ranking.',
+    'Not designated as a conservation priority.'
+];
+
+var clipPNCAreaInfo = [
+    'Highest priority for underrepresented natural communities.',
+    'High priority for underrepresented natural communities.',
+    'Moderate priority for underrepresented natural communities.',
+    'Low priority for underrepresented natural communities.',
+    'Not designated as a conservation priority.'
+];
+
+var clipSppRichInfo = [
+    'Highest priority potential habitat (8-13  SHCA vertebrate species).',
+    'High priority potential habitat (7 SHCA vertebrate species).',
+    'Moderate priority potential habitat (5-6 SHCA vertebrate species).',
+    'Low priority potential habitat (2-4 SHCA vertebrate species).',
+    'Potential habitat for (1 SHCA vertebrate species).',
+    'Not designated as a conservation priority.'
+];
+
+var clipGreenwayInfo = [
+    'Highest priority critical linkages.', // P1
+    'High priority greenways that are not critical linkages.', // P3
+    'Moderate priority regionally significant greenways.', // P4
+    'Not designated as a conservation priority.'
+];
+
+var clipLIInfo = [
+    'Areas with highest ecological landscape integrity with very large patches of natural lands.', // P2
+    'Areas with highest ecological landscape integrity.', // P3
+    'Areas with moderately-high to high ecological landscape integrity.', // P4
+    'Areas with moderate ecological landscape integrity', // P5
+    'Not designated as a conservation priority.'
+];
+
+var clipSigSurfWaterInfo = [
+    'Highest conservation priorities for surface waters.',
+    'High conservation priorities for surface waters.',
+    'Moderate conservation priorities for surface waters.',
+    'Low Conservation Priorities for surface waters.',
+    'Lowest conservation priorities for surface waters.',
+    'Not designated as a conservation priority.'
+];
+
+var clipNatFldInfo = [
+    'Highest conservation priorities for natural floodplains.',
+    'High conservation priorities for natural floodplains.',
+    'Moderate conservation priorities for natural floodplains.',
+    'Low Conservation Priorities for natural floodplains.',
+    'Lowest conservation priorities for natural floodplains.',
+    'Not designated as a conservation priority.'
+];
+
+var clipWetlandsInfo = [
+    'Highest conservation priorities for wetlands.',
+    'High conservation priorities for wetlands.',
+    'Moderate conservation priorities for wetlands.',
+    'Low Conservation Priorities for wetlands.',
+    'Lowest conservation priorities for wetlands.',
+    'Not designated as a conservation priority.'
+];
+
+var aquiferInfo = [
+    'Highest recharge areas that overlap with either Spring Protection Areas and/or public water supply buffers.',
+    'Highest recharge areas that do not overlap; OR high recharge areas that overlap with either Spring Protection Areas and/or public water supply buffers.',
+    'High recharge areas that do not overlap; OR moderate recharge areas that overlap with either Spring Protection Areas and/or public water supply buffers.',
+    'Moderate recharge areas that do not overlap; OR moderately low recharge areas that overlap with either Spring Protection Areas and/or public water supply buffers.',
+    'Moderately low recharge areas that do not overlap; OR low recharge areas that overlap with either Spring Protection Areas and/or public water supply buffers.',
+    'Low recharge areas that do not overlap.',
+    'Not designated as a conservation priority.'
+];
+//
+//var clipLIInfo = [
+//    '',
+//    '',
+//    '',
+//    '',
+//    '',
+//    ''
+//];
+//
+//var clipLIInfo = [
+//    '',
+//    '',
+//    '',
+//    '',
+//    '',
+//    ''
+//];
