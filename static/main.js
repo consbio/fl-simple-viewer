@@ -29,8 +29,7 @@ var threatLevel = {
 
 // Microsoft dropped IE < 11 so we should too
 if (L.Browser.ielt9 || (L.Browser.ie && ((/MSIE 9/i).test(navigator.userAgent) || (/MSIE 10/i).test(navigator.userAgent)))){
-
-    alert("Unfortunately, you are using an unsupported of Internet Explorer.\n\nPlease upgrade your browser or use Google Chrome!");
+    d3.select('#IEAlert').classed('hidden', false);
     throw 'UnsupportedBrowser';
 }
 
@@ -500,7 +499,8 @@ function createSliderFilter(node, dimension, label, tooltip, removeCallback) {
         .on('change', function(){
             var self = d3.select(this);
             var quantityNode = d3.select(self.node().parentNode).select('.slider-value');
-            quantityNode.html('');
+            //quantityNode.html('');
+
             var value = slider.property('value');
             if (value == 0) {
                 dimension.filterAll();
@@ -509,17 +509,85 @@ function createSliderFilter(node, dimension, label, tooltip, removeCallback) {
                 //filter range from value to max
                 dimension.filterRange([value, extent[1] + 1]);
             }
-            quantityNode.text(d3.format(',')(value) + ' ha'); //'at least ' +
+
+            if (quantityNode.property('value') != value) {
+                quantityNode.property('value', value);
+            }
+            //quantityNode.text(d3.format(',')(value) + ' ha'); //'at least ' +
 
             dc.redrawAll();
             updateMap();
         });
-    sliderContainer.append('div').classed('inline-middle slider-value small', true).text(d3.format(',')(extent[0]) + ' ha');
 
-    var labelContainer = node.append('div').style('width', '300px');
+    //function updateRange(self) {
+    //    //var self = (self)? self: d3.select(this);
+    //        var value = self.property('value');
+    //        if (value > extent[1]) {
+    //            value = extent[1];
+    //            self.property('value', value);
+    //        }
+    //        else if (value < extent[0]) {
+    //            value = extent[0];
+    //            self.property('value', value);
+    //        }
+    //        console.log(value)
+    //        if (slider.property('value') != value) {
+    //            slider.property('value', value);
+    //        }
+    //}
+
+    var inputContainer = sliderContainer.append('div').classed('inline-middle', true);
+
+    inputContainer.append('div').classed('small quieter input-label', true).text('at least');
+
+    inputContainer.append('input')
+        .classed('inline-middle slider-value small', true)
+        .attr('type', 'number')
+        .attr('min', extent[0])
+        .attr('max', extent[1])
+        .attr('step', 1)
+        .property('value', extent[0])
+        .on('change', function(){
+            var self = d3.select(this);
+            var value = self.property('value');
+            if (value > extent[1]) {
+                value = extent[1];
+                self.property('value', value);
+            }
+            else if (value < extent[0]) {
+                value = extent[0];
+                self.property('value', value);
+            }
+            console.log(value)
+            if (slider.property('value') != value) {
+                slider.property('value', value);
+            }
+        });
+        //.on('change', function() {
+        //    updateRange(d3.select(this))
+        //})
+        //.on('keypress', function(){
+        //    console.log(d3.select(this))
+        //    if (d3.event.key == 'Enter' || d3.event.keyCode == 13) updateRange(d3.select(this));
+        //    console.log(d3.event)
+        //})
+        //.on('blur', function() {
+        //    var value = d3.select(this).property('value');
+        //    if (value < extent[0] || value > extent[1]) {
+        //
+        //    }
+        //});
+
+    inputContainer.append('span').classed('small quieter', true).text(' ha');
+
+
+        //.text(d3.format(',')(extent[0]) + ' ha');
+    //sliderContainer.append('div').classed('inline-middle slider-value small', true).text(d3.format(',')(extent[0]) + ' ha');
+
+    var labelContainer = node.append('div').classed('slider-label', true);//.style('width', '300px').style('margin-top', '-14px'); // TODO: move to CSS
     var formatter = d3.format(',');
-    labelContainer.append('span').classed('small', true).text(d3.format(',')(extent[0]) + ' ha');
-    labelContainer.append('span').classed('small right', true).text(d3.format(',')(extent[1]) + ' ha');
+    labelContainer.append('span').classed('small quieter', true).text(d3.format(',')(extent[0]) + ' ha');
+    labelContainer.append('span').classed('small right quieter', true).text('max: ' + d3.format(',')(extent[1]) + ' ha');
 }
 
 function createFilterChart(node, dimension, header) {

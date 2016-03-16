@@ -9,6 +9,7 @@ var colorMap = {
 
 
 // These represent the breaks between quantile classes.  q=0 where value <= bin[0]
+// Except for dev and slr, which are hard-coded breaks
 var quantiles = {
     priority: [51, 73, 84, 93, 100],
     bio: [11, 24, 46, 73, 100],
@@ -16,14 +17,22 @@ var quantiles = {
     water: [7, 18, 33, 55, 100],
     clip: [23, 45, 70, 92, 100],
 
-    devCur: [2, 6, 14, 32, 100],
-    dev2020: [2, 7, 19, 44, 100],
-    dev2040: [4, 12, 30, 57, 100],
-    dev2060: [6, 19, 41, 65, 100],
+    //devCur: [2, 6, 14, 32, 100],
+    //dev2020: [2, 7, 19, 44, 100],
+    //dev2040: [4, 12, 30, 57, 100],
+    //dev2060: [6, 19, 41, 65, 100],
+    devCur: [0, 5, 10, 25, 100],
+    dev2020: [0, 5, 10, 25, 100],
+    dev2040: [0, 5, 10, 25, 100],
+    dev2060: [0, 5, 10, 25, 100],
 
-    slr1: [0, 3, 9, 24, 100],
-    slr2: [0, 4, 14, 32, 100],
-    slr3: [0, 6, 20, 46, 100]
+    //slr1: [0, 3, 9, 24, 100],
+    //slr2: [0, 4, 14, 32, 100],
+    //slr3: [0, 6, 20, 46, 100]
+    slr1: [0, 5, 10, 25, 100],
+    slr2: [0, 5, 10, 25, 100],
+    slr3: [0, 5, 10, 25, 100]
+
 };
 
 var summaryFields = {

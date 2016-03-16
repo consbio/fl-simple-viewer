@@ -397,6 +397,16 @@ input[type=range]::-ms-tooltip {
 .modal .button-close:hover {
     color: #333;
 }
+.modal.alert {
+    background: #FFF;
+}
+.modal.alert > div {
+    background: rgba(255, 169, 0, 0.44);
+}
+.modal.alert .fa-exclamation-triangle {
+    font-size: 3em;
+}
+
 /* End Modal Dialog */
 
 
@@ -1022,24 +1032,39 @@ h4:hover .fa-map {
 
 /* idea from: http://codepen.io/thelifemgmt/pen/CeLqA */
 .slider-value {
-    background: #555;
-    color: white;
+    /*background: #555;*/
+    /*color: white;*/
     position: relative;
-    border-radius: 10px;
+    /*border-radius: 10px;*/
+    border-radius: 3px;
     padding: 4px 8px;
     margin-left: 10px;
+    border: 1px solid #AAA;
+    outline: none;
+    width: 64px;
 }
-.slider-value::before {
-    position: absolute;
-    content: "";
-    height: 0;
-    width: 0;
-    left: -6px;
-    border-right: 12px solid #555;
-    border-top: 9px solid transparent;
-    border-bottom: 10px solid transparent;
+.slider-value:focus {
+    border-color: blue;
+}
+.slider-list .input-label {
+    margin-left: 10px;
+}
+.slider-label {
+    width: 300px;
+    margin-top: -12px;
+}
 
-}
+
+/*.slider-value::before {*/
+    /*position: absolute;*/
+    /*content: "";*/
+    /*height: 0;*/
+    /*width: 0;*/
+    /*left: -6px;*/
+    /*border-right: 12px solid #555;*/
+    /*border-top: 9px solid transparent;*/
+    /*border-bottom: 10px solid transparent;*/
+/*}*/
 
 
 #PartnersList li,
