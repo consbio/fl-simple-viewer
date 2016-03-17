@@ -15,7 +15,7 @@ metrics = {
     'clip': ['CLIPOverallPrioritiesByHUC12', 'CLIPp_P1P2'],
     'bio': ['CLIPBiodiversityPrioritesByHUC12', 'BioDp_P1P2'],
     'land': ['CLIPLanScpPrioritiesByHUC12', 'Lanp_P1P2'],
-    'priority': ['PFLCCPRByHUC12', 'ALL_PR_pH'],
+    'priority': ['PFLCCPRbyHUC12_rev', 'ALL_PR_pH'],
     'water': ['CLIPSrfWatPrioritiesByHUC12', 'SWp_P1P2'],
 
     # Threats

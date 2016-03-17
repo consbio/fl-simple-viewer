@@ -7,28 +7,28 @@ var colorMap = {
     general: ["#08519c", "#3182bd", "#6baed6", "#bdd7e7", "#eff3ff", '#ffffcc'] //blue
 };
 
+var labelColorMap = {
+    //priority: ["#006837", "#31a354", "#78c679", "#c2e699", "#ffffcc"],
+    //dev: ["#993404", "#d95f0e", "#fe9929", "#fed98e", "#ffffd4"],
+    //slr: ["#253494", "#2c7fb8", "#41b6c4", "#a1dab4", "#ffffcc"],
+    general: ['#FFF', '#FFF', '#FFF', '#333', '#333', '#333']
+};
+
 
 // These represent the breaks between quantile classes.  q=0 where value <= bin[0]
 // Except for dev and slr, which are hard-coded breaks
 var quantiles = {
-    priority: [51, 73, 84, 93, 100],
+    priority: [59, 75, 85, 92, 101], // known issue for > 100
     bio: [11, 24, 46, 73, 100],
     land: [0, 12, 49, 81, 100],
     water: [7, 18, 33, 55, 100],
     clip: [23, 45, 70, 92, 100],
 
-    //devCur: [2, 6, 14, 32, 100],
-    //dev2020: [2, 7, 19, 44, 100],
-    //dev2040: [4, 12, 30, 57, 100],
-    //dev2060: [6, 19, 41, 65, 100],
     devCur: [0, 5, 10, 25, 100],
     dev2020: [0, 5, 10, 25, 100],
     dev2040: [0, 5, 10, 25, 100],
     dev2060: [0, 5, 10, 25, 100],
 
-    //slr1: [0, 3, 9, 24, 100],
-    //slr2: [0, 4, 14, 32, 100],
-    //slr3: [0, 6, 20, 46, 100]
     slr1: [0, 5, 10, 25, 100],
     slr2: [0, 5, 10, 25, 100],
     slr3: [0, 5, 10, 25, 100]
@@ -80,6 +80,17 @@ var fieldTooltips = {
 var priorityLabels = ['Priority 1', 'Priority 2', 'Priority 3', 'Priority 4', 'Priority 5', 'Not a Priority'];
 var priorityLabels4 = priorityLabels.slice(0, 4).concat(priorityLabels[5]);
 var priorityLabels6 = priorityLabels.slice(0, 5).concat(['Priority 6']).concat(priorityLabels[5]);
+
+
+// greenways and landscape integrity have different priority categories
+var greenwaysLabels = ['Priority 1', 'Priority 3', 'Priority 4', 'Not a Priority'];
+var greenwaysColors = ["#08519c", "#6baed6", "#bdd7e7", '#ffffcc'];
+var greenwaysLabelColors = ['#FFF', '#FFF', '#333', '#333'];
+
+var liLabels = ['Priority 2', 'Priority 3', 'Priority 4', 'Priority 5', 'Not a Priority'];
+var liColors = ["#3182bd", "#6baed6", "#bdd7e7", "#eff3ff", '#ffffcc'];
+var liLabelColors = ['#FFF', '#FFF', '#333', '#333', '#333'];
+
 
 
 // common name|priority(4 levels, not 5)
@@ -396,7 +407,7 @@ var clipInfo = [
     'High conservation priorities in Biodiversity, Landscape, or Surface Water OR moderate conservation priorities across all categories.',
     'Moderate conservation priorities in Biodiversity, Landscape, or Surface Water.',
     'Low conservation priorities in Biodiversity, Landscape or Surface Water.',
-    'Lowest conservation priorities Biodiversity, Landscape or Surface Water.',
+    'Lowest conservation priorities in Biodiversity, Landscape or Surface Water.',
     'Not designated as a conservation priority.'
 ];
 
@@ -404,7 +415,7 @@ var clipBioInfo = [
     'Highest conservation priorities for Strategic Habitat Conservation Areas, Vertebrate Habitat Richness, Rare Species, or Priority Natural Communities.',
     'High conservation priorities for Strategic Habitat Conservation Areas, Vertebrate Habitat Richness, Rare Species, or Priority Natural Communities.',
     'Moderate conservation priorities for Strategic Habitat Conservation Areas, Vertebrate Habitat Richness, Rare Species, or Priority Natural Communities.',
-    'Lowest conservation priorities Strategic Habitat Conservation Areas, Rare Species, or Priority Natural Communities. Low conservation priorities for Vertebrate Habitat Richness.',
+    'Lowest conservation priorities for Strategic Habitat Conservation Areas, Rare Species, or Priority Natural Communities. Low conservation priorities for Vertebrate Habitat Richness.',
     'Lowest conservation priorities for Vertebrate Habitat Richness.',
     'Not designated as a conservation priority.'
 ];
@@ -511,21 +522,11 @@ var aquiferInfo = [
     'Low recharge areas that do not overlap.',
     'Not designated as a conservation priority.'
 ];
-//
-//var clipLIInfo = [
-//    '',
-//    '',
-//    '',
-//    '',
-//    '',
-//    ''
-//];
-//
-//var clipLIInfo = [
-//    '',
-//    '',
-//    '',
-//    '',
-//    '',
-//    ''
-//];
+
+var landOwnershipInfo = [
+    'Lands owned by a federal agency.',
+    'Lands owned by a state agency.',
+    'Lands owned by a local agency.',
+    'Lands recorded as privately conserved.',
+    'Areas not owned by federal, state, or local agencies, and not recorded as private conserved land.'
+];

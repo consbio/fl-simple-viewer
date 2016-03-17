@@ -14,7 +14,7 @@ deps = [
     "deps",
     "static",
     "index.html",
-    # "features" #TODO: uncomment when uploading new data / new version
+    "features" #TODO: uncomment when uploading new data / new version
 ]
 
 

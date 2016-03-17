@@ -113,6 +113,9 @@ input[type=range]::-ms-tooltip {
     display: none;
 }
 
+
+
+
 /* Core classes */
 .pos-rel {
     position: relative;
@@ -161,12 +164,6 @@ input[type=range]::-ms-tooltip {
 }
 .quieter {
     color: #AAA;
-}
-
-.dark {
-    background: #666 !important;
-    color: white;
-    width: 75%;
 }
 
 .font-weight-normal {
@@ -478,14 +475,19 @@ input[type=range]::-ms-tooltip {
 
 
 /* Leaflet overrides */
-.leaflet-control-layers-toggle {
-    background-image: none;
-    width: auto;
-    height: auto;
-    padding:4px;
-    text-decoration: none;
-    font-size: 1.3em;
+.leaflet-top.leaflet-right {
+    z-index: 2000;
 }
+
+
+/*.leaflet-control-layers-toggle {*/
+    /*background-image: none;*/
+    /*width: auto;*/
+    /*height: auto;*/
+    /*padding:4px;*/
+    /*text-decoration: none;*/
+    /*font-size: 1.3em;*/
+/*}*/
 /* End Leaflet overrides */
 
 path.leaflet-interactive {
@@ -834,70 +836,115 @@ ul.legend.legend-table {
 }
 
 
-.legendElement {
-    padding: 4px 2px;
-    cursor: default;
-    border-radius: 3px;
-}
-.legendElement.highlight,
-.tooltipContents .highlight
-{
-    background: rgba(252, 249, 142, 0.43);
-}
-.legendElement .colorpatch {
-    padding: 4px;
-    width: 18px;
-    height: 22px;
-    margin-right: 4px;
-    border: 1px solid #AAA;
-    border-radius: 3px;
-    font-size: 18px;
-    text-align: center;
-    overflow: hidden;
-    vertical-align: top;
-    display: inline-block;
-}
-.legendElement > div + div {
-    width: 150px;
-}
-.legendElement.small .colorpatch {
-    font-size: 0.9em;
-    height: 12px;
-    width: 12px;
+/*.legendElement {*/
+    /*padding: 4px 2px;*/
+    /*cursor: default;*/
+    /*border-radius: 3px;*/
+/*}*/
+/*.legendElement.highlight,*/
+/*.tooltipContents .highlight*/
+/*{*/
+    /*background: rgba(252, 249, 142, 0.43);*/
+/*}*/
+/*.legendElement .colorpatch {*/
+    /*padding: 4px;*/
+    /*width: 18px;*/
+    /*height: 22px;*/
+    /*margin-right: 4px;*/
+    /*border: 1px solid #AAA;*/
+    /*border-radius: 3px;*/
+    /*font-size: 18px;*/
+    /*text-align: center;*/
+    /*overflow: hidden;*/
+    /*vertical-align: top;*/
+    /*display: inline-block;*/
+/*}*/
+/*.legendElement > div + div {*/
+    /*width: 150px;*/
+/*}*/
+/*.legendElement.small .colorpatch {*/
+    /*font-size: 0.9em;*/
+    /*height: 12px;*/
+    /*width: 12px;*/
+/*}*/
+
+
+.legend-chart li {
+    /*padding: 2px 10px 2px 0;*/
+    padding: 0 10px 0 0;
 }
 
-.legend-table .colorpatch {
+.legend-chart .colorpatch {
     width: 32px;
     font-size: 0.8em;
     padding: 4px;
-    border: 1px solid #AAA;
+    border: 1px solid #DDD;
     border-radius: 3px;
     text-align: center;
     overflow: hidden;
     vertical-align: middle;
     display: inline-block;
+    margin-right: 4px;
+    /*height: 18px;*/
+    height: 22px;
+    line-height: 2;
+    /*line-height: 1.5;*/
 }
-.legend-table .empty {
-    width: 34px;
+.legend-chart .colorpatch.empty {
+    background: #F6F6F6;
+    color: #AAA;
 }
-.legend-table h4 {
-    margin: 0 0 0 4px;
-    font-weight: normal;
-    font-size: 1.1em;
+
+.legend-chart li + li .colorpatch {
+    border-top: none;
 }
-.legend-table .info {
-    margin-top: 4px;
-    margin-bottom: 8px;
-    border-top: 1px solid #DDD;
-    font-size: 0.9em;
-    line-height: 1.1;
+.legend-chart li:first-child .colorpatch {
+    border-radius: 10px 10px 0 0;
 }
-.legend-table li + li {
-    margin-top: 1.2em;
+.legend-chart li:last-child .colorpatch {
+    border-radius: 0 0 10px 10px;
 }
-.legend-table h4 + span {
-    margin-top: 0.5em;
+.legend-chart li:only-child .colorpatch {
+    border-radius: 10px;
 }
+
+.legend-chart .label {
+    max-width: 150px;
+}
+
+
+/*.legend-table .colorpatch {*/
+    /*width: 32px;*/
+    /*font-size: 0.8em;*/
+    /*padding: 4px;*/
+    /*border: 1px solid #AAA;*/
+    /*border-radius: 3px;*/
+    /*text-align: center;*/
+    /*overflow: hidden;*/
+    /*vertical-align: middle;*/
+    /*display: inline-block;*/
+/*}*/
+/*.legend-table .empty {*/
+    /*width: 34px;*/
+/*}*/
+/*.legend-table h4 {*/
+    /*margin: 0 0 0 4px;*/
+    /*font-weight: normal;*/
+    /*font-size: 1.1em;*/
+/*}*/
+/*.legend-table .info {*/
+    /*margin-top: 4px;*/
+    /*margin-bottom: 8px;*/
+    /*border-top: 1px solid #DDD;*/
+    /*font-size: 0.9em;*/
+    /*line-height: 1.1;*/
+/*}*/
+/*.legend-table li + li {*/
+    /*margin-top: 1.2em;*/
+/*}*/
+/*.legend-table h4 + span {*/
+    /*margin-top: 0.5em;*/
+/*}*/
 
 
 #Legend {

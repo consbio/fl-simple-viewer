@@ -76,7 +76,6 @@ d3.select('#DetailsClose').on('click', function(){
     d3.select('#MainSidebarHeader').classed('hidden', false);
     d3.select('#Details').classed('hidden', true);
     d3.select('#DetailsHeader').classed('hidden', true);
-    d3.select('#Sidebar').classed('dark', false);//.style('background', '#FFF');
     deselectUnit();
 });
 
@@ -499,7 +498,6 @@ function createSliderFilter(node, dimension, label, tooltip, removeCallback) {
         .on('change', function(){
             var self = d3.select(this);
             var quantityNode = d3.select(self.node().parentNode).select('.slider-value');
-            //quantityNode.html('');
 
             var value = slider.property('value');
             if (value == 0) {
@@ -513,28 +511,9 @@ function createSliderFilter(node, dimension, label, tooltip, removeCallback) {
             if (quantityNode.property('value') != value) {
                 quantityNode.property('value', value);
             }
-            //quantityNode.text(d3.format(',')(value) + ' ha'); //'at least ' +
-
             dc.redrawAll();
             updateMap();
         });
-
-    //function updateRange(self) {
-    //    //var self = (self)? self: d3.select(this);
-    //        var value = self.property('value');
-    //        if (value > extent[1]) {
-    //            value = extent[1];
-    //            self.property('value', value);
-    //        }
-    //        else if (value < extent[0]) {
-    //            value = extent[0];
-    //            self.property('value', value);
-    //        }
-    //        console.log(value)
-    //        if (slider.property('value') != value) {
-    //            slider.property('value', value);
-    //        }
-    //}
 
     var inputContainer = sliderContainer.append('div').classed('inline-middle', true);
 
@@ -563,26 +542,8 @@ function createSliderFilter(node, dimension, label, tooltip, removeCallback) {
                 slider.property('value', value);
             }
         });
-        //.on('change', function() {
-        //    updateRange(d3.select(this))
-        //})
-        //.on('keypress', function(){
-        //    console.log(d3.select(this))
-        //    if (d3.event.key == 'Enter' || d3.event.keyCode == 13) updateRange(d3.select(this));
-        //    console.log(d3.event)
-        //})
-        //.on('blur', function() {
-        //    var value = d3.select(this).property('value');
-        //    if (value < extent[0] || value > extent[1]) {
-        //
-        //    }
-        //});
 
     inputContainer.append('span').classed('small quieter', true).text(' ha');
-
-
-        //.text(d3.format(',')(extent[0]) + ' ha');
-    //sliderContainer.append('div').classed('inline-middle slider-value small', true).text(d3.format(',')(extent[0]) + ' ha');
 
     var labelContainer = node.append('div').classed('slider-label', true);//.style('width', '300px').style('margin-top', '-14px'); // TODO: move to CSS
     var formatter = d3.format(',');
@@ -704,8 +665,6 @@ function selectUnit(id){
     d3.select('#MainSidebarHeader').classed('hidden', true);
     d3.select('#Details').classed('hidden', false);
     d3.select('#DetailsHeader').classed('hidden', false);
-    //d3.select('#Sidebar').classed('dark', true);
-    //d3.select('#Sidebar').style('width', '600px');
 
     if (pendingRequest != null) {
         pendingRequest.abort();
@@ -755,8 +714,11 @@ function showDetails(id) {
     d3.select('#UnitArea').text(d3.format(',')(details.hectares));
 
     var chartColors = colorMap.general;
+    var labelColors = labelColorMap.general;
     var chartColors4 = chartColors.slice(0, 4).concat(chartColors[5]);
+    var labelColors4 = labelColors.slice(0, 4).concat(labelColors[5]);
     var chartColors6 = ["#08519c", "#3182bd", "#6baed6", "#9ecae1", "#c6dbef", "#eff3ff", '#ffffcc'];  // same version as colorMap.general but over 7 classes
+    var labelColors6 = labelColors.concat(['#333']);
 
     // Priority resources tab
     var pr_data = d3.entries(details.pflcc_pr).map(function(d) {
@@ -770,17 +732,11 @@ function showDetails(id) {
     createInlineBarChart(d3.select('#PFLCC_PR_Bars'), pr_data, ' ha', true);
 
     // CLIP tab
-    createPieChart(d3.select('#CLIP_Chart'), zipIntoObj(['value', 'label', 'color'], details.clip, priorityLabels, chartColors), '%');
-    createPieChart(d3.select('#Bio_Chart'), zipIntoObj(['value', 'label', 'color'], details.bio, priorityLabels, chartColors), '%');
+    createPieChart(d3.select('#CLIP_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'info'], details.clip, priorityLabels, chartColors, labelColors, clipInfo), details.hectares);
+    createPieChart(d3.select('#Bio_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'info'], details.bio, priorityLabels, chartColors, labelColors, clipBioInfo), details.hectares);
+    createPieChart(d3.select('#BioRareSpp_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'info'], details.bio_rare_spp, priorityLabels4, chartColors4, labelColors4, clipRareSppInfo), details.hectares);
+    createPieChart(d3.select('#BioSHCA_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'info'], details.bio_shca, priorityLabels4, chartColors4, labelColors4, clipSHCAInfo), details.hectares);
 
-    createPieChart2(d3.select('#CLIP_Chart'), zipIntoObj(['value', 'label', 'color', 'info'], details.clip, priorityLabels, chartColors, clipInfo), ' ha', details.hectares);
-    createPieChart2(d3.select('#Bio_Chart'), zipIntoObj(['value', 'label', 'color', 'info'], details.bio, priorityLabels, chartColors, clipBioInfo), 'ha', details.hectares);
-
-    createPieChart(d3.select('#BioRareSpp_Chart'), zipIntoObj(['value', 'label', 'color', 'info'], details.bio_rare_spp, priorityLabels4, chartColors4, clipRareSppInfo), '%');
-    createPieChart(d3.select('#BioSHCA_Chart'), zipIntoObj(['value', 'label', 'color', 'info'], details.bio_shca, priorityLabels4, chartColors4, clipSHCAInfo), '%');
-
-    //createPieChart2(d3.select('#BioRareSpp_Chart'), zipIntoObj(['value', 'label', 'color', 'info'], details.bio_rare_spp, priorityLabels4, chartColors4, clipRareSppInfo), 'ha', details.hectares);
-    //createPieChart2(d3.select('#BioSHCA_Chart'), zipIntoObj(['value', 'label', 'color', 'info'], details.bio_shca, priorityLabels4, chartColors4, clipSHCAInfo), 'ha', details.hectares);
 
     var tableNode = d3.select('#BioSHCATable');
     tableNode.html('');
@@ -788,11 +744,11 @@ function showDetails(id) {
         var values = details.bio_shca2[d];
         if (!values) return;
 
-        tableNode.append('h5').text(priorityLabels4[i]);
+        tableNode.append('h5').text(priorityLabels4[i] + ' species');
         createAreaTable(tableNode.append('table').attr('cellspacing', 0).append('tbody'), createTableLabeLinks(values, species, speciesLinks), true);
     });
 
-    createPieChart(d3.select('#BioPNC_Chart'), zipIntoObj(['value', 'label', 'color', 'info'], details.bio_pnc, priorityLabels4, chartColors4, clipPNCAreaInfo), '%');
+    createPieChart(d3.select('#BioPNC_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'info'], details.bio_pnc, priorityLabels4, chartColors4, labelColors4, clipPNCAreaInfo), details.hectares);
 
     tableNode = d3.select('#BioPNC_Table');
     tableNode.html('');
@@ -800,12 +756,12 @@ function showDetails(id) {
         var values = details.bio_pnc2[d];
         if (!values) return;
 
-        tableNode.append('h5').text(priorityLabels4[i]);
+        tableNode.append('h5').text(priorityLabels4[i] + ' communities');
         createAreaTable(tableNode.append('table').attr('cellspacing', 0).append('tbody'), createTableLabeLinks(values, communities, {}), true);
     });
 
 
-    createPieChart(d3.select('#BioSppRich_Chart'), zipIntoObj(['value', 'label', 'color', 'info'], details.bio_spp_rich, priorityLabels, chartColors, clipSppRichInfo), '%');
+    createPieChart(d3.select('#BioSppRich_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'info'], details.bio_spp_rich, priorityLabels, chartColors, labelColors, clipSppRichInfo), details.hectares);
 
     tableNode = d3.select('#BioSppRichTable');
     tableNode.html('');
@@ -814,34 +770,27 @@ function showDetails(id) {
         createAreaTable(tableNode.append('table').attr('cellspacing', 0).append('tbody'), createTableLabeLinks(details.bio_spp_rich2, species, speciesLinks), true);
     }
 
-
     // Landscape tab
-    createPieChart(d3.select('#Land_Chart'), zipIntoObj(['value', 'label', 'color'], details.land, priorityLabels, chartColors), '%');
+    createPieChart(d3.select('#Land_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'info'], details.land, priorityLabels, chartColors, labelColors, clipLandInfo), details.hectares);
     //createPieChart2(d3.select('#Land_Chart'), zipIntoObj(['value', 'label', 'color', 'info'], details.land, priorityLabels, chartColors, clipLandInfo), 'ha', details.hectares);
 
-    // greenways have different priority categories
-    var greenwaysLabels = ['Priority 1', 'Priority 3', 'Priority 4', 'Not a Priority'];
-    var greenwaysColors = ["#08519c", "#6baed6", "#bdd7e7", '#ffffcc'];
-    createPieChart(d3.select('#Greenways_Chart'), zipIntoObj(['value', 'label', 'color'], details.land_greenways, greenwaysLabels, greenwaysColors), '%');
+
+    createPieChart(d3.select('#Greenways_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'info'], details.land_greenways, greenwaysLabels, greenwaysColors, greenwaysLabelColors, clipGreenwayInfo), details.hectares);
 
     // land integrity has different priority categories
-    var liLabels = ['Priority 2', 'Priority 3', 'Priority 4', 'Priority 5', 'Not a Priority'];
-    var liColors = ["#3182bd", "#6baed6", "#bdd7e7", "#eff3ff", '#ffffcc'];
-    createPieChart(d3.select('#LI_Chart'), zipIntoObj(['value', 'label', 'color'], details.land_integrity, liLabels, liColors), '%');
+    createPieChart(d3.select('#LI_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'info'], details.land_integrity, liLabels, liColors, liLabelColors, clipLIInfo), details.hectares);
 
     // Surface water tab
-    createPieChart(d3.select('#Water_Chart'), zipIntoObj(['value', 'label', 'color'], details.water, priorityLabels, chartColors), '%');
-    //createPieChart2(d3.select('#Water_Chart'), zipIntoObj(['value', 'label', 'color', 'info'], details.water, priorityLabels, chartColors, clipWaterInfo), 'ha', details.hectares);
-    createPieChart(d3.select('#SSW_Chart'), zipIntoObj(['value', 'label', 'color'], details.water_significant, priorityLabels, chartColors), '%');
-    createPieChart(d3.select('#Floodplain_Chart'), zipIntoObj(['value', 'label', 'color'], details.water_floodplain, priorityLabels, chartColors), '%');
-    createPieChart(d3.select('#Wetlands_Chart'), zipIntoObj(['value', 'label', 'color'], details.water_wetland, priorityLabels, chartColors), '%');
+    createPieChart(d3.select('#Water_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'info'], details.water, priorityLabels, chartColors, labelColors, clipWaterInfo), details.hectares);
+    createPieChart(d3.select('#SSW_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'info'], details.water_significant, priorityLabels, chartColors, labelColors, clipSigSurfWaterInfo), details.hectares);
+    createPieChart(d3.select('#Floodplain_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'info'], details.water_floodplain, priorityLabels, chartColors, labelColors, clipNatFldInfo), details.hectares);
+    createPieChart(d3.select('#Wetlands_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'info'], details.water_wetland, priorityLabels, chartColors, labelColors, clipWetlandsInfo), details.hectares);
     if (details.water_aquifer) {
-        createPieChart(d3.select('#Aquifer_Chart'), zipIntoObj(['value', 'label', 'color'], details.water_aquifer, priorityLabels6, chartColors6), '%');
+        createPieChart(d3.select('#Aquifer_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'info'], details.water_aquifer, priorityLabels6, chartColors6, labelColors6, aquiferInfo), details.hectares);
     }
     else {
         d3.select('#Aquifer_Chart').append('div').classed('quiet center', true).html('No data available');
     }
-
 
 
     // Land use tab
@@ -921,7 +870,9 @@ function showDetails(id) {
                 {
                     value: totalByOwnerType,
                     label: d.label,
-                    color: chartColors4[i]
+                    color: chartColors4[i],
+                    labelColor: labelColors4[i],
+                    info: landOwnershipInfo[i]
                 }
             );
 
@@ -937,15 +888,21 @@ function showDetails(id) {
         }
     });
     if (totalManaged < details.hectares) {
-        ownershipData.push({label: 'Other Lands', value: details.hectares - totalManaged, color: chartColors4[4]});
+        ownershipData.push({
+            label: 'Other Lands',
+            value: details.hectares - totalManaged,
+            color: chartColors4[4],
+            labelColor: labelColors4[4],
+            info: landOwnershipInfo[4]
+        });
     }
-    var total = d3.sum(_.pluck(ownershipData, 'value'));
-    ownershipData = ownershipData.map(function(d){
-        d.value = 100 * d.value / total;
-        return d;
-    });
+    //var total = d3.sum(_.pluck(ownershipData, 'value'));
+    //ownershipData = ownershipData.map(function(d){
+    //    d.value = 100 * d.value / total;
+    //    return d;
+    //});
 
-    createPieChart(d3.select('#Owner_Chart'), ownershipData, '%');
+    createPieChart(d3.select('#Owner_Chart'), ownershipData, details.hectares);
 
     // Partners
     var partnersList = d3.select('#PartnersList');
@@ -1044,18 +1001,17 @@ function createInlineBarChart(node, data, units, sortByValue, noSort) {
 
 
 
-function createPieChart(node, data, units){
+function createPieChart(node, data, totalArea){
     var width = 240,
         height = 240;
 
-    function formatter(d){
-        if (d >= 5 || Math.round(d) === d){
-            return d3.format('.0f')(d) + units;
+    var intFormatter = d3.format(',.0f');
+    function pctFormatter(d){
+        var pct = 100 * d / totalArea;
+        if (pct < 1) {
+            return '<span class="smaller">&lt;</span>1%';
         }
-        if (d < 1) {
-            return '< 1' + units;
-        }
-        return d3.format('.1f')(d) + units;
+        return d3.format('.0f')(pct) + '%';
     }
 
     nv.addGraph(function() {
@@ -1066,44 +1022,52 @@ function createPieChart(node, data, units){
             .showLegend(false)
             .showLabels(false)
             .color(function(d){ return d.color })
-            .valueFormat(formatter);
+            .valueFormat(pctFormatter);
 
         node.html('');
         node.append('svg')
             .classed('inline-middle', true)
             .style({
                 width: width + 'px',
-                height: height + 'px'
+                height: height + 'px',
+                'margin-left': '-18px'
             })
             .datum(data.filter(function(d){return d.value >= 1}))
             .call(chart);
 
+        var legendContainer = node.append('div').classed('inline-middle', true);
 
-        node.append('ul')
-            .classed('inline-middle legend', true)
+        legendContainer.append('div').classed('small quieter', true).style('padding', '4px 4px 4px 8px').text('% of watershed');
+
+        legendContainer.append('ul')
+            .classed('inline-middle legend legend-chart', true)
             .selectAll('li')
-            .data(data)
+            .data(data.filter(function(d){ return d.value > 0 }))  //TODO: confirm
             .enter().append('li')
-            .classed('legendElement small', true)
+            .classed('small', true)
             .each(function(d){
                 var node = d3.select(this);
 
                 if (d.value > 0) {
-                    node.append('div').classed('colorpatch', true).style('background', d.color);
-                    node.append('div').classed('inline-top', true).html(d.label)
-                        .append('span').classed('small quiet', true).text(' (' + formatter(d.value) + ')');
+                    node.append('div').classed('colorpatch', true).style('background', d.color)
+                        .html(pctFormatter(d.value))
+                        .style('color', d.labelColor);
+
+                    node.append('div').classed('inline-middle label', true).html(d.label)
+                        //.append('span').classed('small quieter', true).text(' (' + intFormatter(d.value) + ' ha)');
                 }
-                else {
-                    //absent
-                    node.append('div').classed('colorpatch', true).style({background: 'none', 'border-color': '#EEE'});
-                    node.append('div').classed('inline-top quieter', true).html(d.label)
-                        .append('span').classed('small quieter', true).text(' (absent)');
-                }
+                //else {
+                //    //absent
+                //    node.append('div').classed('colorpatch empty', true).text('--');
+                //    node.append('div').classed('inline-top quieter', true).html(d.label)
+                //        .append('span').classed('small quieter', true).text(' (absent)');
+                //}
 
                 if (d.info) {
                     node.classed('node-highlight', true);
                     connectTooltip(node, {
-                        title: d.label + '<span class="right quieter small font-weight-normal">(' + formatter(d.value) + ')</span>',
+                        //TODO: add color node ?
+                        title: '<span class="quiet small">' + pctFormatter(d.value) + ' |</span> ' + d.label + '<span class="right quieter small font-weight-normal">' + intFormatter(d.value) + ' ha</span>',
                         text: (d.info)? d.info: d.label
                     });
                 }
