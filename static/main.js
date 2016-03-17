@@ -26,6 +26,18 @@ var threatLevel = {
     dev: summaryFields['dev'][0]
 };
 
+function pctFormatter(d){
+    if (d < 1) {
+        return '<span class="smaller">&lt;</span>1%';
+    }
+    return d3.format('.0f')(d) + '%';
+}
+var intFormatter = d3.format(',.0f');
+
+
+var valueSort = function(a, b){ return d3.descending(a.value, b.value) };
+var labelSort = function(a, b){ return d3.ascending(a.label, b.label) };
+
 
 // Microsoft dropped IE < 11 so we should too
 if (L.Browser.ielt9 || (L.Browser.ie && ((/MSIE 9/i).test(navigator.userAgent) || (/MSIE 10/i).test(navigator.userAgent)))){
@@ -118,12 +130,31 @@ function connectTooltip(node, data) {
         var anchorNode = d3.select(this);
         var bndRect = anchorNode.node().getBoundingClientRect();
         var tooltip = d3.select('#Tooltip');
-        tooltip.select('h4').html(data.title);
-        tooltip.select('p').html(data.text); //TODO
+        tooltip.html('');
+        tooltip.append('div').classed('tooltip-pointer', true);
+        tooltip.append('h4')
+            .classed('tooltip-title', true)
+            .html(data.title);
+
+        if (data.subtitle) {
+            var tooltipSubtitle = tooltip.append('div')
+                .classed('tooltip-subtitle', true)
+                .html(data.subtitle);
+
+            if (data.subtitleClass) {
+                tooltipSubtitle.classed(data.subtitleClass, true);
+            }
+        }
+
+        if (data.text) {
+            tooltip.append('div')
+                .classed('tooltip-text', true)
+                .html(data.text);
+        }
 
         var tooltipBnd = tooltip.node().getBoundingClientRect();
         var top = bndRect.top + window.pageYOffset;
-        if (top + tooltipBnd.height > window.innerHeight){  // TODO
+        if (top + tooltipBnd.height > window.innerHeight){
             top = top - (top + tooltipBnd.height - window.innerHeight);
         }
         top = Math.max(top, 0);
@@ -350,23 +381,42 @@ function load() {
                         .attr('name', d)
                         .property('checked', j === 0)
                         .on('click', function(level){
-                            console.log('radio clicked', arguments)
                             var threat = level.slice(0, 3);
                             var curLevel = threatLevel[threat];
 
                             if (level === curLevel) return;
+
+                            var chartID = 'FilterChart-' + threat;
+                            var chart = _.find(dc.chartRegistry.list(), function(d){ return d.root().node().id === chartID });
+                            var curFilters = chart.filters();
+                            console.log("prev filters", curFilters);
 
                             // reset filter and map
                             dimensions[curLevel].filterAll();
                             updateMap();
 
                             // recreate chart
-                            var chartID = 'FilterChart-' + threat;
-                            var chart = _.find(dc.chartRegistry.list(), function(d){ return d.root().node().id === chartID });
                             dc.deregisterChart(chart);  // have to deregister manually, otherwise it sticks around
                             var chartNode = d3.select(chart.root().node());
                             chartNode.empty();
                             createFilterChart(chartNode, level, header);
+
+                            // TODO: reselect previous categories
+                            // not quite working
+                            //if (curFilters.length > 0) {
+                            //    chart = _.find(dc.chartRegistry.list(), function(d){ return d.root().node().id === chartID });
+                            //    curFilters.forEach(function(d){
+                            //        console.log("reapplying", d)
+                            //        chart.filter(d);
+                            //    });
+                            //    chart.redraw();
+                            //}
+
+
+
+
+
+
 
                             // update header and map
                             var h = d3.select('#Filter-' + threat + ' h4').classed('filtered', false);
@@ -381,9 +431,7 @@ function load() {
                 });
 
             var subheading = (i === 0 )? 'percent of watershed inundated': 'percent of watershed with urban / suburban development';
-            //if (i === 0) {
-            //    //subheading = "Time ranges were extrapolated from the High Bathtub Projections (for Mean Sea Level Rise) used in the University of Florida GeoPlan Center's <a href='http://sls.geoplan.ufl.edu/' target='_blank'>Sea Level Rise Sketch tool</a>.<br/><br/>" + subheading;
-            //}
+
             chartContainer.append('div')
                 .classed('quiet small filter-subheading', true)
                 .html(subheading);
@@ -729,13 +777,14 @@ function showDetails(id) {
             tooltip: priorityResourceTooltips[d.key]
         }
     });
-    createInlineBarChart(d3.select('#PFLCC_PR_Bars'), pr_data, ' ha', true);
+    pr_data.sort(valueSort);
+    createInlineBarChart(d3.select('#PFLCC_PR_Bars'), pr_data, details.hectares);
 
     // CLIP tab
-    createPieChart(d3.select('#CLIP_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'info'], details.clip, priorityLabels, chartColors, labelColors, clipInfo), details.hectares);
-    createPieChart(d3.select('#Bio_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'info'], details.bio, priorityLabels, chartColors, labelColors, clipBioInfo), details.hectares);
-    createPieChart(d3.select('#BioRareSpp_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'info'], details.bio_rare_spp, priorityLabels4, chartColors4, labelColors4, clipRareSppInfo), details.hectares);
-    createPieChart(d3.select('#BioSHCA_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'info'], details.bio_shca, priorityLabels4, chartColors4, labelColors4, clipSHCAInfo), details.hectares);
+    createPieChart(d3.select('#CLIP_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.clip, priorityLabels, chartColors, labelColors, clipInfo), details.hectares);
+    createPieChart(d3.select('#Bio_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.bio, priorityLabels, chartColors, labelColors, clipBioInfo), details.hectares);
+    createPieChart(d3.select('#BioRareSpp_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.bio_rare_spp, priorityLabels4, chartColors4, labelColors4, clipRareSppInfo), details.hectares);
+    createPieChart(d3.select('#BioSHCA_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.bio_shca, priorityLabels4, chartColors4, labelColors4, clipSHCAInfo), details.hectares);
 
 
     var tableNode = d3.select('#BioSHCATable');
@@ -748,7 +797,7 @@ function showDetails(id) {
         createAreaTable(tableNode.append('table').attr('cellspacing', 0).append('tbody'), createTableLabeLinks(values, species, speciesLinks), true);
     });
 
-    createPieChart(d3.select('#BioPNC_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'info'], details.bio_pnc, priorityLabels4, chartColors4, labelColors4, clipPNCAreaInfo), details.hectares);
+    createPieChart(d3.select('#BioPNC_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.bio_pnc, priorityLabels4, chartColors4, labelColors4, clipPNCAreaInfo), details.hectares);
 
     tableNode = d3.select('#BioPNC_Table');
     tableNode.html('');
@@ -761,7 +810,7 @@ function showDetails(id) {
     });
 
 
-    createPieChart(d3.select('#BioSppRich_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'info'], details.bio_spp_rich, priorityLabels, chartColors, labelColors, clipSppRichInfo), details.hectares);
+    createPieChart(d3.select('#BioSppRich_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.bio_spp_rich, priorityLabels, chartColors, labelColors, clipSppRichInfo), details.hectares);
 
     tableNode = d3.select('#BioSppRichTable');
     tableNode.html('');
@@ -771,22 +820,22 @@ function showDetails(id) {
     }
 
     // Landscape tab
-    createPieChart(d3.select('#Land_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'info'], details.land, priorityLabels, chartColors, labelColors, clipLandInfo), details.hectares);
-    //createPieChart2(d3.select('#Land_Chart'), zipIntoObj(['value', 'label', 'color', 'info'], details.land, priorityLabels, chartColors, clipLandInfo), 'ha', details.hectares);
+    createPieChart(d3.select('#Land_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.land, priorityLabels, chartColors, labelColors, clipLandInfo), details.hectares);
+    //createPieChart2(d3.select('#Land_Chart'), zipIntoObj(['value', 'label', 'color', 'tooltip'], details.land, priorityLabels, chartColors, clipLandInfo), 'ha', details.hectares);
 
 
-    createPieChart(d3.select('#Greenways_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'info'], details.land_greenways, greenwaysLabels, greenwaysColors, greenwaysLabelColors, clipGreenwayInfo), details.hectares);
+    createPieChart(d3.select('#Greenways_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.land_greenways, greenwaysLabels, greenwaysColors, greenwaysLabelColors, clipGreenwayInfo), details.hectares);
 
     // land integrity has different priority categories
-    createPieChart(d3.select('#LI_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'info'], details.land_integrity, liLabels, liColors, liLabelColors, clipLIInfo), details.hectares);
+    createPieChart(d3.select('#LI_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.land_integrity, liLabels, liColors, liLabelColors, clipLIInfo), details.hectares);
 
     // Surface water tab
-    createPieChart(d3.select('#Water_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'info'], details.water, priorityLabels, chartColors, labelColors, clipWaterInfo), details.hectares);
-    createPieChart(d3.select('#SSW_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'info'], details.water_significant, priorityLabels, chartColors, labelColors, clipSigSurfWaterInfo), details.hectares);
-    createPieChart(d3.select('#Floodplain_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'info'], details.water_floodplain, priorityLabels, chartColors, labelColors, clipNatFldInfo), details.hectares);
-    createPieChart(d3.select('#Wetlands_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'info'], details.water_wetland, priorityLabels, chartColors, labelColors, clipWetlandsInfo), details.hectares);
+    createPieChart(d3.select('#Water_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.water, priorityLabels, chartColors, labelColors, clipWaterInfo), details.hectares);
+    createPieChart(d3.select('#SSW_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.water_significant, priorityLabels, chartColors, labelColors, clipSigSurfWaterInfo), details.hectares);
+    createPieChart(d3.select('#Floodplain_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.water_floodplain, priorityLabels, chartColors, labelColors, clipNatFldInfo), details.hectares);
+    createPieChart(d3.select('#Wetlands_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.water_wetland, priorityLabels, chartColors, labelColors, clipWetlandsInfo), details.hectares);
     if (details.water_aquifer) {
-        createPieChart(d3.select('#Aquifer_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'info'], details.water_aquifer, priorityLabels6, chartColors6, labelColors6, aquiferInfo), details.hectares);
+        createPieChart(d3.select('#Aquifer_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.water_aquifer, priorityLabels6, chartColors6, labelColors6, aquiferInfo), details.hectares);
     }
     else {
         d3.select('#Aquifer_Chart').append('div').classed('quiet center', true).html('No data available');
@@ -804,7 +853,8 @@ function showDetails(id) {
                 tooltip: landUseTooltips[d]
             }
         });
-    createInlineBarChart(d3.select('#LU_Bars'), luData, ' ha', true);
+    luData.sort(valueSort);
+    createInlineBarChart(d3.select('#LU_Bars'), luData, details.hectares);
 
 
     // Threats tab
@@ -818,7 +868,11 @@ function showDetails(id) {
             return {
                 value: details.slr[i],
                 label: 'Projected - ' + fieldLabels[d],
-                color: colorMap.slr[i]
+                color: colorMap.slr[i],
+                tooltip: "Area affected by projected sea level rise of up to " + fieldLabels[d] + "<br/><br/>" +
+                    "Time ranges were extrapolated from the High Bathtub Projections (for Mean Sea Level Rise) used " +
+                    "in the University of Florida GeoPlan Center's Sea Level Rise Sketch tool.<br/><br/>" +
+                    "The areas reported for each of these scenarios are cumulative figures."
             }
         }).filter(function(d){ return d.value > 0});
     }
@@ -826,10 +880,12 @@ function showDetails(id) {
         slrData.push({
             value: notAffectedBySLR,
             label: 'Not affected by up to 3 meters',
-            color: colorMap.slr[4]
+            color: colorMap.slr[4],
+            tooltip: "Area not affected by projected sea level rise for the 1-3 meter sea level rise projections.  " +
+            "May be impacted by higher levels of sea level rise."
         })
     }
-    createInlineBarChart(d3.select('#SLR_Bars'), slrData, ' ha', false, true);
+    createInlineBarChart(d3.select('#SLR_Bars'), slrData, details.hectares);
 
 
     var devData = [];
@@ -837,10 +893,19 @@ function showDetails(id) {
     var notDeveloped = details.hectares - devHa;
     if (devHa > 0) {
         devData = devLevels.map(function (d, i) {
+            var tooltip = null;
+            if (i === 0 ) {
+                tooltip = 'Area affected by current urbanization as of 2005';
+            }
+            else {
+                tooltip = 'Area affected by projected urban development projections from 2005 to ' + fieldLabels[d] + '.';
+            }
+            
             return {
                 value: details.dev[i],
                 label: ((i === 0) ? '' : 'Projected - ') + fieldLabels[d],
-                color: colorMap.dev[i]
+                color: colorMap.dev[i],
+                tooltip: tooltip
             }
         }).filter(function(d){ return d.value > 0});
     }
@@ -848,10 +913,11 @@ function showDetails(id) {
         devData.push({
             value: notDeveloped,
             label: 'Not developed by 2060',
-            color: colorMap.dev[4]
+            color: colorMap.dev[4],
+            tooltip: 'Area not affected by development projections up to 2060.'
         });
     }
-    createInlineBarChart(d3.select('#Dev_Bars'), devData, ' ha', false, true);
+    createInlineBarChart(d3.select('#Dev_Bars'), devData, details.hectares);
 
 
 
@@ -872,7 +938,7 @@ function showDetails(id) {
                     label: d.label,
                     color: chartColors4[i],
                     labelColor: labelColors4[i],
-                    info: landOwnershipInfo[i]
+                    tooltip: landOwnershipInfo[i]
                 }
             );
 
@@ -893,14 +959,9 @@ function showDetails(id) {
             value: details.hectares - totalManaged,
             color: chartColors4[4],
             labelColor: labelColors4[4],
-            info: landOwnershipInfo[4]
+            tooltip: landOwnershipInfo[4]
         });
     }
-    //var total = d3.sum(_.pluck(ownershipData, 'value'));
-    //ownershipData = ownershipData.map(function(d){
-    //    d.value = 100 * d.value / total;
-    //    return d;
-    //});
 
     createPieChart(d3.select('#Owner_Chart'), ownershipData, details.hectares);
 
@@ -914,7 +975,6 @@ function showDetails(id) {
             var partnerInfo = partnerLabels[d].split('|');
             return '<a href="' + partnerInfo[1] + '" target="_blank">' + partnerInfo[0] + '</a>';
         });
-    //partnerNodes.exit().remove();
 
     if (partnerNodes.empty()) {
         partnersList.append('li').classed('quiet', true).html('No information available');
@@ -951,21 +1011,13 @@ function createTableLabeLinks(values, labels, links){
 
 // expects array of objects with value, label, color already present
 //redo handling of sort flag or require things to be sorted on input
-function createInlineBarChart(node, data, units, sortByValue, noSort) {
+// TODO: expect inputs to be sorted properly
+function createInlineBarChart(node, data, totalArea) {
     width = 324;
 
     var formatter = d3.format(',');
     var values = data.map(function(d){ return d.value });
     var scale = d3.scale.linear().range([0, width]).domain([0, d3.max(values)]);
-
-    if (!noSort) {
-        if (sortByValue){
-            data.sort(function(a, b){ return d3.descending(a.value, b.value) });
-        }
-        else {
-            data.sort(function(a, b){ return d3.ascending(a.label, b.label) });
-        }
-    }
 
     node.html('');
     node.selectAll('div')
@@ -976,9 +1028,9 @@ function createInlineBarChart(node, data, units, sortByValue, noSort) {
 
             node.append('div')
                 .classed('horiz-bar-title', true)
-                .text(d.label);
+                .html(d.label);
 
-            var row = node.append('div');
+            var row = node.append('div').classed('node-highlight', true);
 
             row.append('div')
                 .classed('bar inline-middle', true)
@@ -986,16 +1038,20 @@ function createInlineBarChart(node, data, units, sortByValue, noSort) {
                 .style('background-color', d.color);
 
             row.append('label')
-                .classed('quieter horiz-bar-label', true)
-                .text(formatter(d.value) + units);
+                .classed('quieter horiz-bar-label inline-middle small', true)
+                .html(pctFormatter(100 * d.value / totalArea));
 
             if (d.tooltip) {
-                //node.classed('node-highlight', true);
-                connectTooltip(node, {title: d.label, text: d.tooltip});
+                connectTooltip(row, {
+                    title: d.label,
+                    subtitle: '<div class="right quieter">' + intFormatter(d.value) + ' ha</div>' +
+                        '<div class="colorpatch" style="background-color: ' + d.color + ' "></div>' +
+                        pctFormatter(100 * d.value / totalArea),
+                    subtitleClass: 'small',
+                    text: d.tooltip
+                });
             }
-
         });
-
 }
 
 
@@ -1005,14 +1061,14 @@ function createPieChart(node, data, totalArea){
     var width = 240,
         height = 240;
 
-    var intFormatter = d3.format(',.0f');
-    function pctFormatter(d){
+    function dynamicPctFormatter(d){
         var pct = 100 * d / totalArea;
         if (pct < 1) {
             return '<span class="smaller">&lt;</span>1%';
         }
         return d3.format('.0f')(pct) + '%';
     }
+
 
     nv.addGraph(function() {
         var chart = nv.models.pieChart()
@@ -1022,7 +1078,7 @@ function createPieChart(node, data, totalArea){
             .showLegend(false)
             .showLabels(false)
             .color(function(d){ return d.color })
-            .valueFormat(pctFormatter);
+            .valueFormat(dynamicPctFormatter);
 
         node.html('');
         node.append('svg')
@@ -1037,7 +1093,7 @@ function createPieChart(node, data, totalArea){
 
         var legendContainer = node.append('div').classed('inline-middle', true);
 
-        legendContainer.append('div').classed('small quieter', true).style('padding', '4px 4px 4px 8px').text('% of watershed');
+        legendContainer.append('div').classed('small quieter', true).style('padding', '4px 4px 4px 8px').text('% of area within watershed');
 
         legendContainer.append('ul')
             .classed('inline-middle legend legend-chart', true)
@@ -1050,28 +1106,27 @@ function createPieChart(node, data, totalArea){
 
                 if (d.value > 0) {
                     node.append('div').classed('colorpatch', true).style('background', d.color)
-                        .html(pctFormatter(d.value))
+                        .html(pctFormatter(100 * d.value / totalArea))
                         .style('color', d.labelColor);
 
-                    node.append('div').classed('inline-middle label', true).html(d.label)
-                        //.append('span').classed('small quieter', true).text(' (' + intFormatter(d.value) + ' ha)');
+                    node.append('div').classed('inline-middle label', true).html(d.label);
                 }
-                //else {
-                //    //absent
-                //    node.append('div').classed('colorpatch empty', true).text('--');
-                //    node.append('div').classed('inline-top quieter', true).html(d.label)
-                //        .append('span').classed('small quieter', true).text(' (absent)');
-                //}
 
-                if (d.info) {
+                if (d.tooltip) {
                     node.classed('node-highlight', true);
                     connectTooltip(node, {
                         //TODO: add color node ?
-                        title: '<span class="quiet small">' + pctFormatter(d.value) + ' |</span> ' + d.label + '<span class="right quieter small font-weight-normal">' + intFormatter(d.value) + ' ha</span>',
-                        text: (d.info)? d.info: d.label
+                        //'<span class="quiet small">' + dynamicPctFormatter(d.value) + ' |</span> ' +
+                        //title:  d.label + '<span class="right quieter small font-weight-normal">' + intFormatter(d.value) + ' ha</span>',
+                        //text: '<div class="tooltip-percent">' + dynamicPctFormatter(d.value) + '</div>' + d.tooltip
+                        title: d.label,
+                        subtitle: '<div class="right quieter">' + intFormatter(d.value) + ' ha</div>' +
+                            '<div class="colorpatch" style="background-color: ' + d.color + ' "></div>' +
+                            dynamicPctFormatter(d.value),
+                        subtitleClass: 'small',
+                        text: d.tooltip
                     });
                 }
-
             });
 
         return chart;
@@ -1081,78 +1136,78 @@ function createPieChart(node, data, totalArea){
 
 
 
-function createPieChart2(node, data, units, area){ //TODO: remove units; not used
-    var width = 180,
-        height = 180;
-
-    //calculate areas from percents
-    data.forEach(function(d){
-        d.area = area * d.value / 100.0;
-    });
-
-    function pctFormatter(d){
-        if (d < 1) {
-            return '<span class="smaller">&lt;</span>1%';
-        }
-        return d3.format('.0f')(d) + '%';
-    }
-
-    var intFormatter = d3.format(',.0f');
-
-    nv.addGraph(function() {
-        var chart = nv.models.pieChart()
-            .margin({top: 0, right: 0, bottom: 0, left: 0})
-            .x(function(d) { return d.label })
-            .y(function(d) { return d.value })
-            .showLegend(false)
-            .showLabels(false)
-            .color(function(d){ return d.color })
-            .valueFormat(pctFormatter);
-
-        node.html('');
-        node.append('svg')
-            .style({
-                width: width + 'px',
-                height: height + 'px'
-            })
-            .datum(data.filter(function(d){return d.value >= 1}))
-            .call(chart);
-
-
-        node.append('ul')
-            .classed('legend legend-table', true)
-            .selectAll('li')
-            .data(data)
-            .enter().append('li')
-            .classed('small', true)
-            .each(function(d, i){
-                var node = d3.select(this);
-
-                var headerNode = node.append('div');
-                //var infoNode = node.append('div').classed('info quieter clear', true).style('border-top', '1px solid #DDD');
-
-                if (d.value > 0) {
-                    headerNode.append('div').classed('colorpatch has-text', true).style('background', d.color)
-                        .html(pctFormatter(d.value))
-                        .style('color', (i < 3)? '#FFF': '#333'); //TODO: better flip colors
-
-                    headerNode.append('h4').classed('inline-middle', true).html(d.label);
-
-                    headerNode.append('span').classed('right small quieter', true)
-                        .html(intFormatter(d.area) + ' ha');
-
-                    node.append('div').classed('info quieter clear', true).html(d.info);
-                }
-                //else {
-                //    //absent
-                //    headerNode.append('h4').classed('inline-middle quieter', true).html(d.label);
-                //    headerNode.append('span').classed('right small quieter', true).text('absent')
-                //}
-            });
-
-        return chart;
-    });
-}
+//function createPieChart2(node, data, units, area){ //TODO: remove units; not used
+//    var width = 180,
+//        height = 180;
+//
+//    //calculate areas from percents
+//    data.forEach(function(d){
+//        d.area = area * d.value / 100.0;
+//    });
+//
+//    function pctFormatter(d){
+//        if (d < 1) {
+//            return '<span class="smaller">&lt;</span>1%';
+//        }
+//        return d3.format('.0f')(d) + '%';
+//    }
+//
+//    var intFormatter = d3.format(',.0f');
+//
+//    nv.addGraph(function() {
+//        var chart = nv.models.pieChart()
+//            .margin({top: 0, right: 0, bottom: 0, left: 0})
+//            .x(function(d) { return d.label })
+//            .y(function(d) { return d.value })
+//            .showLegend(false)
+//            .showLabels(false)
+//            .color(function(d){ return d.color })
+//            .valueFormat(pctFormatter);
+//
+//        node.html('');
+//        node.append('svg')
+//            .style({
+//                width: width + 'px',
+//                height: height + 'px'
+//            })
+//            .datum(data.filter(function(d){return d.value >= 1}))
+//            .call(chart);
+//
+//
+//        node.append('ul')
+//            .classed('legend legend-table', true)
+//            .selectAll('li')
+//            .data(data)
+//            .enter().append('li')
+//            .classed('small', true)
+//            .each(function(d, i){
+//                var node = d3.select(this);
+//
+//                var headerNode = node.append('div');
+//                //var infoNode = node.append('div').classed('info quieter clear', true).style('border-top', '1px solid #DDD');
+//
+//                if (d.value > 0) {
+//                    headerNode.append('div').classed('colorpatch has-text', true).style('background', d.color)
+//                        .html(pctFormatter(d.value))
+//                        .style('color', (i < 3)? '#FFF': '#333'); //TODO: better flip colors
+//
+//                    headerNode.append('h4').classed('inline-middle', true).html(d.label);
+//
+//                    headerNode.append('span').classed('right small quieter', true)
+//                        .html(intFormatter(d.area) + ' ha');
+//
+//                    node.append('div').classed('info quieter clear', true).html(d.info);
+//                }
+//                //else {
+//                //    //absent
+//                //    headerNode.append('h4').classed('inline-middle quieter', true).html(d.label);
+//                //    headerNode.append('span').classed('right small quieter', true).text('absent')
+//                //}
+//            });
+//
+//        return chart;
+//    });
+//}
 
 
 
@@ -1186,7 +1241,7 @@ function createAreaTable(node, entries, sortArea){
 
 
 
-var intFormatter = d3.format('.0f');
+//var intFormatter = d3.format('.0f');
 function barLabels(field) {
     var breaks = quantiles[field];
     return breaks.map(function(d, i){

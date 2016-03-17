@@ -318,9 +318,12 @@ input[type=range]::-ms-tooltip {
     cursor: pointer;
     border-radius: 3px 3px 0 0;
     margin: 0 auto;
+    background-color: #BBB;
+    border: 1px solid #999;
+    border-bottom: none;
 }
 .tabs > li:hover {
-    background-color: #BBB;
+    background-color: #CCC;
 }
 .tabs > li.active {
     font-weight: bold;
@@ -339,6 +342,10 @@ input[type=range]::-ms-tooltip {
 }
 .tabs.subtabs > li {
     border-bottom: 2px solid #FFF;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    background: transparent;
 }
 .tabs.subtabs > li:hover {
     background: #FFF;
@@ -662,13 +669,6 @@ div.dc-chart {
     padding: 0 10px 10px 10px;
     box-shadow: 2px 2px 6px #555;
 }
-.tooltip h4 {
-    border-bottom: 1px solid #DDD;
-}
-.tooltip p {
-    padding: 4px 0;
-}
-
 .tooltip-pointer {
     position: absolute;
     top: 14px;
@@ -678,6 +678,33 @@ div.dc-chart {
     border-right: 8px solid #555;
     border-top: 8px solid transparent;
     border-bottom: 8px solid transparent;
+}
+.tooltip-title {
+    border-bottom: 1px solid #DDD;
+    padding-bottom: 4px;
+}
+
+.tooltip-subtitle {
+    padding-bottom: 4px;
+    border-bottom: 1px solid #DDD;
+    line-height: 1.5;
+}
+.tooltip-text {
+    padding: 4px 0;
+    color: #666;
+    font-size: smaller;
+    margin: 0;
+    clear: both;
+}
+
+/* not officially part of tooltip construct */
+.tooltip .colorpatch {
+    height: 1.25em;
+    width: 2em;
+    vertical-align: middle;
+    display: inline-block;
+    margin: 1px 6px 1px 0;
+    border: 1px solid #DDD;
 }
 
 
@@ -780,18 +807,18 @@ div.dc-chart {
     padding: 2px 8px 8px;
 }
 
-#DetailsHeader ul {
-    padding: 3px 10px;
-}
+/*#DetailsHeader ul {*/
+    /*padding: 3px 10px;*/
+/*}*/
 
-#DetailsHeader ul li {
-    border-radius: 3px;
-}
+/*#DetailsHeader ul li {*/
+    /*border-radius: 3px;*/
+/*}*/
 
-#DetailsHeader ul li.active {
-    background: #EEE;
-    border: 1px solid #999;
-}
+/*#DetailsHeader ul li.active {*/
+    /*background: #EEE;*/
+    /*border: 1px solid #999;*/
+/*}*/
 
 
 .horiz-bars .nvd3 text {
@@ -801,7 +828,8 @@ div.dc-chart {
     line-height: 1;
     margin: 20px 10px 10px 10px;
     border-left: 1px solid #555;
-    padding: 10px 10px 10px 0
+    padding: 10px 10px 10px 0;
+    cursor: default;
 }
 .horiz-bars > div {
     padding: 8px 0 8px 0;
@@ -814,10 +842,10 @@ div.dc-chart {
 }
 .horiz-bar-title {
     margin: 0 0 2px 2px;
+    font-size: 0.9em;
 }
 .horiz-bar-label {
     margin-left: 4px;
-    font-size: 0.8em;
 }
 
 
@@ -911,6 +939,10 @@ ul.legend.legend-table {
 .legend-chart .label {
     max-width: 150px;
 }
+
+
+
+
 
 
 /*.legend-table .colorpatch {*/

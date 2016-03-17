@@ -8,9 +8,6 @@ var colorMap = {
 };
 
 var labelColorMap = {
-    //priority: ["#006837", "#31a354", "#78c679", "#c2e699", "#ffffcc"],
-    //dev: ["#993404", "#d95f0e", "#fe9929", "#fed98e", "#ffffd4"],
-    //slr: ["#253494", "#2c7fb8", "#41b6c4", "#a1dab4", "#ffffcc"],
     general: ['#FFF', '#FFF', '#FFF', '#333', '#333', '#333']
 };
 
@@ -281,10 +278,10 @@ var priorityResourceLabels = {
     PFDP: 'Pine Flatwoods and Dry Prairie',
     HPS: 'High Pine and Scrub',
     M: 'Marine',
-    WL2: 'Working Lands 2',
+    WL2: 'Working Lands - Low Intensity',
     HFU: 'Hardwood Forested Uplands',
     FA: 'Freshwater Aquatic',
-    WL1: 'Working Lands 1',
+    WL1: 'Working Lands - High Intensity',
     FFW: 'Freshwater Forested Wetlands',
     CU: 'Coastal Uplands'
 };
@@ -349,8 +346,8 @@ var landUseLabels = {
     20: 'Wetland',
     30: 'Freshwater Aquatic',
     60: 'Marine',
-    70: 'Rural (High Intensity)',
-    80: 'Rural (Low Intensity)',
+    70: 'Rural - High Intensity',
+    80: 'Rural - Low Intensity',
     85: 'Tree Plantations',
     90: 'Developed / Altered'
 };
@@ -530,3 +527,4 @@ var landOwnershipInfo = [
     'Lands recorded as privately conserved.',
     'Areas not owned by federal, state, or local agencies, and not recorded as private conserved land.'
 ];
+

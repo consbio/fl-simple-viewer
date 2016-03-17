@@ -58,7 +58,7 @@
                                     </i>
                                 </div>
                             </div>
-                            <ul class="tabs small">
+                            <ul class="tabs small" style="padding-top: 8px;">
                                 <li class="active" data-tab="DetailsOverview">Overview</li>
                                 <li data-tab="DetailsCLIP">CLIP</li>
                                 <li data-tab="DetailsLandUse">Land Use</li>
@@ -155,7 +155,7 @@
                                         <section class="js-hasTooltip " data-tooltip-title="PFLCC DRAFT Priority Resources" data-tooltip="Priority resources are the set of biological, ecological, and cultural features and ecological processes collaboratively identified as most important, and are the focus of the PFLCC’s planning.  Priority resources will provide a simple way to measure the overall condition of the Peninsular Florida’s complex systems.">
                                             <h4>PFLCC DRAFT Priority Resources</h4>
                                             <div>
-                                                <div id="PFLCC_PR_Bars" class="horiz-bars small"></div>
+                                                <div id="PFLCC_PR_Bars" class="horiz-bars"></div>
                                             </div>
                                         </section>
 
@@ -177,7 +177,8 @@
                                         </ul>
 
                                         <div id="CLIPOverall" class="tab">
-                                            <section class="js-hasTooltip" data-tooltip-title="CLIP Overall Priorities" data-tooltip="The Critical Lands and Waters Identification Project (CLIP) is a collection of spatial data that identify statewide priorities for a broad range of natural resources in Florida. CLIP 3.0 is organized into a set of core natural resource data layers which are combined into resource categories, three of which (biodiversity, landscapes, surface water) have been combined into the Aggregated CLIP model, which identifies five priority levels for natural resource conservation.<br/><br/><img src='static/img/clip3.png' style='width:100%;'/>">
+                                            <section class="js-hasTooltip" data-tooltip-title="CLIP Overall Priorities" data-tooltip="The Critical Lands and Waters Identification Project (CLIP) is a collection of spatial data that identify statewide priorities for a broad range of natural resources in Florida. CLIP 3.0 is organized into a set of core natural resource data layers which are combined into resource categories, three of which (biodiversity, landscapes, surface water) have been combined into the Aggregated CLIP model, which identifies five priority levels for natural resource conservation.">
+                                                <!--<br/><br/><img src='static/img/clip3.png' style='width:100%;'/>-->
                                                 <h4>CLIP Overall Priorities</h4>
                                                 <div>
                                                     <div id="CLIP_Chart"></div>
@@ -334,7 +335,7 @@
                                     <div id="DetailsLandUse" class="tab hidden">
                                         <section class="js-hasTooltip" data-tooltip-title="Land Use" data-tooltip="These land use categories were generalized from the 78 state level land cover types outlined in the Florida Cooperative Land Cover Map (CLC, version 3.1) currently maintained by FWC and FNAI.  This generalization was performed to make visualization and calculation in this tool manageable.">
                                             <h4>Land Use</h4>
-                                            <div id="LU_Bars" class="horiz-bars small"></div>
+                                            <div id="LU_Bars" class="horiz-bars"></div>
                                         </section>
 
                                         <section class="read-more">
@@ -353,7 +354,7 @@
                                                 The hectares reported for each of these scenarios are cumulative figures.">
                                             <h4>Projected Sea Level Rise</h4>
                                             <div>
-                                                <div id="SLR_Bars" class="horiz-bars small"></div>
+                                                <div id="SLR_Bars" class="horiz-bars"></div>
                                                 <p class="small quiet">
                                                     Read more about sea level rise projections and access data <a href="http://pflcc.databasin.org/datasets/dd54d301894f4322a7a30832572c4a7e" target="_blank">here.</a>
                                                 </p>
@@ -362,7 +363,7 @@
                                         <section class="expandable expanded js-hasTooltip " style="margin-top:20px;" data-tooltip-title="Urban Development / Population Growth" data-tooltip="These development projections are derived from the Florida 2060 development dataset. This projections explores the physical reality and consequences of the population growth from 2005 to 2060 if existing land use policy or population growth patterns do not change.  The land use suitability analysis displayed in this dataset was performed by the University of Florida GeoPlan Center for 1000 Friends of Florida. The graph below reports the area affected for each of the three time steps used in this model, the existing extent of urbanization in 2005, and the area unaffected by urbanization. The hectares reported for each of the three time steps are cumulative figures.">
                                             <h4>Urban Development / Population Growth</h4>
                                             <div>
-                                                <div id="Dev_Bars" class="horiz-bars small"></div>
+                                                <div id="Dev_Bars" class="horiz-bars"></div>
                                                 <p class="small quiet">
                                                     Read more about urban development projections and access data <a href="http://pflcc.databasin.org/datasets/4a1340791089437dae38593f0ef39439" target="_blank">here.</a>
                                                 </p>
@@ -447,9 +448,9 @@
     </div>
 
     <div id="Tooltip" class="tooltip">
-        <div class="tooltip-pointer"></div>
-        <h4></h4>
-        <p class="quiet nomargin small"></p>
+        <!--<div class="tooltip-pointer"></div>-->
+        <!--<h4></h4>-->
+        <!--<p class="quiet nomargin small"></p>-->
     </div>
 
     <div id="Legend" class="map-panel">
