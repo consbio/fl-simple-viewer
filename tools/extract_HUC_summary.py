@@ -52,8 +52,14 @@ for metric in metrics:
 
     bins = numpy.ceil(bins).astype('uint8').tolist()
 
-    quantiles[metric] = pd.Series(numpy.digitize(series, bins, right=True), index=series.index)
+    if 'dev' in metric or 'slr' in metric:
+        quantiles[metric] = pd.Series(numpy.digitize(series, [0, 10, 25, 50, 100], right=True), index=series.index)
+
+    else:
+        quantiles[metric] = pd.Series(numpy.digitize(series, bins, right=True), index=series.index)
+
     if (quantiles[metric].max() > 4): print metric
+
     binsObj[metric] = bins
 
 df = pd.DataFrame(quantiles)

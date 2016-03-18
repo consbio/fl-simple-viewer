@@ -20,6 +20,12 @@ var pendingRequest = null;
 var featuresURL = 'features/';
 var selectedID = null;
 
+// store current state of filtered dimensions by tab
+var activeFiltersByTab = {};
+d3.select('#MainSidebarHeader').selectAll('li').each(function(d){
+    activeFiltersByTab[d3.select(this).attr('data-tab')] = {};
+});
+
 // store current level of threat filters
 var threatLevel = {
     slr: summaryFields['slr'][0],
@@ -224,10 +230,6 @@ legend.onAdd = function (map) {
 };
 legend.addTo(map);
 
-//map.addControl(L.control.layers(basemaps, null, {position: 'bottomright', autoZIndex: false}));
-//d3.select('.leaflet-control-layers-toggle').html('<i class="fa fa-globe"></i> <i class="fa fa-globe quiet"></i>'); // basemaps
-
-
 omnivore.topojson('static/features.json')
     .on('ready', function(){
         this.getLayers().forEach(function(feature){
@@ -262,28 +264,21 @@ d3.csv('static/summary.csv',
         data = rows;
 
         //summary data contain pre-calculated quantiles
-        cf = crossfilter(rows); // TODO: exclude species
+        cf = crossfilter(rows);
         dimensions.id = cf.dimension(function(r){ return r['id']});
         idDimensions.push('id');
         d3.keys(quantiles).forEach(function(d){
-            dimensions[d] = cf.dimension(function(r){ return r[d]});
+            var dimension = cf.dimension(function(r){ return r[d]});
+            // id needed for setting tab indicator on filter
+            dimension.id = (d.indexOf('slr') != -1 || d.indexOf('dev') != -1)? d.slice(0, 3): d;
+            dimensions[d] = dimension;
         });
 
         landUseTypes.forEach(function(d) {
             d = 'lu' + d;
-            dimensions[d] = cf.dimension(function(r){ return r[d] })
+            dimensions[d] = cf.dimension(function(r){ return r[d] });
+            // id intentionally left out here
         });
-
-        //d3.keys(sppGroups).forEach(function(g){
-        //    cfs[g] = crossfilter(rows.map(function(row){ return _.pick(row, 'id', sppGroups[g]) }));
-        //    var idDimName = g + '_id';
-        //    dimensions[idDimName] = cfs[g].dimension(function(r){ return r.id });
-        //    idDimensions.push(idDimName);
-        //
-        //    sppGroups[g].forEach(function(d){
-        //        dimensions[d] = cfs[g].dimension(function(r){ return r[d] })
-        //    });
-        //});
 
         onLoad();
         console.log('loaded csv by',new Date().getTime() - pageLoadStart, 'ms');
@@ -293,7 +288,7 @@ d3.csv('static/summary.csv',
 // Use lodash to call load function after 2 prior async requests are complete
 var onLoad = _.after(2, load);
 function load() {
-    setSelectedField(selectedField, 'priority');
+    setSelectedField(selectedField, 'priority', '% of watershed covered by combined priority resources');
     features.addTo(map);
 
     d3.select('#PriorityFilter').selectAll('div')
@@ -312,7 +307,7 @@ function load() {
             container.classed('node-highlight', true);
             connectTooltip(container, {title: fieldLabels[d], text: fieldTooltips[d]});
 
-            var subheading = (i === 0)? 'percent covered by combined priority resources': 'percent covered by Priority 1 &amp; 2';
+            var subheading = (i === 0)? '% of watershed covered by combined priority resources': '% of watershed covered by Priority 1 and 2';
             chartContainer.append('div')
                 .classed('quiet small filter-subheading', true)
                 .html(subheading);
@@ -323,7 +318,7 @@ function load() {
                 .attr('title', 'Click to show on map')
                 .on('click', function(){
                     d3.event.stopPropagation();
-                    setSelectedField(d, 'priority');
+                    setSelectedField(d, 'priority', subheading);
                     d3.select('.mapped').classed('mapped', false);
                     header.classed('mapped', true);
                 });
@@ -351,6 +346,7 @@ function load() {
             var container = d3.select(this).append('section').attr('id', 'Filter-' + d);
 
             var header = container.append('h4').text(fieldLabels[d]);
+            var subheading = (i === 0 )? '% of watershed inundated': '% of watershed with urban / suburban development';
             var chartContainer = container.append('div');
 
             initExpando(container, true);
@@ -364,10 +360,11 @@ function load() {
                 .attr('title', 'Click to show on map')
                 .on('click', function(d){
                     d3.event.stopPropagation();
-                    setSelectedField(threatLevel[d], d);
+                    setSelectedField(threatLevel[d], d, subheading);
                     d3.select('.mapped').classed('mapped', false);
                     header.classed('mapped', true);
                 });
+
 
             chartContainer.append('div').classed('filter-radio-container', true)
                 .selectAll('span')
@@ -402,26 +399,21 @@ function load() {
                             createFilterChart(chartNode, level, header);
 
                             // TODO: reselect previous categories
-                            // not quite working
-                            //if (curFilters.length > 0) {
-                            //    chart = _.find(dc.chartRegistry.list(), function(d){ return d.root().node().id === chartID });
-                            //    curFilters.forEach(function(d){
-                            //        console.log("reapplying", d)
-                            //        chart.filter(d);
-                            //    });
-                            //    chart.redraw();
-                            //}
+                            var hasFilters = curFilters.length > 0;
 
+                            if (hasFilters) {
+                                chart = _.find(dc.chartRegistry.list(), function(d){ return d.root().node().id === chartID });
+                                curFilters.forEach(function(d){
+                                    chart.filter(d);
+                                });
+                                chart.redraw();
+                            }
 
-
-
-
-
+                            updateTabIndicator(d, hasFilters);  // intentionally using 'slr' and 'dev' instead of specific dimension here
 
                             // update header and map
-                            var h = d3.select('#Filter-' + threat + ' h4').classed('filtered', false);
-                            if (h.classed('mapped')) {
-                                setSelectedField(level, threat);
+                            if (d3.select('#Filter-' + threat + ' h4').classed('mapped')) {
+                                setSelectedField(level, threat, subheading);
                             }
 
                             threatLevel[threat] = level;
@@ -430,7 +422,7 @@ function load() {
                     node.append('label').html(fieldLabels[e].replace('(', '<span class="small quiet">(').replace(')', ')</span>'));
                 });
 
-            var subheading = (i === 0 )? 'percent of watershed inundated': 'percent of watershed with urban / suburban development';
+
 
             chartContainer.append('div')
                 .classed('quiet small filter-subheading', true)
@@ -483,7 +475,7 @@ function load() {
                         'a species to make room for another');
                     return;
                 }
-                console.log('add spp filter', spp);
+                //console.log('add spp filter', spp);
 
                 var dimension = cf.dimension(function(d){ return d[spp] });
                 dimensions[spp] = dimension;
@@ -497,6 +489,8 @@ function load() {
                         d3.select('option[value="' + spp + '"]').property('disabled', false);  // TODO: optimize select
                         dimensions[spp].dispose();
                         delete dimensions[spp];
+                        updateSliderFilterTabIndicator(dimension.id);
+                        dc.redrawAll();
                         updateMap();
                     }
                 );
@@ -544,23 +538,18 @@ function createSliderFilter(node, dimension, label, tooltip, removeCallback) {
         .attr('step', 1)
         .property('value', extent[0])
         .on('change', function(){
+            console.log('slider onchange')
             var self = d3.select(this);
-            var quantityNode = d3.select(self.node().parentNode).select('.slider-value');
 
             var value = slider.property('value');
-            if (value == 0) {
-                dimension.filterAll();
-            }
-            else {
-                //filter range from value to max
-                dimension.filterRange([value, extent[1] + 1]);
-            }
 
+            var quantityNode = d3.select(self.node().parentNode).select('.slider-value');
             if (quantityNode.property('value') != value) {
                 quantityNode.property('value', value);
             }
-            dc.redrawAll();
-            updateMap();
+
+            // this must happen after value is set
+            updateSliderFilter(dimension, value, extent[1] + 1);
         });
 
     var inputContainer = sliderContainer.append('div').classed('inline-middle', true);
@@ -585,9 +574,10 @@ function createSliderFilter(node, dimension, label, tooltip, removeCallback) {
                 value = extent[0];
                 self.property('value', value);
             }
-            console.log(value)
-            if (slider.property('value') != value) {
+            if (slider.property('value') !== value) {
                 slider.property('value', value);
+                updateSliderFilter(dimension, value, extent[1] + 1);
+                console.log('updating slider')
             }
         });
 
@@ -598,6 +588,30 @@ function createSliderFilter(node, dimension, label, tooltip, removeCallback) {
     labelContainer.append('span').classed('small quieter', true).text(d3.format(',')(extent[0]) + ' ha');
     labelContainer.append('span').classed('small right quieter', true).text('max: ' + d3.format(',')(extent[1]) + ' ha');
 }
+
+function updateSliderFilter(dimension, value, max) {
+    if (value == 0) {
+        dimension.filterAll();
+    }
+    else {
+        //filter range from value to max
+        dimension.filterRange([value, max]);
+    }
+
+    dc.redrawAll();
+    updateSliderFilterTabIndicator(dimension.id);
+    updateMap();
+}
+
+
+
+function updateSliderFilterTabIndicator(dimensionID) {
+    // select active tab, then look through all inputs; if any is > 0 then this tab has a filter
+    var hasFilters = _.any(d3.select('#' + d3.select('#MainSidebarHeader li.active').attr('data-tab')).selectAll('input.slider-value')[0].map(function(d){ return d.value > 0}));
+    updateTabIndicator(dimensionID, hasFilters);
+}
+
+
 
 function createFilterChart(node, dimension, header) {
     var labels = barLabels(dimension);
@@ -612,10 +626,34 @@ function createFilterChart(node, dimension, header) {
 }
 
 function onFilter(header, chart, filter) {
-    console.log("onfilter", arguments);
-    header.classed('filtered', filter != null);
+    //console.log("onfilter", arguments);
+
+    var isFiltered = chart.hasFilter();
+    header.classed('filtered', isFiltered);
+    updateTabIndicator(chart.dimension().id, isFiltered);
     updateMap();
 }
+
+function updateTabIndicator (dimensionID, isFiltered) {
+    var activeTab = d3.select('#MainSidebarHeader li.active');
+    var indicator = activeTab.select('.indicator');
+    var tabState = activeFiltersByTab[activeTab.attr('data-tab')];
+
+    // update with current filter state
+    tabState[dimensionID] = isFiltered;
+
+    if (_.any(d3.values(tabState))) {
+        if (indicator.empty()) {
+            activeTab.append('i')
+                .classed('fa fa-circle indicator', true)
+                .attr('title', 'has one or more active filters');
+        }
+    }
+    else {
+        indicator.remove();
+    }
+}
+
 
 
 function updateMap() {
@@ -633,11 +671,16 @@ function updateMap() {
     // Update legend with count of visible watersheds
     var visibleCount = visibleIDs.size();
     var totalCount = index.size();
-    var countNode = d3.select('#Legend > h5');
+    var countNode = d3.select('#Legend .legend-count');
     if (visibleCount < totalCount) {
         countNode.classed('hidden', false);
         var formatter = d3.format(',');
-        countNode.html(formatter(visibleCount) + ' of ' + formatter(totalCount) + ' watersheds visible')
+        if (visibleCount > 0) {
+            countNode.html(formatter(visibleCount) + ' of ' + formatter(totalCount) + ' watersheds visible')
+        }
+        else {
+            countNode.text('no watersheds visible')
+        }
     }
     else {
         countNode.classed('hidden', true);
@@ -664,7 +707,7 @@ d3.select('#Legend input').on('change', function(){
     transparency = value;
 });
 
-function setSelectedField(field, group) {
+function setSelectedField(field, group, subtitle) {
     selectedField = field;
     selectedGroup = group;
     var colors = colorMap[group];
@@ -679,6 +722,17 @@ function setSelectedField(field, group) {
 
     var prefix = (group === 'slr' || group === 'dev')? fieldLabels[group] + ':<br/>': '';
     d3.select('#Legend > h4').html(prefix + fieldLabels[field]);
+
+    var subtitleNode = d3.select('#Legend > h5');
+    if (subtitle) {
+        subtitleNode.classed('hidden', false)
+            .html(subtitle);
+    }
+    else {
+        subtitleNode.classed('hidden', true);
+    }
+
+
     var legendNode = d3.select('#Legend > div');
     legendNode.html('');
     var labels = barLabels(selectedField);
@@ -900,7 +954,7 @@ function showDetails(id) {
             else {
                 tooltip = 'Area affected by projected urban development projections from 2005 to ' + fieldLabels[d] + '.';
             }
-            
+
             return {
                 value: details.dev[i],
                 label: ((i === 0) ? '' : 'Projected - ') + fieldLabels[d],
@@ -1115,10 +1169,6 @@ function createPieChart(node, data, totalArea){
                 if (d.tooltip) {
                     node.classed('node-highlight', true);
                     connectTooltip(node, {
-                        //TODO: add color node ?
-                        //'<span class="quiet small">' + dynamicPctFormatter(d.value) + ' |</span> ' +
-                        //title:  d.label + '<span class="right quieter small font-weight-normal">' + intFormatter(d.value) + ' ha</span>',
-                        //text: '<div class="tooltip-percent">' + dynamicPctFormatter(d.value) + '</div>' + d.tooltip
                         title: d.label,
                         subtitle: '<div class="right quieter">' + intFormatter(d.value) + ' ha</div>' +
                             '<div class="colorpatch" style="background-color: ' + d.color + ' "></div>' +
@@ -1132,84 +1182,6 @@ function createPieChart(node, data, totalArea){
         return chart;
     });
 }
-
-
-
-
-//function createPieChart2(node, data, units, area){ //TODO: remove units; not used
-//    var width = 180,
-//        height = 180;
-//
-//    //calculate areas from percents
-//    data.forEach(function(d){
-//        d.area = area * d.value / 100.0;
-//    });
-//
-//    function pctFormatter(d){
-//        if (d < 1) {
-//            return '<span class="smaller">&lt;</span>1%';
-//        }
-//        return d3.format('.0f')(d) + '%';
-//    }
-//
-//    var intFormatter = d3.format(',.0f');
-//
-//    nv.addGraph(function() {
-//        var chart = nv.models.pieChart()
-//            .margin({top: 0, right: 0, bottom: 0, left: 0})
-//            .x(function(d) { return d.label })
-//            .y(function(d) { return d.value })
-//            .showLegend(false)
-//            .showLabels(false)
-//            .color(function(d){ return d.color })
-//            .valueFormat(pctFormatter);
-//
-//        node.html('');
-//        node.append('svg')
-//            .style({
-//                width: width + 'px',
-//                height: height + 'px'
-//            })
-//            .datum(data.filter(function(d){return d.value >= 1}))
-//            .call(chart);
-//
-//
-//        node.append('ul')
-//            .classed('legend legend-table', true)
-//            .selectAll('li')
-//            .data(data)
-//            .enter().append('li')
-//            .classed('small', true)
-//            .each(function(d, i){
-//                var node = d3.select(this);
-//
-//                var headerNode = node.append('div');
-//                //var infoNode = node.append('div').classed('info quieter clear', true).style('border-top', '1px solid #DDD');
-//
-//                if (d.value > 0) {
-//                    headerNode.append('div').classed('colorpatch has-text', true).style('background', d.color)
-//                        .html(pctFormatter(d.value))
-//                        .style('color', (i < 3)? '#FFF': '#333'); //TODO: better flip colors
-//
-//                    headerNode.append('h4').classed('inline-middle', true).html(d.label);
-//
-//                    headerNode.append('span').classed('right small quieter', true)
-//                        .html(intFormatter(d.area) + ' ha');
-//
-//                    node.append('div').classed('info quieter clear', true).html(d.info);
-//                }
-//                //else {
-//                //    //absent
-//                //    headerNode.append('h4').classed('inline-middle quieter', true).html(d.label);
-//                //    headerNode.append('span').classed('right small quieter', true).text('absent')
-//                //}
-//            });
-//
-//        return chart;
-//    });
-//}
-
-
 
 
 // labels in this case are an object
