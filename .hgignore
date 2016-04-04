@@ -5,3 +5,7 @@ media/*
 features/*
 tools/deploy_settings.py
 v*/*
+node_modules/*
+static/dist/*
+build/*
+static/fonts/*

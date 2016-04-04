@@ -1,0 +1,21 @@
+{
+  "name": "pflcc-custom-map-viewer",
+  "version": "0.2.0",
+  "description": "Custom map and data viewer for Peninsular Florida LCC",
+  "main": "gulpfile.js",
+  "dependencies": {},
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-clean-css": "^2.0.4",
+    "gulp-concat": "^2.6.0",
+    "gulp-minify": "^0.0.7",
+    "gulp-strip-comments": "^2.4.2",
+    "gulp-util": "^3.0.7"
+  },
+  "keywords": [
+    "map",
+    "viewer"
+  ],
+  "author": "Conservation Biology Institute",
+  "license": "ISC"
+}

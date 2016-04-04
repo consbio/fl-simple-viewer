@@ -28,6 +28,17 @@ Output is `features.json`.
 
 
 
+## Build process
+
+This project uses Gulp to minify and concatenate CSS and JS files.
+
+Run `gulp build` to run the build, which produces artifacts in `static/dist`.
+
+Font files are manually copied from fontawesome install directory to `static/fonts`.
+
+Leaflet iamge files are manually copied from leaflet install directory to `static/dist/images`.
+
+
 ## Deploy process
 
 To deploy, this requires a deploy_settings.py file from Brendan (contains S3 keys and bucket info).
