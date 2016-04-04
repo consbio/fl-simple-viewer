@@ -11,8 +11,11 @@ version = "0.2"
 
 # files / directories to push into version
 deps = [
-    "deps",
-    "static",
+    "static/features.json",
+    "static/summary.csv",
+    "static/dist",
+    "static/fonts",
+    "static/img",
     "index.html",
     # "features" #TODO: uncomment when uploading new data / new version
 ]
