@@ -58,8 +58,8 @@ gulp.task('build', ['concat-js', 'compress-css'], function () {});
 
 
 gulp.task('watch', function () {
-    gulp.watch('static/*.css', ['compress-css']);
-    gulp.watch('static/*.js', ['concat-js']);
+    gulp.watch('static/src/*.css', ['compress-css']);
+    gulp.watch('static/src/*.js', ['concat-js']);
 });
 
 

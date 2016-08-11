@@ -27,11 +27,12 @@ from deploy_settings import *
 
 
 def upload_files(directory, root_folder):
-    conn = S3Connection(S3_ACCESS_KEY, S3_SECRET_KEY) # , calling_format=OrdinaryCallingFormat() # calling_format required to get past dots in the bucket name
+    # conn = S3Connection(S3_ACCESS_KEY, S3_SECRET_KEY)
+    conn = S3Connection(S3_ACCESS_KEY, S3_SECRET_KEY, calling_format=OrdinaryCallingFormat())  # calling_format required to get past dots in the bucket name
     bucket = conn.get_bucket(S3_BUCKET_NAME)
 
-    root_key = '{0}/{1}'.format(ROOT_DIR, root_folder)
-    # root_key = root_folder
+    # root_key = '{0}/{1}'.format(ROOT_DIR, root_folder)
+    root_key = root_folder
     for root, dirs, files in os.walk(directory):
         for filename in files:
             print 'Uploading', filename

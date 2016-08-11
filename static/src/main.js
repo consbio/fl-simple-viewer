@@ -20,6 +20,9 @@ var pendingRequest = null;
 var featuresURL = 'features/';
 var selectedID = null;
 
+// Have to tell Leaflet where the marker images are
+L.Icon.Default.imagePath = 'static/dist/images';
+
 // store current state of filtered dimensions by tab
 var activeFiltersByTab = {};
 d3.select('#MainSidebarHeader').selectAll('li').each(function(d){

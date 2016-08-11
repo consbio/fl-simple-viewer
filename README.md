@@ -36,7 +36,7 @@ Run `gulp build` to run the build, which produces artifacts in `static/dist`.
 
 Font files are manually copied from fontawesome install directory to `static/fonts`.
 
-Leaflet iamge files are manually copied from leaflet install directory to `static/dist/images`.
+Leaflet image files are manually copied from leaflet install directory to `static/dist/images`.
 
 
 ## Deploy process

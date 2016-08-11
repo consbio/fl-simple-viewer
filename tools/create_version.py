@@ -7,7 +7,7 @@ with a folder name equal to version specified here.
 import os, shutil
 
 # run time variables
-version = "0.2"
+version = "1"
 
 # files / directories to push into version
 deps = [
