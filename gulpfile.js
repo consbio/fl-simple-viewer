@@ -11,6 +11,7 @@ gulp.task('compress-css', function () {
             'deps/leaflet.css',
             'deps/L.Control.Geonames.css',
             'deps/L.Control.ZoomBox.css',
+            'node_modules/leaflet-basemaps/L.Control.Basemaps.css',
             'deps/dc.css',
             'deps/nv.d3.css',
             'static/src/main.css'
@@ -39,6 +40,7 @@ gulp.task('concat-js', ['compress-js'], function () {
         'deps/leaflet-omnivore.min.js',
         'deps/L.Control.Geonames.min.js',
         'deps/L.Control.ZoomBox.min.js',
+        'node_modules/leaflet-basemaps/L.Control.Basemaps-min.js',
         'deps/d3.min.js',
         'deps/lodash.min.js',
         'deps/crossfilter.min.js',

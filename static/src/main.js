@@ -211,7 +211,7 @@ var basemaps = [
 
 
 map = L.map('Map', {
-    layers: [basemaps[0]],
+    // layers: [basemaps[0]],
     maxZoom: 12,
     center: [27.68, -81.69],
      zoom: 7
@@ -1313,84 +1313,20 @@ function createCountChart(node, dimension, options){
 }
 
 
-/**************** NEW BASEMAP CONTROL HERE *****************/
+var basemapsControl = L.control.basemaps({
+    basemaps: basemaps,
+    tileX: 8,
+    tileY: 13,
+    tileZ: 5
+});
 
-function createControl(domNode, map, config) {
-    var control = L.control(config);
-    control.onAdd = function (map) {
-        var container = domNode;
-        L.DomEvent.disableClickPropagation(container);
-        if (!L.Browser.touch) {
-            L.DomEvent.disableScrollPropagation(container);
-        }
-        this._container = container;
-        return container;
-    };
-    control.addTo(map);
-}
+map.addControl(basemapsControl);
 
-var curBasemap = null;
-
-function initBasemaps(node, map, basemaps){
-    createControl(node.node(), map, {position: 'bottomright'});
-    basemaps.forEach(function(d, i){
-        if (i === 0) {
-            curBasemap = d;
-        }
-
-        var coords = {x:8, y:13};
-
-        var zoom = 5; //map.getZoom();
-        //TODO: get center of map and two zooms level out or 0
-
-        var url = L.Util.template(d._url, L.extend({
-			s: d._getSubdomain(coords),
-			x: coords.x,
-			y: d.options.tms ? d._globalTileRange.max.y - coords.y : coords.y,
-			z: zoom
-		}, d.options));
-
-        console.log(url)
-
-        var container = node.append('div').classed('basemap', true).classed('active', i === 0).classed('alt', i === 1);
-        //container.append('h4').classed('center', true).html(d.options.label);
-
-        var img = container.append('img')
-            .attr('src', url)
-            .attr('title', d.options.label);
-
-        container.on('click', function(){
-                console.log(d, i)
-
-                //if different, remove previous basemap, and add new one
-                if (d != curBasemap) {
-                    map.removeLayer(curBasemap);
-                    map.addLayer(d);
-                    map.fire('baselayerchange', curBasemap); //TODO: need to sync up attribution after this
-                    curBasemap = d;
-
-                    d3.selectAll('.basemap.active').classed('active', false);
-                    d3.select(this).classed('active', true);
-
-                    d3.selectAll('.basemap.alt').classed('alt', false);
-                    var altIdx = (i === 0)? 1: 0;
-                    d3.select(d3.selectAll('.basemap')[0][altIdx]).classed('alt', true);
-
-                    //node.classed('closed', true);//.classed('map-panel', false);
-                }
-            });
-
-    });
-
-    node.on('mouseenter', function() {
-            d3.select(this).classed('closed', false);//.classed('map-panel', true);
-        })
-        .on('mouseleave', function() {
-            d3.select(this).classed('closed', true);//.classed('map-panel', false);
-        })
-
-
-}
-
-var selectedBasemapIdx = 0;
-initBasemaps(d3.select('#Basemaps'), map, basemaps);
+// log via google analytics
+map.on('baselayerchange', function(){
+    ga('send', 'event',
+        'Basemaps',
+        'set',
+        basemapsControl.basemap.options.label
+    );
+});
