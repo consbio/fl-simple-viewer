@@ -1065,6 +1065,10 @@ ul.legend.legend-table {
     font-weight: normal;
 }
 
+h4.filtered {
+    color: red;
+}
+
 h4.mapped .fa-map
  {
     /*h4:hover .fa-map*/

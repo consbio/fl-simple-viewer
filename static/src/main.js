@@ -335,7 +335,7 @@ function load() {
 
             chartContainer.append('div').classed('small quiet center', true).text('number of watersheds');
 
-            createFilterChart(chartNode, d, header);
+            createFilterChart(chartNode, d, header, fieldLabels[d]);
         });
 
 
@@ -399,7 +399,7 @@ function load() {
                             dc.deregisterChart(chart);  // have to deregister manually, otherwise it sticks around
                             var chartNode = d3.select(chart.root().node());
                             chartNode.empty();
-                            createFilterChart(chartNode, level, header);
+                            createFilterChart(chartNode, level, header, fieldLabels[d] + ': ' + fieldLabels[level]);
 
                             // TODO: reselect previous categories
                             var hasFilters = curFilters.length > 0;
@@ -433,7 +433,7 @@ function load() {
 
             var chartID = 'FilterChart-' + d;
             var chartNode = chartContainer.append('div').classed('chart', true).attr('id', chartID);
-            createFilterChart(chartNode, curLevel, header);
+            createFilterChart(chartNode, curLevel, header, fieldLabels[d] + ': ' + fieldLabels[curLevel]);
             header.append('div')
                 .classed('filter-reset small', true)
                 .text('[clear filter]')
@@ -541,7 +541,7 @@ function createSliderFilter(node, dimension, label, tooltip, removeCallback) {
         .attr('step', 1)
         .property('value', extent[0])
         .on('change', function(){
-            console.log('slider onchange')
+            // console.log('slider onchange')
             var self = d3.select(this);
 
             var value = slider.property('value');
@@ -552,7 +552,7 @@ function createSliderFilter(node, dimension, label, tooltip, removeCallback) {
             }
 
             // this must happen after value is set
-            updateSliderFilter(dimension, value, extent[1] + 1);
+            updateSliderFilter(dimension, value, extent[1] + 1, label);
         });
 
     var inputContainer = sliderContainer.append('div').classed('inline-middle', true);
@@ -579,8 +579,8 @@ function createSliderFilter(node, dimension, label, tooltip, removeCallback) {
             }
             if (slider.property('value') !== value) {
                 slider.property('value', value);
-                updateSliderFilter(dimension, value, extent[1] + 1);
-                console.log('updating slider')
+                updateSliderFilter(dimension, value, extent[1] + 1, label);
+                // console.log('updating slider')
             }
         });
 
@@ -592,7 +592,7 @@ function createSliderFilter(node, dimension, label, tooltip, removeCallback) {
     labelContainer.append('span').classed('small right quieter', true).text('max: ' + d3.format(',')(extent[1]) + ' ha');
 }
 
-function updateSliderFilter(dimension, value, max) {
+function updateSliderFilter(dimension, value, max, label) {
     if (value == 0) {
         dimension.filterAll();
     }
@@ -604,6 +604,14 @@ function updateSliderFilter(dimension, value, max) {
     dc.redrawAll();
     updateSliderFilterTabIndicator(dimension.id);
     updateMap();
+
+    // log via google analytics
+    ga('send', 'event',
+        'Slider: ' + label,
+        'update filter',
+        (value > 0)? 'set: ' + d3.format(',d')(value) + ' ha': 'clear',
+        value
+    );
 }
 
 
@@ -616,25 +624,32 @@ function updateSliderFilterTabIndicator(dimensionID) {
 
 
 
-function createFilterChart(node, dimension, header) {
+function createFilterChart(node, dimension, header, dimensionName) {
     var labels = barLabels(dimension);
     createCountChart(node, dimensions[dimension], {
         barHeight: barHeight,
         colors: filterColors,
         label: function(g) { return labels[g.key]},
-        onFilter: _.partial(onFilter, header),
+        onFilter: _.partial(onFilter, header, dimensionName),
         width: chartWidth,
         ordering: function(d) { return -d.key }
     });
 }
 
-function onFilter(header, chart, filter) {
-    //console.log("onfilter", arguments);
-
+function onFilter(header, dimensionName, chart, filter) {
+    // console.log("onfilter", arguments);
+    console.log(dimensionName)
     var isFiltered = chart.hasFilter();
     header.classed('filtered', isFiltered);
     updateTabIndicator(chart.dimension().id, isFiltered);
     updateMap();
+
+    // log via google analytics
+    ga('send', 'event',
+        'Filter: ' + dimensionName,
+        'update filter',
+        (isFiltered)? 'set: ' + chart.filters().slice().sort().join(','): 'clear'
+    );
 }
 
 function updateTabIndicator (dimensionID, isFiltered) {
@@ -805,6 +820,9 @@ function showDetails(id) {
     var record = index.get('id');
     var details = featureCache[id];
     console.log('details', details);
+
+    // log via google analytics
+    ga('send', 'event', 'Watersheds Map', 'view details', details.name + ' (' + id + ')');
 
     d3.selectAll('path.selected').classed('selected', false);
 
@@ -1321,10 +1339,6 @@ function initBasemaps(node, map, basemaps){
         }
 
         var coords = {x:8, y:13};
-
-        //pt = new L.Point(center.lng, center.lat)
-
-
 
         var zoom = 5; //map.getZoom();
         //TODO: get center of map and two zooms level out or 0
