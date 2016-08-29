@@ -218,7 +218,16 @@ map = L.map('Map', {
 });
 map.zoomControl.setPosition('topright');
 map.addControl(L.control.zoomBox({modal: false, position:'topright'}));
-map.addControl(L.control.geonames({username: 'cbi.test', position:'topright'}));
+map.addControl(L.control.geonames(
+    {
+        username: 'cbi.test',
+        position:'topright',
+        adminCodes: {
+            country: 'us',
+            adminCode1: 'fl'
+        }
+    }
+));
 
 // Legend is setup as a control to coordinate layout within Leaflet
 //TODO: changed - add to leaflet-quickstart, dm-quickstart, and other controls
@@ -618,7 +627,7 @@ function updateSliderFilter(dimension, value, max, label) {
 
 function updateSliderFilterTabIndicator(dimensionID) {
     // select active tab, then look through all inputs; if any is > 0 then this tab has a filter
-    var hasFilters = _.any(d3.select('#' + d3.select('#MainSidebarHeader li.active').attr('data-tab')).selectAll('input.slider-value')[0].map(function(d){ return d.value > 0}));
+    var hasFilters = _.some(d3.select('#' + d3.select('#MainSidebarHeader li.active').attr('data-tab')).selectAll('input.slider-value')[0].map(function(d){ return d.value > 0}));
     updateTabIndicator(dimensionID, hasFilters);
 }
 
@@ -660,7 +669,7 @@ function updateTabIndicator (dimensionID, isFiltered) {
     // update with current filter state
     tabState[dimensionID] = isFiltered;
 
-    if (_.any(d3.values(tabState))) {
+    if (_.some(d3.values(tabState))) {
         if (indicator.empty()) {
             activeTab.append('i')
                 .classed('fa fa-circle indicator', true)

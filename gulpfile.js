@@ -7,13 +7,13 @@ var concat = require('gulp-concat');
 
 gulp.task('compress-css', function () {
     gulp.src([
-            'deps/fontawesome/css/font-awesome.min.css',
-            'deps/leaflet.css',
-            'deps/L.Control.Geonames.css',
-            'deps/L.Control.ZoomBox.css',
+            'node_modules/font-awesome/css/font-awesome.min.css',
+            'node_modules/leaflet/dist/leaflet.css',
+            'node_modules/leaflet-geonames/L.Control.Geonames.css',
+            'node_modules/leaflet-zoombox/L.Control.ZoomBox.css',
             'node_modules/leaflet-basemaps/L.Control.Basemaps.css',
-            'deps/dc.css',
-            'deps/nv.d3.css',
+            'node_modules/dc/dc.min.css',
+            'node_modules/nvd3/build/nv.d3.min.css',
             'static/src/main.css'
         ])
         .pipe(cleanCSS())
@@ -36,16 +36,16 @@ gulp.task('compress-js', function () {
 
 gulp.task('concat-js', ['compress-js'], function () {
     gulp.src([
-        'deps/leaflet.js',
-        'deps/leaflet-omnivore.min.js',
-        'deps/L.Control.Geonames.min.js',
-        'deps/L.Control.ZoomBox.min.js',
+        'node_modules/leaflet/dist/leaflet.js',
+        'node_modules/leaflet-omnivore/leaflet-omnivore.min.js',
+        'node_modules/leaflet-geonames/L.Control.Geonames.min.js',
+        'node_modules/leaflet-zoombox/L.Control.ZoomBox.min.js',
         'node_modules/leaflet-basemaps/L.Control.Basemaps-min.js',
-        'deps/d3.min.js',
-        'deps/lodash.min.js',
-        'deps/crossfilter.min.js',
-        'deps/dc.min.js',
-        'deps/nv.d3.min.js',
+        'node_modules/d3/d3.min.js',
+        'node_modules/lodash/lodash.min.js',
+        'node_modules/crossfilter/crossfilter.min.js',
+        'node_modules/dc/dc.min.js',
+        'node_modules/nvd3/nv.d3.min.js',
         'build/core-min.js'
     ])
         .pipe(strip())
@@ -55,7 +55,23 @@ gulp.task('concat-js', ['compress-js'], function () {
 });
 
 
-gulp.task('build', ['concat-js', 'compress-css'], function () {});
+gulp.task('copy-files', [], function () {
+    gulp.src(['node_modules/leaflet/dist/images/*'])
+        .pipe(gulp.dest('static/dist/images'));
+
+    gulp.src(['node_modules/font-awesome/fonts/*'])
+        .pipe(gulp.dest('static/fonts'));
+
+    gulp.src(['node_modules/leaflet-geonames/*.svg'])
+        .pipe(gulp.dest('static/dist'));
+
+    gulp.src(['node_modules/leaflet-zoombox/*.svg'])
+        .pipe(gulp.dest('static/dist'));
+});
+
+
+
+gulp.task('build', ['concat-js', 'compress-css', 'copy-files'], function () {});
 
 
 
@@ -65,6 +81,6 @@ gulp.task('watch', function () {
 });
 
 
-gulp.task('default', ['compress-css', 'concat-js', 'watch']);
+gulp.task('default', ['build', 'watch']);
 
 

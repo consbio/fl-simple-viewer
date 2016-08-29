@@ -4,7 +4,17 @@
   "description": "Custom map and data viewer for Peninsular Florida LCC",
   "main": "gulpfile.js",
   "dependencies": {
-    "leaflet-basemaps": "^0.1.1"
+    "crossfilter": "^1.3.12",
+    "d3": "^3.5.17",
+    "dc": "^2.0.0-beta.32",
+    "font-awesome": "^4.6.3",
+    "leaflet": "^1.0.0-rc.3",
+    "leaflet-basemaps": "^0.1.1",
+    "leaflet-geonames": "^0.2.0",
+    "leaflet-omnivore": "^0.3.2",
+    "leaflet-zoombox": "^0.3.0",
+    "lodash": "^4.15.0",
+    "nvd3": "^1.8.4"
   },
   "devDependencies": {
     "gulp": "^3.9.1",
