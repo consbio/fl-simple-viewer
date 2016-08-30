@@ -410,7 +410,6 @@ function load() {
                             var chartID = 'FilterChart-' + threat;
                             var chart = _.find(dc.chartRegistry.list(), function(d){ return d.root().node().id === chartID });
                             var curFilters = chart.filters();
-                            console.log("prev filters", curFilters);
 
                             // reset filter and map
                             dimensions[curLevel].filterAll();
@@ -499,7 +498,6 @@ function load() {
                         'a species to make room for another');
                     return;
                 }
-                //console.log('add spp filter', spp);
 
                 var dimension = cf.dimension(function(d){ return d[spp] });
                 dimensions[spp] = dimension;
@@ -562,7 +560,6 @@ function createSliderFilter(node, dimension, label, tooltip, removeCallback) {
         .attr('step', 1)
         .property('value', extent[0])
         .on('change', function(){
-            // console.log('slider onchange')
             var self = d3.select(this);
 
             var value = slider.property('value');
@@ -601,7 +598,6 @@ function createSliderFilter(node, dimension, label, tooltip, removeCallback) {
             if (slider.property('value') !== value) {
                 slider.property('value', value);
                 updateSliderFilter(dimension, value, extent[1] + 1, label);
-                // console.log('updating slider')
             }
         });
 
@@ -658,8 +654,6 @@ function createFilterChart(node, dimension, header, dimensionName) {
 }
 
 function onFilter(header, dimensionName, chart, filter) {
-    // console.log("onfilter", arguments);
-    console.log(dimensionName)
     var isFiltered = chart.hasFilter();
     header.classed('filtered', isFiltered);
     updateTabIndicator(chart.dimension().id, isFiltered);
@@ -729,7 +723,7 @@ function updateMap() {
 
 // reset handler
 function handleChartReset(id) {
-    console.log('reset', id)
+    // console.log('reset', id)
     d3.event.stopPropagation();
     var chart = _.find(dc.chartRegistry.list(), function(d){ return d.root().node().id === id });
     chart.filterAll();
@@ -840,7 +834,7 @@ function deselectUnit() {
 function showDetails(id) {
     var record = index.get('id');
     var details = featureCache[id];
-    console.log('details', details);
+    // console.log('details', details);
 
     // log via google analytics
     ga('send', 'event', 'Watersheds Map', 'view details', details.name + ' (' + id + ')');

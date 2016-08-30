@@ -10,10 +10,10 @@
  * [{<prop1>: <v>, <prop2>: <l>},...]
  * @param {string[]} properties - the properties to add to each object.  Must match number of arrays passed in
  * @param {..Array} [arrays] - The arrays to process
- * @returns {Array} Returns array of objcts with properties and values
+ * @returns {Array} Returns array of objects with properties and values
  */
 function zipIntoObj(properties, arrays){
-    return _.unzip(_.rest(arguments)).map(function(d){
+    return _.unzip(_.tail(arguments)).map(function(d){
         var obj = {};
         properties.forEach(function(p, i){
             obj[p] = d[i];

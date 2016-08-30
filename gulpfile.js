@@ -41,11 +41,11 @@ gulp.task('concat-js', ['compress-js'], function () {
         'node_modules/leaflet-geonames/L.Control.Geonames.min.js',
         'node_modules/leaflet-zoombox/L.Control.ZoomBox.min.js',
         'node_modules/leaflet-basemaps/L.Control.Basemaps-min.js',
-        'node_modules/d3/d3.min.js',
         'node_modules/lodash/lodash.min.js',
         'node_modules/crossfilter/crossfilter.min.js',
+        'node_modules/d3/d3.min.js',
         'node_modules/dc/dc.min.js',
-        'node_modules/nvd3/nv.d3.min.js',
+        'node_modules/nvd3/build/nv.d3.min.js',
         'build/core-min.js'
     ])
         .pipe(strip())
