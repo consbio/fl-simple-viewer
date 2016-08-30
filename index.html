@@ -12,11 +12,28 @@
         })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
         ga('create', 'UA-82274034-2', 'auto');
-        ga('require', 'linkid');
         ga('send', 'pageview');
     </script>
+    <style>
+        @-webkit-keyframes spin{
+            0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}
+            100%{-webkit-transform:rotate(359deg);transform:rotate(359deg)}
+        }
+        @keyframes spin{
+            0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}
+            100%{-webkit-transform:rotate(359deg);transform:rotate(359deg)}}
+        .spinner {
+            background: transparent no-repeat center center;
+            background-image: url(data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjNjQ2RDVBIiBoZWlnaHQ9IjI0IiB2aWV3Qm94PSIwIDAgMjQgMjQiIHdpZHRoPSIyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4gICAgPHBhdGggZD0iTTEyIDZ2M2w0LTQtNC00djNjLTQuNDIgMC04IDMuNTgtOCA4IDAgMS41Ny40NiAzLjAzIDEuMjQgNC4yNkw2LjcgMTQuOGMtLjQ1LS44My0uNy0xLjc5LS43LTIuOCAwLTMuMzEgMi42OS02IDYtNnptNi43NiAxLjc0TDE3LjMgOS4yYy40NC44NC43IDEuNzkuNyAyLjggMCAzLjMxLTIuNjkgNi02IDZ2LTNsLTQgNCA0IDR2LTNjNC40MiAwIDgtMy41OCA4LTggMC0xLjU3LS40Ni0zLjAzLTEuMjQtNC4yNnoiLz4gICAgPHBhdGggZD0iTTAgMGgyNHYyNEgweiIgZmlsbD0ibm9uZSIvPjwvc3ZnPg==);
+            animation: spin 2s infinite linear;
+        }
+    </style>
 </head>
 <body>
+    <div id="LoadingScrim" style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; z-index: 10000; background: #FFF; padding: 15% 0 0 50%;">
+        <div class="spinner" style="width:100px;height:100px;background-size:100px;"></div>
+    </div>
+
     <div class="table fullwidth fullheight">
         <div id="Header" class="table-row fullwidth">
             <img src="static/img/logo.png" align="left" />
@@ -26,7 +43,12 @@
 
         <div id="Main" class="table fullwidth fullheight">
             <div id="Sidebar" class="table-cell fullheight">
-                <div class="table fullheight fullwidth">
+                <!-- loading spinner -->
+                <div id="SidebarLoadingScrim" class="flex-container-centered hidden" style="padding-top:40px;">
+                    <div class="spinner" style="width:50px;height:50px;background-size:50px;"></div>
+                </div>
+
+                <div id="SidebarContents" class="table fullheight fullwidth">
                     <!-- header row -->
                     <div class="table-row fullwidth">
                         <ul id="MainSidebarHeader" class="tabs">
@@ -451,9 +473,9 @@
         </div>
     </div>
 
-    <div id="Tooltip" class="tooltip"></div>
+    <div id="Tooltip" class="tooltip" style="left: -9999px;top:-9999px;"></div>
 
-    <div id="Legend" class="map-panel">
+    <div id="Legend" class="map-panel hidden">
         <h4></h4>
         <h5 class="quiet"></h5>
         <div></div>
@@ -464,19 +486,6 @@
         </div>
         <div class="hidden quiet small center legend-count"></div>
     </div>
-
-
-
-    <!--<div id="DetailsLoadingScrim" class="hidden">-->
-        <!--<div class="spinner">-->
-            <!--<h4 class="nomargin">Loading</h4>-->
-            <!--<div class="rect1"></div>-->
-            <!--<div class="rect2"></div>-->
-            <!--<div class="rect3"></div>-->
-            <!--<div class="rect4"></div>-->
-            <!--<div class="rect5"></div>-->
-        <!--</div>-->
-    <!--</div>-->
 
     <div id="IEAlert" class="modal alert hidden">
         <div class="center">

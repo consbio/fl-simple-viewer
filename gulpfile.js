@@ -61,12 +61,6 @@ gulp.task('copy-files', [], function () {
 
     gulp.src(['node_modules/font-awesome/fonts/*'])
         .pipe(gulp.dest('static/fonts'));
-
-    gulp.src(['node_modules/leaflet-geonames/*.svg'])
-        .pipe(gulp.dest('static/dist'));
-
-    gulp.src(['node_modules/leaflet-zoombox/*.svg'])
-        .pipe(gulp.dest('static/dist'));
 });
 
 

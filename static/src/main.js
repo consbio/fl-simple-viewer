@@ -1,14 +1,9 @@
 var pageLoadStart = new Date().getTime();
-var foo = false;
-var zoomOpacityScale = d3.scale.linear().domain([5,12]).range([1, 0.35]);
 var features, data;
-var scales = {};
-var numClasses = 5;
 var index = d3.map();
 var featureIndex = d3.map();
 var visibleFeatures = d3.map();
 var cf = null;
-var cfs = {};
 var dimensions = {};
 var idDimensions = [];
 var barHeight = 20;
@@ -19,6 +14,9 @@ var featureCache = {};
 var pendingRequest = null;
 var featuresURL = 'features/';
 var selectedID = null;
+var loadingUnit = false;
+var detailsShowing = false;
+
 
 // Have to tell Leaflet where the marker images are
 L.Icon.Default.imagePath = 'static/dist/images';
@@ -93,10 +91,8 @@ d3.selectAll('.button-close').on('click', function() {
     });
 });
 d3.select('#DetailsClose').on('click', function(){
-    d3.select('#MainSidebar').classed('hidden', false);
-    d3.select('#MainSidebarHeader').classed('hidden', false);
-    d3.select('#Details').classed('hidden', true);
-    d3.select('#DetailsHeader').classed('hidden', true);
+    detailsShowing = false;
+    updateNodeVisibility(['#MainSidebar', '#MainSidebarHeader'], ['#Details', '#DetailsHeader']);
     deselectUnit();
 });
 
@@ -246,6 +242,7 @@ geonamesControl.on('search', function(e){
 var legend = L.control({position: 'bottomright'});
 legend.onAdd = function (map) {
     this._container = L.DomUtil.get('Legend');
+    L.DomUtil.removeClass(this._container, 'hidden');
     L.DomEvent.disableClickPropagation(this._container);
     if (!L.Browser.touch) {
         L.DomEvent.disableScrollPropagation(this._container);
@@ -312,6 +309,8 @@ d3.csv('static/summary.csv',
 // Use lodash to call load function after 2 prior async requests are complete
 var onLoad = _.after(2, load);
 function load() {
+    d3.select('#LoadingScrim').classed('hidden', true);
+
     setSelectedField(selectedField, 'priority', '% of watershed covered by combined priority resources');
     features.addTo(map);
 
@@ -796,24 +795,29 @@ function setSelectedField(field, group, subtitle) {
 function selectUnit(id){
     console.log('select ', id);
 
-    d3.select('#MainSidebar').classed('hidden', true);
-    d3.select('#MainSidebarHeader').classed('hidden', true);
-    d3.select('#Details').classed('hidden', false);
-    d3.select('#DetailsHeader').classed('hidden', false);
+    if (!detailsShowing){
+        updateNodeVisibility(['#SidebarLoadingScrim'], ['#SidebarContents', '#MainSidebar', '#MainSidebarHeader']);
+    }
+    detailsShowing = true;
+
 
     if (pendingRequest != null) {
         pendingRequest.abort();
     }
 
     if (featureCache[id] != null){
-        //d3.select('#DetailsLoadingScrim').classed('hidden', true);
-        //d3.select('#DetailsContainer').classed('hidden', false);
+        loadingUnit = false;
         showDetails(id);
     }
     else {
-        // TODO: do this in a timeout to prevent jitter
-        //d3.select('#DetailsLoadingScrim').classed('hidden', false);
-        //d3.select('#DetailsContainer').classed('hidden', true);
+        loadingUnit = true;
+        _.delay(function(){
+                if (loadingUnit){
+                    updateNodeVisibility(['#SidebarLoadingScrim'], ['#SidebarContents']);
+                }
+            },
+            250
+        );
 
         pendingRequest = d3.json(featuresURL + id + '.json', function (r) {
             if (r == null || r == undefined) { return }  //should handle case where no data is available
@@ -869,6 +873,9 @@ function showDetails(id) {
     });
     pr_data.sort(valueSort);
     createInlineBarChart(d3.select('#PFLCC_PR_Bars'), pr_data, details.hectares);
+
+    // Now show the contents
+    updateNodeVisibility(['#SidebarContents', '#Details', '#DetailsHeader'], ['#SidebarLoadingScrim']);
 
     // CLIP tab
     createPieChart(d3.select('#CLIP_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.clip, priorityLabels, chartColors, labelColors, clipInfo), details.hectares);
@@ -1328,11 +1335,30 @@ function createCountChart(node, dimension, options){
 }
 
 
+
+/* inputs are selected nodes or selectors */
+function updateNodeVisibility(visibleNodes, hiddenNodes) {
+    if (visibleNodes) {
+        visibleNodes.forEach(function (n) {
+            d3.select(n).classed('hidden', false)
+        });
+    }
+    if (hiddenNodes){
+        hiddenNodes.forEach(function(n){
+            d3.select(n).classed('hidden', true)
+        });
+    }
+
+}
+
+
+
 var basemapsControl = L.control.basemaps({
     basemaps: basemaps,
     tileX: 8,
     tileY: 13,
-    tileZ: 5
+    tileZ: 5,
+    position: 'bottomleft'
 });
 
 map.addControl(basemapsControl);
