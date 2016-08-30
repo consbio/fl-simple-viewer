@@ -211,14 +211,13 @@ var basemaps = [
 
 
 map = L.map('Map', {
-    // layers: [basemaps[0]],
     maxZoom: 12,
     center: [27.68, -81.69],
      zoom: 7
 });
 map.zoomControl.setPosition('topright');
 map.addControl(L.control.zoomBox({modal: false, position:'topright'}));
-map.addControl(L.control.geonames(
+var geonamesControl = L.control.geonames(
     {
         username: 'cbi.test',
         position:'topright',
@@ -227,7 +226,20 @@ map.addControl(L.control.geonames(
             adminCode1: 'fl'
         }
     }
-));
+);
+map.addControl(geonamesControl);
+
+// log via google analytics
+geonamesControl.on('search', function(e){
+    if (!(e.params && e.params.q)) return;
+
+    ga('send', 'event',
+        'Geonames',
+        'search',
+        e.params.q
+    );
+});
+
 
 // Legend is setup as a control to coordinate layout within Leaflet
 //TODO: changed - add to leaflet-quickstart, dm-quickstart, and other controls
