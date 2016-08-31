@@ -55,7 +55,7 @@ var labelSort = function(a, b){ return d3.ascending(a.label, b.label) };
 
 // Microsoft dropped IE < 11 so we should too
 if (L.Browser.ielt9 || (L.Browser.ie && ((/MSIE 9/i).test(navigator.userAgent) || (/MSIE 10/i).test(navigator.userAgent)))){
-    d3.select('#IEAlert').classed('hidden', false);
+    updateNodeVisibility(['#IEAlert'], ['#LoadingScrim']);
     if (!DEBUG) {
         ga('send', 'event', 'Unsupported Browser', 'IE < 11');
     }
