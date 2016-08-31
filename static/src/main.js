@@ -1,3 +1,5 @@
+var DEBUG = true; //FIXME
+
 var pageLoadStart = new Date().getTime();
 var features, data;
 var index = d3.map();
@@ -26,6 +28,11 @@ var activeFiltersByTab = {};
 d3.select('#MainSidebarHeader').selectAll('li').each(function(d){
     activeFiltersByTab[d3.select(this).attr('data-tab')] = {};
 });
+function hasFilters(){
+    return _.some(_.values(activeFiltersByTab).map(function(d){return _.some(d)}));
+}
+
+
 
 // store current level of threat filters
 var threatLevel = {
@@ -49,6 +56,9 @@ var labelSort = function(a, b){ return d3.ascending(a.label, b.label) };
 // Microsoft dropped IE < 11 so we should too
 if (L.Browser.ielt9 || (L.Browser.ie && ((/MSIE 9/i).test(navigator.userAgent) || (/MSIE 10/i).test(navigator.userAgent)))){
     d3.select('#IEAlert').classed('hidden', false);
+    if (!DEBUG) {
+        ga('send', 'event', 'Unsupported Browser', 'IE < 11');
+    }
     throw 'UnsupportedBrowser';
 }
 
@@ -93,8 +103,44 @@ d3.selectAll('.button-close').on('click', function() {
 d3.select('#DetailsClose').on('click', function(){
     detailsShowing = false;
     updateNodeVisibility(['#MainSidebar', '#MainSidebarHeader'], ['#Details', '#DetailsHeader']);
+    d3.select('#ClearFilterContainer').classed('hidden', !hasFilters());
     deselectUnit();
 });
+
+/** Clear all button **/
+d3.select('#ClearAllButton').on('click', function() {
+    d3.select('#ClearFilterContainer').classed('hidden', true);
+
+    // clear all charts
+    dc.chartRegistry.list().forEach(function(chart) {
+        chart.filterAll();
+    });
+
+    // clear all sliders
+    d3.selectAll('.slider-list input.slider-value')[0].filter(function(d){ return d.value > 0}).forEach(function(d){d3.select(d).property('value', 0)});
+    d3.selectAll('.slider-list input[type="range"]')[0].filter(function(d){ return d.value > 0}).forEach(function(d){d3.select(d).property('value', 0)});
+    var sliderTabs =['LandUseFilter', 'SppFilter'];
+    sliderTabs.forEach(function(tab) {
+        var dims = _.entries(activeFiltersByTab[tab]).filter(function(d){return d[1] == true}).map(function(d){return d[0]});
+        dims.forEach(function(d) {
+            dimensions[d].filterAll();
+            // updateTabIndicator(d, false);
+            activeFiltersByTab[tab] = {};
+        })
+    });
+
+    d3.selectAll('.indicator').remove();
+    d3.select('#ClearFilterContainer').classed('hidden', true);
+    dc.redrawAll();
+    updateMap();
+
+    if (!DEBUG) {
+        // log via google analytics
+        ga('send', 'event', 'Filters: clear all', 'clear all filters');
+    }
+});
+
+
 
 /******** Expandos *****************/
 function initExpando(section, open) {
@@ -225,16 +271,36 @@ var geonamesControl = L.control.geonames(
 );
 map.addControl(geonamesControl);
 
-// log via google analytics
-geonamesControl.on('search', function(e){
-    if (!(e.params && e.params.q)) return;
-
-    ga('send', 'event',
-        'Geonames',
-        'search',
-        e.params.q
-    );
+var basemapsControl = L.control.basemaps({
+    basemaps: basemaps,
+    tileX: 8,
+    tileY: 13,
+    tileZ: 5,
+    position: 'bottomleft'
 });
+map.addControl(basemapsControl);
+
+
+if (!DEBUG) {
+    // log via google analytics
+    geonamesControl.on('search', function (e) {
+        if (!(e.params && e.params.q)) return;
+
+        ga('send', 'event',
+            'Geonames',
+            'search',
+            e.params.q
+        );
+    });
+
+    map.on('baselayerchange', function () {
+        ga('send', 'event',
+            'Basemaps',
+            'set',
+            basemapsControl.basemap.options.label
+        );
+    });
+}
 
 
 // Legend is setup as a control to coordinate layout within Leaflet
@@ -250,6 +316,7 @@ legend.onAdd = function (map) {
     return this._container;
 };
 legend.addTo(map);
+
 
 omnivore.topojson('static/features.json')
     .on('ready', function(){
@@ -297,8 +364,10 @@ d3.csv('static/summary.csv',
 
         landUseTypes.forEach(function(d) {
             d = 'lu' + d;
-            dimensions[d] = cf.dimension(function(r){ return r[d] });
-            // id intentionally left out here
+            var dimension = cf.dimension(function(r){ return r[d] });
+            dimension.id = d;
+            dimensions[d] = dimension;
+            // id intentionally left out here?? FIXME
         });
 
         onLoad();
@@ -431,7 +500,7 @@ function load() {
                                 chart.redraw();
                             }
 
-                            updateTabIndicator(d, hasFilters);  // intentionally using 'slr' and 'dev' instead of specific dimension here
+                            updateTabIndicator(d.id, hasFilters);  // intentionally using 'slr' and 'dev' instead of specific dimension here
 
                             // update header and map
                             if (d3.select('#Filter-' + threat + ' h4').classed('mapped')) {
@@ -487,8 +556,7 @@ function load() {
                 var spp = self.property('value');
                 if (spp === '-') { return }
 
-                // TODO: remove from list and /or prevent from duplicate add
-                //temporary hack
+                // prevent from duplicate add
                 if (dimensions[spp] != null) { return; }
 
                 // TODO: find a nicer UI for this
@@ -499,6 +567,7 @@ function load() {
                 }
 
                 var dimension = cf.dimension(function(d){ return d[spp] });
+                dimension.id = spp;
                 dimensions[spp] = dimension;
                 createSliderFilter(
                     itemsList.append('li').attr('id', 'Filter-' + spp),
@@ -510,7 +579,7 @@ function load() {
                         d3.select('option[value="' + spp + '"]').property('disabled', false);  // TODO: optimize select
                         dimensions[spp].dispose();
                         delete dimensions[spp];
-                        updateSliderFilterTabIndicator(dimension.id);
+                        updateTabIndicator(dimension.id, false);
                         dc.redrawAll();
                         updateMap();
                     }
@@ -609,35 +678,30 @@ function createSliderFilter(node, dimension, label, tooltip, removeCallback) {
 }
 
 function updateSliderFilter(dimension, value, max, label) {
+    var hasFilter = false;
     if (value == 0) {
         dimension.filterAll();
     }
     else {
         //filter range from value to max
         dimension.filterRange([value, max]);
+        hasFilter = true;
     }
 
     dc.redrawAll();
-    updateSliderFilterTabIndicator(dimension.id);
+    updateTabIndicator(dimension.id, hasFilter);
     updateMap();
 
-    // log via google analytics
-    ga('send', 'event',
-        'Slider: ' + label,
-        'update filter',
-        (value > 0)? 'set: ' + d3.format(',d')(value) + ' ha': 'clear',
-        value
-    );
+    if (!DEBUG) {
+        // log via google analytics
+        ga('send', 'event',
+            'Slider: ' + label,
+            'update filter',
+            (value > 0) ? 'set: ' + d3.format(',d')(value) + ' ha' : 'clear',
+            value
+        );
+    }
 }
-
-
-
-function updateSliderFilterTabIndicator(dimensionID) {
-    // select active tab, then look through all inputs; if any is > 0 then this tab has a filter
-    var hasFilters = _.some(d3.select('#' + d3.select('#MainSidebarHeader li.active').attr('data-tab')).selectAll('input.slider-value')[0].map(function(d){ return d.value > 0}));
-    updateTabIndicator(dimensionID, hasFilters);
-}
-
 
 
 function createFilterChart(node, dimension, header, dimensionName) {
@@ -658,12 +722,14 @@ function onFilter(header, dimensionName, chart, filter) {
     updateTabIndicator(chart.dimension().id, isFiltered);
     updateMap();
 
-    // log via google analytics
-    ga('send', 'event',
-        'Filter: ' + dimensionName,
-        'update filter',
-        (isFiltered)? 'set: ' + chart.filters().slice().sort().join(','): 'clear'
-    );
+    if (!DEBUG) {
+        // log via google analytics
+        ga('send', 'event',
+            'Filter: ' + dimensionName,
+            'update filter',
+            (isFiltered)? 'set: ' + chart.filters().slice().sort().join(','): 'clear'
+        );
+    }
 }
 
 function updateTabIndicator (dimensionID, isFiltered) {
@@ -684,6 +750,8 @@ function updateTabIndicator (dimensionID, isFiltered) {
     else {
         indicator.remove();
     }
+
+    d3.select('#ClearFilterContainer').classed('hidden', !hasFilters());
 }
 
 
@@ -796,7 +864,7 @@ function selectUnit(id){
     console.log('select ', id);
 
     if (!detailsShowing){
-        updateNodeVisibility(['#SidebarLoadingScrim'], ['#SidebarContents', '#MainSidebar', '#MainSidebarHeader']);
+        updateNodeVisibility(['#SidebarLoadingScrim'], ['#SidebarContents', '#MainSidebar', '#MainSidebarHeader', '#ClearFilterContainer']);
     }
     detailsShowing = true;
 
@@ -840,8 +908,10 @@ function showDetails(id) {
     var details = featureCache[id];
     // console.log('details', details);
 
-    // log via google analytics
-    ga('send', 'event', 'Watersheds Map', 'view details', details.name + ' (' + id + ')');
+    if (!DEBUG) {
+        // log via google analytics
+        ga('send', 'event', 'Watersheds Map', 'view details', details.name + ' (' + id + ')');
+    }
 
     d3.selectAll('path.selected').classed('selected', false);
 
@@ -874,8 +944,6 @@ function showDetails(id) {
     pr_data.sort(valueSort);
     createInlineBarChart(d3.select('#PFLCC_PR_Bars'), pr_data, details.hectares);
 
-    // Now show the contents
-    updateNodeVisibility(['#SidebarContents', '#Details', '#DetailsHeader'], ['#SidebarLoadingScrim']);
 
     // CLIP tab
     createPieChart(d3.select('#CLIP_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.clip, priorityLabels, chartColors, labelColors, clipInfo), details.hectares);
@@ -1017,8 +1085,6 @@ function showDetails(id) {
     createInlineBarChart(d3.select('#Dev_Bars'), devData, details.hectares);
 
 
-
-
     // Partners tab
     tableNode = d3.select('#Owner_Table');
     tableNode.html('');
@@ -1089,6 +1155,9 @@ function showDetails(id) {
     if (landTrustNodes.empty()) {
         landTrustNodes.append('li').classed('quiet', true).html('No information available');
     }
+
+
+    updateNodeVisibility(['#SidebarContents', '#Details', '#DetailsHeader'], ['#SidebarLoadingScrim']);
 }
 
 
@@ -1350,24 +1419,3 @@ function updateNodeVisibility(visibleNodes, hiddenNodes) {
     }
 
 }
-
-
-
-var basemapsControl = L.control.basemaps({
-    basemaps: basemaps,
-    tileX: 8,
-    tileY: 13,
-    tileZ: 5,
-    position: 'bottomleft'
-});
-
-map.addControl(basemapsControl);
-
-// log via google analytics
-map.on('baselayerchange', function(){
-    ga('send', 'event',
-        'Basemaps',
-        'set',
-        basemapsControl.basemap.options.label
-    );
-});
