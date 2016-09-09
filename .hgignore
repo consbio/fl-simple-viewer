@@ -1,6 +1,7 @@
 syntax: glob
 .git/*
 .gitignore
+.idea
 media/*
 features/*
 tools/deploy_settings.py
