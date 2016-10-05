@@ -1,0 +1,214 @@
+<html>
+<head>
+    <script type="application/javascript" src="static/reporter/deps/leaflet/leaflet-src.js"></script>
+    <link rel="stylesheet" type="text/css" href="static/reporter/deps/leaflet/leaflet.css">
+    <script type="application/javascript" src="static/reporter/deps/leaflet-image/leaflet-image.js"></script>
+
+    <script type="application/javascript" src="static/reporter/deps/jspdf/jspdf.debug.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="static/src/pdf.css">
+</head>
+<body>
+
+<div class="page">
+    <div class="header">
+        <img src="static/img/logo.png">
+        <h3>Peninsular Florida LCC - Simple Map Viewer</h3>
+    </div>
+
+    <div id="mapContainer">
+        <div id="boundNorth"></div>
+        <div id="boundSouth"></div>
+        <div id="boundEast"></div>
+        <div id="boundWest"></div>
+        <div id="map"></div>
+    </div>
+
+    <div id="description" class="table">
+        <div class="table-row">
+            <div class="table-cell form" style="width: 3in;">
+                <b><input type="text" placeholder="Name of the map (optional)"/></b>
+                <textarea rows="10" maxlength="400" placeholder="Description (optional)"></textarea>
+            </div>
+
+            <div class="table-cell" style="width: 2.3in">
+                {{{legend}}}
+            </div>
+
+            <div id="mapThumbnail" class="table-cell" style="width: 2.1in">
+                <img src="static/img/preview.jpg"/>
+                <div id="studyArea"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div>
+            <span>Report generated {{date}}</span>
+            <a href="http://peninsularfloridalcc.org/" target="_blank" class="right">Peninsular Florida LCC</a>
+        </div>
+        <a href="{{access_url}}" target="_blank" class="smaller">{{access_url}}</a>
+    </div>
+</div>
+
+{{#joinFilters charts sliders}}
+<div class="page">
+    <div class="header">
+        <img src="static/img/logo.png">
+        <h3>Peninsular Florida LCC - Simple Map Viewer</h3>
+    </div>
+
+    <h3 class="filterTitle">Map is showing only those watersheds that meet ALL the following criteria:</h3>
+
+    <div class="filters">
+        {{#each filters}}
+        {{{this}}}
+        {{/each}}
+    </div>
+
+    <div class="footer">
+        <div>
+            <span>Report generated {{date}}</span>
+            <a href="http://peninsularfloridalcc.org/" target="_blank" class="right">Peninsular Florida LCC</a>
+        </div>
+        <a href="{{access_url}}" target="_blank" class="smaller">{{access_url}}</a>
+    </div>
+</div>
+{{/joinFilters}}
+
+<div class="page">
+    <div class="header">
+        <img src="static/img/logo.png">
+        <h3>Peninsular Florida LCC - Simple Map Viewer</h3>
+    </div>
+
+    <div id="dataInfo">
+        <h3>Data access:</h3>
+        <div>
+            You can view and download data used to create this report from the <a href="http://pflcc.databasin.org/">Peninsular
+            Florida Conservation Planning Atlas.</a>
+        </div>
+        <p>
+            For more information about the Florida Critical Lands and Waters Identification Project version 3.0, <a
+                href="http://www.fnai.org/clip.cfm">click here.</a>
+        </p>
+        <p>
+            Priority resources section on the PFLCC web page:
+            <br>
+            <a href="http://peninsularfloridalcc.org/page/conservation-targets">http://peninsularfloridalcc.org/page/conservation-targets</a>
+        </p>
+        <p>
+            Florida Cooperative Land Cover:
+            <br>
+            <a href="http://myfwc.com/research/gis/applications/articles/Cooperative-Land-Cover">http://myfwc.com/research/gis/applications/articles/Cooperative-Land-Cover</a>
+        </p>
+        <p id="mapAttribution">
+            Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS,
+            NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User
+            Community'
+        </p>
+    </div>
+
+    <div class="footer">
+        <div>
+            <span>Report generated {{date}}</span>
+            <a href="http://peninsularfloridalcc.org/" target="_blank" class="right">Peninsular Florida LCC</a>
+        </div>
+        <a href="{{access_url}}" target="_blank" class="smaller">{{access_url}}</a>
+    </div>
+</div>
+
+<script>
+    // save old getContext
+    var oldgetContext = HTMLCanvasElement.prototype.getContext;
+
+    // get a context, set it to smoothed if it was a 2d context, and return it.
+    function getSmoothContext(contextType) {
+        var resCtx = oldgetContext.apply(this, arguments);
+        if (contextType == '2d') {
+            setToFalse(resCtx, 'imageSmoothingEnabled');
+            setToFalse(resCtx, 'mozImageSmoothingEnabled');
+            setToFalse(resCtx, 'oImageSmoothingEnabled');
+            setToFalse(resCtx, 'webkitImageSmoothingEnabled');
+        }
+        return resCtx;
+    }
+
+    function setToFalse(obj, prop) {
+        if (obj[prop] !== undefined) obj[prop] = false;
+    }
+
+    // inject new smoothed getContext
+    HTMLCanvasElement.prototype.getContext = getSmoothContext;
+
+    var map = L.map(document.getElementById('map'), {
+        maxZoom: 12,
+        preferCanvas: true,
+        attributionControl: false
+    });
+
+    map.on('moveend', function (e) {
+        var bounds = map.getBounds();
+        document.getElementById('boundNorth').innerHTML = Math.round(bounds.getNorth() * 100) / 100 + '&deg; N';
+        document.getElementById('boundSouth').innerHTML = Math.round(bounds.getSouth() * 100) / 100 + '&deg; S';
+        document.getElementById('boundEast').innerHTML = Math.round(bounds.getEast() * 100) / 100 + '&deg; E';
+        document.getElementById('boundWest').innerHTML = Math.round(bounds.getWest() * 100) / 100 + '&deg; W';
+    });
+
+    L.tileLayer('//{s}.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+        subdomains: ['server', 'services'],
+        maxZoom: 10,
+        minZoom: 2
+    }).addTo(map);
+
+    function processMaps(callback) {
+        leafletImage(map, function (err, canvas) {
+            var img = document.createElement('img');
+            //var dimensions = map.getSize();
+            //imgRatio = dimensions.x / dimensions.y;
+            img.width = canvas.width;
+            img.height = canvas.height;
+            img.src = canvas.toDataURL();
+
+            var mapContainer = map.getContainer();
+            mapContainer.parentNode.replaceChild(img, mapContainer);
+            callback(mapContainer);
+        })
+    }
+
+    function generateReport(pdfOptions, processed, callback) {
+        if (processed) {
+            makePDF();
+        } else {
+            processMaps(makePDF);
+        }
+
+        function makePDF() {
+            var pdf = new jsPDF(pdfOptions);
+            var pages = Array.prototype.slice.call(document.querySelectorAll('.page')).reverse();
+
+            window.scrollTo(0, 0);  // fixes a bug in chrome; scrolling the preview iframe distorts the final canvas.
+            function page2pdf(pages) {
+                var page = pages.pop();
+                if (!page) {
+                    pdf.output('dataurlnewwindow');
+                    processed = true;
+                    callback(processed);
+                    return
+                }
+
+                pdf.addHTML(page, 0, 15, {
+                    background: '#fff',
+                    logging: true
+                }, function () {
+                    page2pdf(pages);
+                    pdf.addPage();
+                });
+            }
+
+            page2pdf(pages);
+        }
+    }
+</script>
+</body>
+</html>
