@@ -13,7 +13,7 @@
 <div class="page">
     <div class="header">
         <img src="static/img/logo.png">
-        <h3>Peninsular Florida LCC - Simple Map Viewer</h3>
+        <h3 class="selectableText">Peninsular Florida LCC - Simple Map Viewer</h3>
     </div>
 
     <div id="mapContainer">
@@ -44,10 +44,10 @@
 
     <div class="footer">
         <div>
-            <span>Report generated {{date}}</span>
-            <a href="http://peninsularfloridalcc.org/" target="_blank" class="right">Peninsular Florida LCC</a>
+            <span class="selectableText">Report generated {{date}}</span>
+            <a href="http://peninsularfloridalcc.org/" target="_blank" class="right selectableText">Peninsular Florida LCC</a>
         </div>
-        <a href="{{access_url}}" target="_blank" class="smaller">{{access_url}}</a>
+        <a href="{{access_url}}" target="_blank" class="smaller selectableText">{{access_url}}</a>
     </div>
 </div>
 
@@ -55,7 +55,7 @@
 <div class="page">
     <div class="header">
         <img src="static/img/logo.png">
-        <h3>Peninsular Florida LCC - Simple Map Viewer</h3>
+        <h3 class="selectableText">Peninsular Florida LCC - Simple Map Viewer</h3>
     </div>
 
     <h3 class="filterTitle">Map is showing only those watersheds that meet ALL the following criteria:</h3>
@@ -68,10 +68,10 @@
 
     <div class="footer">
         <div>
-            <span>Report generated {{date}}</span>
-            <a href="http://peninsularfloridalcc.org/" target="_blank" class="right">Peninsular Florida LCC</a>
+            <span class="selectableText">Report generated {{date}}</span>
+            <a href="http://peninsularfloridalcc.org/" target="_blank" class="right selectableText">Peninsular Florida LCC</a>
         </div>
-        <a href="{{access_url}}" target="_blank" class="smaller">{{access_url}}</a>
+        <a href="{{access_url}}" target="_blank" class="smaller selectableText">{{access_url}}</a>
     </div>
 </div>
 {{/joinFilters}}
@@ -79,42 +79,43 @@
 <div class="page">
     <div class="header">
         <img src="static/img/logo.png">
-        <h3>Peninsular Florida LCC - Simple Map Viewer</h3>
+        <h3 class="selectableText">Peninsular Florida LCC - Simple Map Viewer</h3>
     </div>
 
     <div id="dataInfo">
-        <h3>Data access:</h3>
-        <div>
-            You can view and download data used to create this report from the <a href="http://pflcc.databasin.org/">Peninsular
-            Florida Conservation Planning Atlas.</a>
+        <h3 class="selectableText">Data access:</h3>
+        <div class="selectableText">
+            You can view and download data used to create this report from the Peninsular Florida Conservation Planning Atlas:
+            <br>
+            <a href="http://pflcc.databasin.org/" class="selectableText">http://pflcc.databasin.org/</a>
         </div>
-        <p>
-            For more information about the Florida Critical Lands and Waters Identification Project version 3.0, <a
-                href="http://www.fnai.org/clip.cfm">click here.</a>
+        <p class="selectableText">
+            More information about the Florida Critical Lands and Waters Identification Project version 3.0:
+            <br>
+            <a href="http://www.fnai.org/clip.cfm" class="selectableText">http://www.fnai.org/clip.cfm</a>
         </p>
-        <p>
+        <p class="selectableText">
             Priority resources section on the PFLCC web page:
             <br>
-            <a href="http://peninsularfloridalcc.org/page/conservation-targets">http://peninsularfloridalcc.org/page/conservation-targets</a>
+            <a href="http://peninsularfloridalcc.org/page/conservation-targets" class="selectableText">http://peninsularfloridalcc.org/page/conservation-targets</a>
         </p>
-        <p>
+        <p class="selectableText">
             Florida Cooperative Land Cover:
             <br>
-            <a href="http://myfwc.com/research/gis/applications/articles/Cooperative-Land-Cover">http://myfwc.com/research/gis/applications/articles/Cooperative-Land-Cover</a>
+            <a href="http://myfwc.com/research/gis/applications/articles/Cooperative-Land-Cover" class="selectableText">http://myfwc.com/research/gis/applications/articles/Cooperative-Land-Cover</a>
         </p>
-        <p id="mapAttribution">
-            Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS,
-            NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User
-            Community'
+        <p id="mapAttribution" class="selectableText">
+            Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL,
+            Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
         </p>
     </div>
 
     <div class="footer">
         <div>
-            <span>Report generated {{date}}</span>
-            <a href="http://peninsularfloridalcc.org/" target="_blank" class="right">Peninsular Florida LCC</a>
+            <span class="selectableText">Report generated {{date}}</span>
+            <a href="http://peninsularfloridalcc.org/" target="_blank" class="right selectableText">Peninsular Florida LCC</a>
         </div>
-        <a href="{{access_url}}" target="_blank" class="smaller">{{access_url}}</a>
+        <a href="{{access_url}}" target="_blank" class="smaller selectableText">{{access_url}}</a>
     </div>
 </div>
 
@@ -125,17 +126,21 @@
     // get a context, set it to smoothed if it was a 2d context, and return it.
     function getSmoothContext(contextType) {
         var resCtx = oldgetContext.apply(this, arguments);
+
+        function setToFalse(obj, prop) {
+            if (obj[prop] !== undefined) {
+                obj[prop] = false;
+            }
+        }
+
         if (contextType == '2d') {
             setToFalse(resCtx, 'imageSmoothingEnabled');
             setToFalse(resCtx, 'mozImageSmoothingEnabled');
             setToFalse(resCtx, 'oImageSmoothingEnabled');
             setToFalse(resCtx, 'webkitImageSmoothingEnabled');
         }
-        return resCtx;
-    }
 
-    function setToFalse(obj, prop) {
-        if (obj[prop] !== undefined) obj[prop] = false;
+        return resCtx;
     }
 
     // inject new smoothed getContext
@@ -164,16 +169,62 @@
     function processMaps(callback) {
         leafletImage(map, function (err, canvas) {
             var img = document.createElement('img');
-            //var dimensions = map.getSize();
-            //imgRatio = dimensions.x / dimensions.y;
             img.width = canvas.width;
             img.height = canvas.height;
             img.src = canvas.toDataURL();
 
             var mapContainer = map.getContainer();
             mapContainer.parentNode.replaceChild(img, mapContainer);
-            callback(mapContainer);
+            callback();
         })
+    }
+
+    function rgb2hex(rgb) {
+        rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
+        return (rgb && rgb.length === 4) ? "#" +
+        ("0" + parseInt(rgb[1], 10).toString(16)).slice(-2) +
+        ("0" + parseInt(rgb[2], 10).toString(16)).slice(-2) +
+        ("0" + parseInt(rgb[3], 10).toString(16)).slice(-2) : '';
+    }
+    var px2pt = 0.264583 * 72 / 25.4;
+
+    function processTexts(el) {
+        var node, texts = [];
+        var walk = document.createTreeWalker(
+                el,
+                NodeFilter.SHOW_TEXT,
+                {
+                    acceptNode: function (n) {
+                        if (n.parentNode.classList.contains('selectableText')) {
+                        //if (/\bselectableText\b/.test(n.parentNode.className)) {
+                            return NodeFilter.FILTER_ACCEPT;
+                        }
+                        return NodeFilter.FILTER_SKIP;
+                    }
+                },
+                false);
+        var elRect = el.getBoundingClientRect();
+        while (node = walk.nextNode()) {
+            var textContent = node.textContent.trim();
+            if (textContent) {
+                var rect = node.parentNode.getBoundingClientRect();
+                var style = getComputedStyle(node.parentNode);
+                var color = rgb2hex(style.color);
+                texts.push({
+                    text: textContent,
+                    url: node.parentNode.getAttribute('href') || '',
+                    pos: {x: (rect.left - elRect.left) * px2pt, y: (rect.top - elRect.top) * px2pt},
+                    style: {
+                        font: style.font || 'sans-serif',
+                        fontSize: Math.floor(parseInt(style.fontSize.match(/(\d+)/)[1]) * px2pt),
+                        fontStyle: style.fontWeight >= 700 ? 'bold' : 'normal',
+                        color: color
+                    }
+                });
+                node.parentNode.style.color = '#fff';
+            }
+        }
+        return texts;
     }
 
     function generateReport(pdfOptions, processed, callback) {
@@ -197,10 +248,23 @@
                     return
                 }
 
+                var texts = processTexts(page);
+
                 pdf.addHTML(page, 0, 15, {
                     background: '#fff',
-                    logging: true
+                    logging: false
                 }, function () {
+                    texts.forEach(function (t) {
+                        pdf.setFont(t.style.font)
+                                .setTextColor(t.style.color)
+                                .setFontSize(t.style.fontSize)
+                                .setFontStyle(t.style.fontStyle);
+                        if (t.url) {
+                            pdf.textWithLink(t.text, t.pos.x - 35 * (t.pos.x / 612), t.pos.y + 25 * (1 - t.pos.y / 792), {url: t.url});
+                        } else {
+                            pdf.text(t.text, t.pos.x - 55 * (t.pos.x / 612), t.pos.y + 25 * (1 - t.pos.y / 792));
+                        }
+                    });
                     page2pdf(pages);
                     pdf.addPage();
                 });

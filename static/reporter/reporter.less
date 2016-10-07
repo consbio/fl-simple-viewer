@@ -38,33 +38,6 @@
     z-index: 10000;
   }
 
-  .controlButton {
-    position: absolute;
-    top: 20px;
-    color: #000;
-    background: #fff;
-    border-radius: 5px;
-    text-align: center;
-    height: 20px;
-    text-decoration: none;
-    z-index: 10001;
-
-    &.print {
-      right: 60px;
-      width: 50px;
-
-      &.disabled {
-        opacity: 0.65;
-        cursor: not-allowed;
-      }
-    }
-
-    &.close {
-      right: 20px;
-      width: 20px;
-    }
-  }
-
   .preview {
     position: absolute;
     top: 3%;
@@ -72,6 +45,28 @@
     height: 85%;
     width: 80%;
     z-index: 10001;
+
+    .toolbar {
+      width: 9.3in;
+      margin-left: ~"calc((100% - 8.5in) / 2)";
+      padding: 3px;
+
+      .controlButton {
+        color: #000;
+        background: #fff;
+        border-radius: 5px;
+        text-align: center;
+        text-decoration: none;
+
+        &.print {
+
+          &.disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+          }
+        }
+      }
+    }
 
     iframe {
       background-color: #fff;

@@ -44,7 +44,10 @@
         <div id="Header" class="table-row fullwidth">
             <img src="static/img/logo.png" align="left" />
             <h3 class="left">Peninsular Florida LCC - Simple Map Viewer</h3>
-            <button id="PDFButton" class="right">PDF</button>
+            <button id="PDFButton" class="button right">
+                <span class="fa fa-file-pdf-o"></span>
+                Report
+            </button>
             <div class="clear"></div>
         </div>
 
@@ -533,7 +536,7 @@
                     pdfOptions: {
                         orientation: 'p',
                         format: 'letter',
-                        unit: 'px'
+                        unit: 'pt'
                     },
                     copyStyle: true,
                     templateHelpers: { // Handlebars helpers

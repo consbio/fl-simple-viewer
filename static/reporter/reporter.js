@@ -103,11 +103,12 @@ var mapSyncFuncs = {
                     addLayer(l, parent, child);
                 });
             } else if (!layer._path.classList.contains('hidden')) {
-                // TODO: this part is specific to PFLCC and should be fixed for a more generic case
+                //} else if (!/\bhidden\b/.test(layer._path.className)) { // IE does not support classList on svg, so regex is used to test whether the elements has hidden class
                 // main map is using svg, while preview must use canvas in order to use leaflet-image; therefore styles set by CSS must be converted somehow.
                 var layerOptions = layer.options;
 
                 layerOptions['fillOpacity'] = 0.75;
+                //if (/\bselected\b/.test(layer._path.className)) {
                 if (layer._path.classList.contains('selected')) {
                     layerOptions['color'] = '#e6550d';
                     layerOptions['weight'] = 2;
@@ -123,7 +124,7 @@ var mapSyncFuncs = {
         }
     },
     studyArea: function (parent, child, iframe) {
-        // totally irrelevant to this library!
+        // why is this here?
         var tb = {
             west: -90,
             south: 21.94,
@@ -204,10 +205,18 @@ var mapSyncFuncs = {
         curtain.classList.add('curtain');
         container.appendChild(curtain);
 
-        var printButton = document.createElement('a');
-        printButton.href = '#';
-        printButton.innerHTML = 'PDF';
-        printButton.classList.add('print', 'controlButton', 'disabled');
+        var preview = document.createElement('div'),
+            iframe;
+        preview.classList.add('preview');
+        container.appendChild(preview);
+
+        var toolbar = document.createElement('div');
+        toolbar.classList.add('toolbar');
+        preview.appendChild(toolbar);
+
+        var printButton = document.createElement('button');
+        printButton.innerHTML = 'Download PDF';
+        printButton.classList.add('button', 'print', 'controlButton', 'disabled');
         printButton.addEventListener('click', function (e) {
             scrim.style.display = 'block';
             if (!processed) {
@@ -219,21 +228,15 @@ var mapSyncFuncs = {
                 setTimeout(hidePreview, 1000);
             });
         });
-        container.appendChild(printButton);
+        toolbar.appendChild(printButton);
 
-        var closeButton = document.createElement('a');
-        closeButton.href = '#';
+        var closeButton = document.createElement('button');
         closeButton.innerHTML = 'x';
-        closeButton.classList.add('close', 'controlButton');
+        closeButton.classList.add('button', 'close', 'controlButton', 'right');
         closeButton.addEventListener('click', function (e) {
             hidePreview();
         });
-        container.appendChild(closeButton);
-
-        var preview = document.createElement('div'),
-            iframe;
-        preview.classList.add('preview');
-        container.appendChild(preview);
+        toolbar.appendChild(closeButton);
 
         function showPreview() {
             processed = false;
@@ -338,7 +341,7 @@ var mapSyncFuncs = {
             svgEl.setAttribute("version", "1.1");
 
             var defsEl = document.createElement("defs");
-            svgEl.insertBefore(defsEl, svgEl.firstChild); //TODO   .insert("defs", ":first-child")
+            svgEl.insertBefore(defsEl, svgEl.firstChild);
 
             var styleEl = document.createElement("style");
             defsEl.appendChild(styleEl);
