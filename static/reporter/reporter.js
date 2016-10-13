@@ -122,35 +122,6 @@ var mapSyncFuncs = {
                 L.geoJson(layer.toGeoJSON(), {style: layerOptions}).addTo(child);
             }
         }
-    },
-    studyArea: function (parent, child, iframe) {
-        // why is this here?
-        var tb = {
-            west: -90,
-            south: 21.94,
-            east: -78.75,
-            north: 31.95
-        };
-
-        var xRatio = 256 / (tb.east - tb.west);
-        var yRatio = 256 / (tb.south - tb.north);
-
-        var studyAreaBounds = parent.getBounds();
-        var right = xRatio * (studyAreaBounds.getEast() - tb.west);
-        var left = xRatio * (studyAreaBounds.getWest() - tb.west);
-        var top = yRatio * (studyAreaBounds.getNorth() - tb.north);
-        var bottom = yRatio * (studyAreaBounds.getSouth() - tb.north);
-
-        right = right > 256 ? 256 : right;
-        left = left < 0 ? 0 : left;
-        top = top < 0 ? 0 : top;
-        bottom = bottom > 256 ? 256 : bottom;
-
-        var thumbnailBound = iframe.contentDocument.getElementById('studyArea');
-        thumbnailBound.style.top = top + 1;
-        thumbnailBound.style.left = left + 1;
-        thumbnailBound.style.width = right - left - 1;
-        thumbnailBound.style.height = bottom - top - 1;
     }
 };
 
@@ -421,3 +392,168 @@ var mapSyncFuncs = {
         return $;
     };
 })(document);
+
+
+/* Setting up the reporter */
+var xhr = new XMLHttpRequest();
+var reporter;
+
+xhr.open('GET', 'preview.html');
+xhr.onload = function () {
+    if (xhr.status === 200) {
+        reporter = pdfReporter({
+            preview_template: xhr.responseText,
+            pdfOptions: {
+                orientation: 'p',
+                format: 'letter',
+                unit: 'pt'
+            },
+            copyStyle: true,
+            templateHelpers: { // Handlebars helpers
+                joinFilters: function (charts, sliders, options) {
+                    // filters are formed into groups of 3 so each page in the template only shows 3!
+                    var pages = [], filters, i, chartsVoid, pageData = options.data.root;
+
+                    for (i = 0; i < charts.length; i += 3) {
+                        filters = charts.slice(i, i + 3);
+                        if (i + 3 >= charts.length) {
+                            /* determines how much space is left on the last chart page;
+                             each chart is roughly equivalent to 3 sliders;
+                             so the remainder of the last page can be filled with sliders. */
+                            chartsVoid = 3 - filters.length;
+                            filters = filters.concat(sliders.slice(0, chartsVoid * 3));
+                            sliders = sliders.slice(chartsVoid * 3);
+                        }
+                        pageData['filters'] = filters;
+                        pages.push(options.fn(pageData));
+                    }
+
+                    for (i = 0; i < sliders.length; i += 9) {
+                        pageData['filters'] = sliders.slice(i, i + 9);
+                        pages.push(options.fn(pageData));
+                    }
+
+                    return pages;
+                }
+            },
+            data: {
+                dom: [
+                    {
+                        tmpl: 'legend',
+                        query: '#Legend',
+                        postProcess: function (processedEl, originalEl) {
+                            for (var i = processedEl.children.length; i--;) {
+                                if (processedEl.children[i].getAttribute('title') == 'Layer transparency') {
+                                    processedEl.removeChild(processedEl.children[i]);
+                                }
+                            }
+                            return processedEl
+                        }
+                    },
+                    {
+                        tmpl: 'charts',
+                        query: function () {
+                            var headers = document.querySelectorAll('.filtered');
+                            var filters = [];
+                            for (var i = 0; i < headers.length; i++) {
+                                filters.push(headers[i].parentElement);
+                            }
+                            return filters;
+                        },
+                        postProcess: function (processedEl, originalEl) {
+                            var filterDiv = document.createElement('div');
+                            filterDiv.classList.add('chart');
+
+                            processedEl.querySelector('.filter-reset').remove();
+
+                            // Replacing radio containers with label of selected input
+                            var radioContainers = processedEl.querySelectorAll('.filter-radio-container');
+                            for (var i = 0; i < radioContainers.length; i++) {
+                                radioContainers[i].parentElement.replaceChild(
+                                    radioContainers[i].querySelector(':checked').parentElement.querySelector('label'),
+                                    radioContainers[i]
+                                );
+                            }
+                            filterDiv.appendChild(processedEl);
+
+                            var tooltipDiv = document.createElement('div');
+                            tooltipDiv.classList.add('tooltip');
+                            tooltipDiv.innerHTML = fieldTooltips[d3.select(originalEl).data()[0]]; // tooltips are added dynamically by d3
+                            filterDiv.appendChild(tooltipDiv);
+
+                            return filterDiv;
+                        }
+                    }
+                ],
+                // maps is a collection of leaflet maps in the preview template to process or sync with a map in the main page
+                // tmplMap and parentMap (optional) are name of variable in the template and the main page respectively
+                maps: [
+                    {
+                        tmplMap: 'map',
+                        parentMap: 'map',
+                        sync: ['zoom', 'center', 'layers']
+                    }
+                ],
+                misc: [
+                    {
+                        tmpl: 'sliders',
+                        value: function () {
+                            var filteredSliders = document.querySelectorAll('[id^=Filter-]:not(#Filter-slr):not(#Filter-dev)');
+                            var sliders = [];
+
+                            for (var i = 0; i < filteredSliders.length; i++) {
+                                var inputEl = filteredSliders[i].querySelector('input');
+                                if (inputEl.value > 0) {
+                                    var filterContent = '';
+
+                                    filterContent += '<div class="slider">\
+                                                    <section><b>' + filteredSliders[i].querySelector('h4').innerHTML.replace('[remove]', '') + ':</b>\
+                                                    &nbsp;<i>At least ' + inputEl.value + ' ha' + '</i></section>';
+
+                                    if (filteredSliders[i].parentElement.parentElement.id === 'LandUseFilterList') {
+                                        filterContent += '<div class="tooltip">' + landUseTooltips[filteredSliders[i].id.slice(-2)] + '</div>';
+                                    }
+
+                                    filterContent += '</div>';
+
+                                    sliders.push(filterContent);
+                                }
+                            }
+
+                            return sliders;
+                        }
+                    },
+                    {
+                        tmpl: 'date',
+                        value: function () {
+                            var monthNames = [
+                                'January', 'February', 'March',
+                                'April', 'May', 'June', 'July',
+                                'August', 'September', 'October',
+                                'November', 'December'
+                            ];
+                            var date = new Date();
+                            return monthNames[date.getMonth()] + ' ' + date.getDate() + ', ' + date.getFullYear();
+                        }
+                    },
+                    {
+                        tmpl: 'access_url',
+                        value: function () {
+                            return 'http://viewer.apps.pflcc.databasin.org/v1/index.html?filter=1:2,3;5:102&extent=xmin,ymin,xmax,ymax';
+                        }
+                    }
+                ]
+            }
+        });
+
+        document.getElementById('PDFButton').onclick = reporter.showPreview;
+    } else {
+        console.log(new Error(xhr.statusText));
+    }
+};
+
+xhr.onerror = function () {
+    new Error('Network Error');
+};
+
+xhr.send();

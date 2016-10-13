@@ -1,10 +1,10 @@
 <html>
 <head>
-    <script type="application/javascript" src="static/reporter/deps/leaflet/leaflet-src.js"></script>
+    <script type="application/javascript" src="static/reporter/deps/leaflet/leaflet.js"></script>
     <link rel="stylesheet" type="text/css" href="static/reporter/deps/leaflet/leaflet.css">
     <script type="application/javascript" src="static/reporter/deps/leaflet-image/leaflet-image.js"></script>
 
-    <script type="application/javascript" src="static/reporter/deps/jspdf/jspdf.debug.js"></script>
+    <script type="application/javascript" src="static/reporter/deps/jspdf/jspdf.min.js"></script>
 
     <link rel="stylesheet" type="text/css" href="static/src/pdf.css">
 </head>
@@ -152,12 +152,43 @@
         attributionControl: false
     });
 
+    function updateStudyArea() {
+        var tb = {
+            west: -90,
+            south: 21.94,
+            east: -78.75,
+            north: 31.95
+        };
+
+        var xRatio = 256 / (tb.east - tb.west);
+        var yRatio = 256 / (tb.south - tb.north);
+
+        var studyAreaBounds = map.getBounds();
+        var right = xRatio * (studyAreaBounds.getEast() - tb.west);
+        var left = xRatio * (studyAreaBounds.getWest() - tb.west);
+        var top = yRatio * (studyAreaBounds.getNorth() - tb.north);
+        var bottom = yRatio * (studyAreaBounds.getSouth() - tb.north);
+
+        right = right > 256 ? 256 : right;
+        left = left < 0 ? 0 : left;
+        top = top < 0 ? 0 : top;
+        bottom = bottom > 256 ? 256 : bottom;
+
+        var thumbnailBound = document.getElementById('studyArea');
+        thumbnailBound.style.top = top + 1;
+        thumbnailBound.style.left = left + 1;
+        thumbnailBound.style.width = right - left - 1;
+        thumbnailBound.style.height = bottom - top - 1;
+    }
+
     map.on('moveend', function (e) {
         var bounds = map.getBounds();
         document.getElementById('boundNorth').innerHTML = Math.round(bounds.getNorth() * 100) / 100 + '&deg; N';
         document.getElementById('boundSouth').innerHTML = Math.round(bounds.getSouth() * 100) / 100 + '&deg; S';
         document.getElementById('boundEast').innerHTML = Math.round(bounds.getEast() * 100) / 100 + '&deg; E';
         document.getElementById('boundWest').innerHTML = Math.round(bounds.getWest() * 100) / 100 + '&deg; W';
+
+        updateStudyArea();
     });
 
     L.tileLayer('//{s}.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
