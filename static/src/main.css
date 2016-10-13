@@ -221,7 +221,12 @@ input[type=range]::-ms-tooltip {
     background-color: #286090;
     border-color: #204d74;
 }
-
+.button.button-default {
+    color: #333;
+}
+.button.button-default:hover {
+    background-color: #e6e6e6;
+}
 
 .button-close {
     padding: 3px;

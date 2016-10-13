@@ -187,7 +187,7 @@ var mapSyncFuncs = {
 
         var printButton = document.createElement('button');
         printButton.innerHTML = 'Download PDF';
-        printButton.classList.add('button', 'print', 'controlButton', 'disabled');
+        printButton.classList.add('button', 'print', 'button-default', 'disabled');
         printButton.addEventListener('click', function (e) {
             scrim.style.display = 'block';
             if (!processed) {
@@ -203,7 +203,7 @@ var mapSyncFuncs = {
 
         var closeButton = document.createElement('button');
         closeButton.innerHTML = 'x';
-        closeButton.classList.add('button', 'close', 'controlButton', 'right');
+        closeButton.classList.add('button', 'close', 'button-default', 'right');
         closeButton.addEventListener('click', function (e) {
             hidePreview();
         });
