@@ -273,7 +273,7 @@
             function page2pdf(pages) {
                 var page = pages.pop();
                 if (!page) {
-                    pdf.output('dataurlnewwindow');
+                    pdf.save('report.pdf');
                     processed = true;
                     callback(processed);
                     return

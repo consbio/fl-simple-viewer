@@ -2,6 +2,7 @@ syntax: glob
 .git/*
 .gitignore
 .idea
+*.pyc
 media/*
 features/*
 tools/deploy_settings.py
