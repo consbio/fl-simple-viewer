@@ -227,6 +227,13 @@ input[type=range]::-ms-tooltip {
 .button.button-default:hover {
     background-color: #e6e6e6;
 }
+.button.disabled {
+    color: #bbb;
+}
+.button.disabled:hover {
+    color: #bbb;
+    cursor: not-allowed;
+}
 
 .button-close {
     padding: 3px;
@@ -1020,4 +1027,40 @@ h4:hover .fa-map {
 #LTList li {
     font-size: 0.9em;
     padding: 0 0 8px 0;
+}
+
+#pdfSupportTooltipContainer {
+    display: none;
+    position: absolute;
+    top: 40px;
+    right: 10px;
+    z-index: 10000;
+}
+
+#pdfSupportTooltipContainer .content {
+    width: 220px;
+    background-color: #fff;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 12px;
+    color: #666;
+}
+
+#pdfSupportTooltipContainer .pointer {
+    position: absolute;
+    right: 25px;
+    margin-top: -8px;
+    width: 0;
+    height: 0;
+    border-bottom: 10px solid #fff;
+    border-right: 10px solid transparent;
+    border-left: 10px solid transparent;
+}
+
+#pdfSupportTooltipContainer .bridge {
+    position: absolute;
+    top: -10px;
+    height: 10px;
+    width: 230px;
 }

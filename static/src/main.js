@@ -62,6 +62,18 @@ if (L.Browser.ielt9 || (L.Browser.ie && ((/MSIE 9/i).test(navigator.userAgent) |
     throw 'UnsupportedBrowser';
 }
 
+if (L.Browser.ie) {
+    d3.select('#PDFButton').property('disabled', 'disabled').classed('disabled', true).on('mouseover', function() {
+        d3.select('#pdfSupportTooltipContainer').style('display', 'block');
+    }).on('mouseout', function() {
+        d3.select('#pdfSupportTooltipContainer').style('display', 'none');
+    });
+    d3.select('#pdfSupportTooltipContainer').on('mouseover', function() {
+        d3.select('#pdfSupportTooltipContainer').style('display', 'block');
+    }).on('mouseout', function() {
+        d3.select('#pdfSupportTooltipContainer').style('display', 'none');
+    });
+}
 
 
 
