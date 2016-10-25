@@ -546,7 +546,11 @@ xhr.onload = function () {
             }
         });
 
-        document.getElementById('PDFButton').onclick = reporter.showPreview;
+
+        var pdfButton = document.getElementById('PDFButton');
+        if (pdfButton.className.indexOf('disabled') < 0) {
+            document.getElementById('PDFButton').onclick = reporter.showPreview;
+        }
     } else {
         console.log(new Error(xhr.statusText));
     }
