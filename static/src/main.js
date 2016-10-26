@@ -546,8 +546,6 @@ function load() {
     // Species
     var sppGroupsList = d3.keys(sppGroups);
 
-    var itemsList = d3.select('#SppFilter .slider-list');
-
     d3.select('#SppFilter > div').selectAll('div')
         .data(sppGroupsList).enter()
         .append('div')
@@ -563,42 +561,7 @@ function load() {
                 .html(function(d, i){ return (i === 0)? 'choose a species': species[d].split('|')[0]})
                 .classed('quiet italic', function(d, i){ return i === 0 });
 
-            selector.on('change', function() {
-                var self = d3.select(this);
-                var spp = self.property('value');
-                if (spp === '-') { return }
-
-                // prevent from duplicate add
-                if (dimensions[spp] != null) { return; }
-
-                // TODO: find a nicer UI for this
-                if (d3.keys(dimensions).length >= 32) {
-                    alert('We are sorry, there is a limit to the number of species that you can combine.  Please remove ' +
-                        'a species to make room for another');
-                    return;
-                }
-
-                var dimension = cf.dimension(function(d){ return d[spp] });
-                dimension.id = spp;
-                dimensions[spp] = dimension;
-                createSliderFilter(
-                    itemsList.append('li').attr('id', 'Filter-' + spp),
-                    dimension,
-                    species[spp].split('|')[0],
-                    null,
-                    function(){
-                        d3.select('#Filter-' + spp).remove();
-                        d3.select('option[value="' + spp + '"]').property('disabled', false);  // TODO: optimize select
-                        dimensions[spp].dispose();
-                        delete dimensions[spp];
-                        updateTabIndicator(dimension.id, false);
-                        dc.redrawAll();
-                        updateMap();
-                    }
-                );
-                self.select('option[value="' + spp + '"]').property('disabled', true);
-                self.property('value', '-');
-            })
+            selector.on('change', speciesSelect);
         });
 
     // Land use
@@ -611,8 +574,48 @@ function load() {
             var label = landUseLabels[d];
             createSliderFilter(node.append('li').attr('id', 'Filter-' + d), dimension, label, landUseTooltips[d], null);
         });
+
+    restorePage(window.location.href);
 }
 
+function speciesSelect() {
+    var self = d3.select(this);
+    var spp = self.property('value');
+    if (spp === '-') { return }
+
+    var itemsList = d3.select('#SppFilter .slider-list');
+
+    // prevent from duplicate add
+    if (dimensions[spp] != null) { return; }
+
+    // TODO: find a nicer UI for this
+    if (d3.keys(dimensions).length >= 32) {
+        alert('We are sorry, there is a limit to the number of species that you can combine.  Please remove ' +
+            'a species to make room for another');
+        return;
+    }
+
+    var dimension = cf.dimension(function(d){ return d[spp] });
+    dimension.id = spp;
+    dimensions[spp] = dimension;
+    createSliderFilter(
+        itemsList.append('li').attr('id', 'Filter-' + spp),
+        dimension,
+        species[spp].split('|')[0],
+        null,
+        function(){
+            d3.select('#Filter-' + spp).remove();
+            d3.select('option[value="' + spp + '"]').property('disabled', false);  // TODO: optimize select
+            dimensions[spp].dispose();
+            delete dimensions[spp];
+            updateTabIndicator(dimension.id, false);
+            dc.redrawAll();
+            updateMap();
+        }
+    );
+    self.select('option[value="' + spp + '"]').property('disabled', true);
+    self.property('value', '-');
+}
 
 function createSliderFilter(node, dimension, label, tooltip, removeCallback) {
     var extent = d3.extent(_.map(dimension.group().all(), 'key')); // TODO: round ranges to nicer values
@@ -718,7 +721,7 @@ function updateSliderFilter(dimension, value, max, label) {
 
 function createFilterChart(node, dimension, header, dimensionName) {
     var labels = barLabels(dimension);
-    createCountChart(node, dimensions[dimension], {
+    return createCountChart(node, dimensions[dimension], {
         barHeight: barHeight,
         colors: filterColors,
         label: function(g) { return labels[g.key]},
@@ -1430,4 +1433,178 @@ function updateNodeVisibility(visibleNodes, hiddenNodes) {
         });
     }
 
+}
+
+var filterCategories = {
+    'FilterChart-priority': 'p',
+    'FilterChart-clip': 'p',
+    'FilterChart-bio': 'p',
+    'FilterChart-land': 'p',
+    'FilterChart-water': 'p',
+    'FilterChart-slr': 't',
+    'FilterChart-dev': 't'
+};
+
+var slrRadioOrder = ['slr1', 'slr2', 'slr3'];
+var devRadioOrder = ['devCur', 'dev2020', 'dev2040', 'dev2060'];
+
+function getStatusUrl(){
+    /* Returns a query string in form of [category][chartId]=[level,][comma-separated-active-filters]
+    For example `p2=3,4&t8=slr2,1,3` means following filters are active:
+        - Priority filter with id=2 (i.e. clip), rows 3 & 4
+        - Threat filter slr, scenario 2 (i.e. 2 meters), rows 1 & 3
+    * */
+    var q = '?';
+
+    dc.chartRegistry.list().forEach(function(c){
+        var anchorName = c.anchorName();    // is in form of FilterChart-[category]
+        var prefix = filterCategories[anchorName];  // returns p for priority filters and t for threats
+
+        if (!prefix || !c.filters().length) {
+            return
+        }
+
+        var cf = '';
+        if (prefix === 't') {
+            var threatType = anchorName.search('-') + 1;
+            var level = threatLevel[anchorName.substr(threatType)];
+            cf += level + ',';
+        }
+        cf += c.filters().join(',');
+        var cid = c.chartID().toString();
+        q += prefix +  cid + '=' + cf + '&';
+    });
+
+    for(var f in activeFiltersByTab['LandUseFilter']) {
+        if (activeFiltersByTab['LandUseFilter'][f]) {
+            q += 'l' + f.substr(2) + '=' + document.querySelector('#Filter-' + f.substr(2) + ' input.slider-value').value + '&';
+        }
+    }
+
+    for(var f in activeFiltersByTab['SppFilter']) {
+        if (activeFiltersByTab['SppFilter'][f]) {
+            var v = document.querySelector('#Filter-' + f + ' input.slider-value').value;
+            if (v > 0) {
+                q += 's' + f + '=' + v + '&';
+            }
+        }
+    }
+
+    var mapCenter = map.getCenter();
+    q += 'm=' + mapCenter.lat + ',' + mapCenter.lng + ',' + map.getZoom();
+
+    return window.location.origin + q;
+}
+
+
+function restorePage(url) {
+    var q = /\?(.+)/.exec(url.replace(/&$/, ''));
+    if (!q) {
+        return
+    }
+
+    // clear all charts - just to be sure!
+    dc.chartRegistry.list().forEach(function(chart) {
+        chart.filterAll();
+    });
+
+    var filters = JSON.parse('{"' + decodeURI(q[1].replace(/&/g, "\",\"").replace(/=/g,"\":\"")) + '"}');
+    var chartList = dc.chartRegistry.list();
+
+    for (var i in filters) {
+        var prefix = i[0];
+        var activeFilter = filters[i];
+        var k = i.substr(1);
+        var chart = chartList[k - 1];
+        var sectionEl;
+        var header, section;
+
+        if (prefix === 'm') {
+            // m is for map!
+            var mapStatus = activeFilter.split(',');
+            map.panTo(L.latLng(mapStatus[0], mapStatus[1]));
+            map.setZoom(mapStatus[2]);
+        }else if (prefix === 'p') {
+            selectTab(d3.select('#MainSidebarHeader li[data-tab=PriorityFilter]'));
+            sectionEl = chart.root().node().parentElement.parentElement;
+            section = d3.select(sectionEl);
+            header = d3.select(sectionEl.querySelector('h4'));
+
+            initializeFilterCharts(chart, activeFilter.split(','), section, header);
+        } else if (prefix === 't') {
+            // first we activate the threat tab
+            selectTab(d3.select('#MainSidebarHeader li[data-tab=ThreatsFilter]'));
+
+            var firstComma = activeFilter.search(',');
+            var threatType = activeFilter.substr(0, firstComma);
+            activeFilter = activeFilter.substr(firstComma + 1);
+            var filterName = threatType.substr(0, 3);
+            var headerEl = document.querySelector('#Filter-' + filterName + ' h4');
+            header = d3.select(headerEl);
+            section = d3.select(headerEl.parentElement);
+            var newChart = updateThreatChart(threatType, filterName, header);
+            if (newChart) {
+                chart = newChart;
+                // newChart means the active filter is under a different scenario than the default one; so let's check the correct radio input
+                headerEl.parentElement.querySelectorAll('.radio-container input:checked').checked = false;
+                headerEl.parentElement.querySelectorAll('.radio-container input')[window[filterName + 'RadioOrder'].indexOf(threatType)].checked = true;
+            }
+
+            initializeFilterCharts(chart, activeFilter.split(','), section, header);
+        } else if (prefix === 'l') {
+            var filterNum = i.substr(1);
+            selectTab(d3.select('#MainSidebarHeader li[data-tab=LandUseFilter]'));
+            initializeSliderCharts(filterNum, activeFilter, 'lu' + filterNum);
+        } else if (prefix === 's') {
+            selectTab(d3.select('#MainSidebarHeader li[data-tab=SppFilter]'));
+            var speciesName = i.substr(1);
+            var selectEl = document.querySelector('#SppFilter option[value=' + speciesName + ']').parentElement;
+            selectEl.value = speciesName;
+            speciesSelect.bind(selectEl)();
+            initializeSliderCharts(speciesName, activeFilter, speciesName);
+        }
+    }
+    selectTab(d3.select('#MainSidebarHeader li[data-tab=Intro]'));
+    dc.redrawAll();
+    updateMap();
+}
+
+function initializeFilterCharts(chart, values, section, header) {
+    values.forEach(function (v) {
+        chart.filter(v);
+    });
+
+    section.classed('expanded', true);
+    section.select('h4 + div').classed('hidden', false);
+    header.select('.fa-caret-right').classed('fa-caret-right', false).classed('fa-caret-down', true);
+}
+
+
+function initializeSliderCharts(filterName, value, dim) {
+    var sliderInputs = document.querySelectorAll('#Filter-' + filterName + ' input');
+    for (var s = sliderInputs.length; s; s--) {
+        sliderInputs[s-1].value = value;
+    }
+    dimensions[dim].filterRange([value, document.querySelector('#Filter-' + filterName + ' input[type=range]').getAttribute('max') + 1]);
+    updateTabIndicator(dim, true);
+}
+
+
+function updateThreatChart(level, d, header){
+    var threat = level.slice(0, 3);
+    var curLevel = threatLevel[threat];
+
+    if (level === curLevel) return;
+
+    var chartID = 'FilterChart-' + threat;
+    var chart = _.find(dc.chartRegistry.list(), function(d){ return d.root().node().id === chartID });
+
+    // recreate chart
+    dc.deregisterChart(chart);  // have to deregister manually, otherwise it sticks around
+    var chartNode = d3.select(chart.root().node());
+    chartNode.empty();
+    chart = createFilterChart(chartNode, level, header, fieldLabels[d] + ': ' + fieldLabels[level]);
+
+    threatLevel[threat] = level;
+    return chart
 }

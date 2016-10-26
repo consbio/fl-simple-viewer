@@ -538,9 +538,7 @@ xhr.onload = function () {
                     },
                     {
                         tmpl: 'access_url',
-                        value: function () {
-                            return 'http://viewer.apps.pflcc.databasin.org/v1/index.html?filter=1:2,3;5:102&extent=xmin,ymin,xmax,ymax';
-                        }
+                        value: getStatusUrl
                     }
                 ]
             }
