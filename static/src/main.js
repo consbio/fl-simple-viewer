@@ -1493,7 +1493,7 @@ function getStatusUrl(){
     var mapCenter = map.getCenter();
     q += 'm=' + mapCenter.lat + ',' + mapCenter.lng + ',' + map.getZoom();
 
-    return window.location.origin + q;
+    return window.location.origin + window.location.pathname + q;
 }
 
 
