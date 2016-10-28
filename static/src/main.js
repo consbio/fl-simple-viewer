@@ -576,6 +576,9 @@ function load() {
         });
 
     restorePage(window.location.href);
+    window.onclick = function() {
+        document.getElementById('sharePageContainer').style.display = 'none';
+    };
 }
 
 function speciesSelect() {
@@ -1449,24 +1452,16 @@ var slrRadioOrder = ['slr1', 'slr2', 'slr3'];
 var devRadioOrder = ['devCur', 'dev2020', 'dev2040', 'dev2060'];
 
 
-d3.select('#sharePageButton').on('mouseover', function() {
-    d3.select('#sharePageContainer').style('display', 'block');
-}).on('mouseout', function() {
-    d3.select('#sharePageContainer').style('display', 'none');
-});
-d3.select('#sharePageContainer').on('mouseover', function() {
-    d3.select('#sharePageContainer').style('display', 'block');
-}).on('mouseout', function() {
-    d3.select('#sharePageContainer').style('display', 'none');
-});
-
-function shareUrl(el) {
+d3.select('#sharePageButton').on('click', function() {
+    d3.event.stopPropagation();
     var url = getStatusUrl();
-    var urlInput = el.nextElementSibling;
+    var sharePageContainer = document.getElementById('sharePageContainer');
+    var urlInput = sharePageContainer.querySelector('input');
     urlInput.value = url;
+    sharePageContainer.style.display = 'block';
     urlInput.focus();
     urlInput.select();
-}
+});
 
 function getStatusUrl() {
     /* Returns a query string in form of [category][chartId]=[level,][comma-separated-active-filters]
