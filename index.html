@@ -38,7 +38,17 @@
         <div class="spinner" style="width:100px;height:100px;background-size:100px;"></div>
     </div>
 
-    <div id="pdfSupportTooltipContainer">
+    <div id="sharePageContainer" class="tooltipTopRight">
+        <div class="bridge"></div>
+        <div class="pointer"></div>
+        <div class="content">
+            <a class="button button-default" onclick="shareUrl(this)">Get url</a>
+            <input type="url" readonly="readonly"/>
+            <div style="margin-top: 5px;">Press "Get url" and use Ctrl+C (Cmd+C on Mac) to copy the url.</div>
+        </div>
+    </div>
+
+    <div id="pdfSupportTooltipContainer" class="tooltipTopRight">
         <div class="bridge"></div>
         <div class="pointer"></div>
         <div class="content">
@@ -55,9 +65,8 @@
                 <span class="fa fa-file-pdf-o"></span>
                 Report
             </button>
-            <button id="StatusUrlButton" class="button button-default right" onclick="console.log(getStatusUrl())">
-                <span class="fa fa-link"></span>
-                Generate URL
+            <button id="sharePageButton" class="button button-default right">
+                <span class="fa fa-share-alt"></span>&nbsp;Share
             </button>
             <div class="clear"></div>
         </div>

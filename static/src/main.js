@@ -1448,7 +1448,27 @@ var filterCategories = {
 var slrRadioOrder = ['slr1', 'slr2', 'slr3'];
 var devRadioOrder = ['devCur', 'dev2020', 'dev2040', 'dev2060'];
 
-function getStatusUrl(){
+
+d3.select('#sharePageButton').on('mouseover', function() {
+    d3.select('#sharePageContainer').style('display', 'block');
+}).on('mouseout', function() {
+    d3.select('#sharePageContainer').style('display', 'none');
+});
+d3.select('#sharePageContainer').on('mouseover', function() {
+    d3.select('#sharePageContainer').style('display', 'block');
+}).on('mouseout', function() {
+    d3.select('#sharePageContainer').style('display', 'none');
+});
+
+function shareUrl(el) {
+    var url = getStatusUrl();
+    var urlInput = el.nextElementSibling;
+    urlInput.value = url;
+    urlInput.focus();
+    urlInput.select();
+}
+
+function getStatusUrl() {
     /* Returns a query string in form of [category][chartId]=[level,][comma-separated-active-filters]
     For example `p2=3,4&t8=slr2,1,3` means following filters are active:
         - Priority filter with id=2 (i.e. clip), rows 3 & 4
@@ -1491,7 +1511,7 @@ function getStatusUrl(){
     }
 
     var mapCenter = map.getCenter();
-    q += 'm=' + mapCenter.lat + ',' + mapCenter.lng + ',' + map.getZoom();
+    q += 'm=' + Math.round(mapCenter.lat * 100000) / 100000  + ',' + Math.round(mapCenter.lng * 100000) / 100000 + ',' + map.getZoom();
 
     return window.location.origin + window.location.pathname + q;
 }
@@ -1522,9 +1542,7 @@ function restorePage(url) {
         if (prefix === 'm') {
             // m is for map!
             var mapStatus = activeFilter.split(',');
-            map.panTo(L.latLng(mapStatus[0], mapStatus[1]));
-            map.setZoom(mapStatus[2]);
-        }else if (prefix === 'p') {
+        } else if (prefix === 'p') {
             selectTab(d3.select('#MainSidebarHeader li[data-tab=PriorityFilter]'));
             sectionEl = chart.root().node().parentElement.parentElement;
             section = d3.select(sectionEl);
@@ -1567,6 +1585,9 @@ function restorePage(url) {
     selectTab(d3.select('#MainSidebarHeader li[data-tab=Intro]'));
     dc.redrawAll();
     updateMap();
+    if (mapStatus) {
+        map.setView(L.latLng(mapStatus[0], mapStatus[1]), mapStatus[2]);
+    }
 }
 
 function initializeFilterCharts(chart, values, section, header) {
@@ -1590,7 +1611,7 @@ function initializeSliderCharts(filterName, value, dim) {
 }
 
 
-function updateThreatChart(level, d, header){
+function updateThreatChart(level, d, header) {
     var threat = level.slice(0, 3);
     var curLevel = threatLevel[threat];
 
