@@ -1459,7 +1459,6 @@ d3.select('#sharePageButton').on('click', function() {
     var urlInput = sharePageContainer.querySelector('input');
     urlInput.value = url;
     sharePageContainer.style.display = 'block';
-    urlInput.focus();
     urlInput.select();
 });
 

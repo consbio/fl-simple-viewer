@@ -1071,6 +1071,11 @@ h4:hover .fa-map {
     right: 60px;
 }
 
+#sharePageContainer .content {
+    right: 60px;
+    width: 330px;
+}
+
 #pdfSupportTooltipContainer {
     right: 10px;
 }
