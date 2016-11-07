@@ -47,7 +47,7 @@
             <span class="selectableText">Report generated {{date}}</span>
             <a href="http://peninsularfloridalcc.org/" target="_blank" class="right selectableText">Peninsular Florida LCC</a>
         </div>
-        <a href="{{access_url}}" target="_blank" class="smaller selectableText">{{access_url}}</a>
+        <a href="{{access_url}}" target="_blank" class="smaller selectableText accessUrl">{{access_url}}</a>
     </div>
 </div>
 
@@ -71,7 +71,7 @@
             <span class="selectableText">Report generated {{date}}</span>
             <a href="http://peninsularfloridalcc.org/" target="_blank" class="right selectableText">Peninsular Florida LCC</a>
         </div>
-        <a href="{{access_url}}" target="_blank" class="smaller selectableText">{{access_url}}</a>
+        <a href="{{access_url}}" target="_blank" class="smaller selectableText accessUrl">{{access_url}}</a>
     </div>
 </div>
 {{/joinFilters}}
@@ -115,7 +115,7 @@
             <span class="selectableText">Report generated {{date}}</span>
             <a href="http://peninsularfloridalcc.org/" target="_blank" class="right selectableText">Peninsular Florida LCC</a>
         </div>
-        <a href="{{access_url}}" target="_blank" class="smaller selectableText">{{access_url}}</a>
+        <a href="{{access_url}}" target="_blank" class="smaller selectableText accessUrl">{{access_url}}</a>
     </div>
 </div>
 
@@ -181,6 +181,18 @@
         thumbnailBound.style.height = bottom - top - 1;
     }
 
+    function updateAccessUrl() {
+        var accessUrls = document.querySelectorAll('.accessUrl');
+        var oldUrl = accessUrls[0].innerText;
+        var newUrl = oldUrl.replace(/(&|\?)m=(.*?)(&|$)/, function(match, p1, p2, p3, offset, string) {
+            var c = map.getCenter();
+            return p1 + 'm=' + Math.round(c.lat * 100000) / 100000  + ',' + Math.round(c.lng * 100000) / 100000 + ',' + map.getZoom() + p3;
+        });
+        for (var n = accessUrls.length; n; n--) {
+            accessUrls[n-1].innerText = accessUrls[n-1].href = newUrl;
+        }
+    }
+
     map.on('moveend', function (e) {
         var bounds = map.getBounds();
         document.getElementById('boundNorth').innerHTML = Math.round(bounds.getNorth() * 100) / 100 + '&deg; N';
@@ -189,6 +201,7 @@
         document.getElementById('boundWest').innerHTML = Math.round(bounds.getWest() * 100) / 100 + '&deg; W';
 
         updateStudyArea();
+        updateAccessUrl();
     });
 
     L.tileLayer('//{s}.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
