@@ -85,12 +85,15 @@ function getStyles(doc) {
 var mapSyncFuncs = {
     // each function get a parent and child, both instances of Leaflet.map
     zoom: function (parent, child) {
+        console.log('Syncing zoom', parent, child);
         child.setZoom(parent.getZoom());
     },
     center: function (parent, child) {
+        console.log('Syncing center', parent, child);
         child.panTo(parent.getCenter());
     },
     layers: function (parent, child) {
+        console.log('Syncing layers', parent, child);
         parent.eachLayer(function (layer) {
             if (layer.toGeoJSON) {
                 addLayer(layer, parent, child);
@@ -188,17 +191,6 @@ var mapSyncFuncs = {
         var printButton = document.createElement('button');
         printButton.innerHTML = 'Download PDF';
         printButton.classList.add('button', 'print', 'button-default', 'disabled');
-        printButton.addEventListener('click', function (e) {
-            scrim.style.display = 'block';
-            if (!processed) {
-                processForms();
-            }
-            iframe.contentWindow.generateReport(options.pdfOptions, processed, function (processSuccessful) {
-                processed = processSuccessful;
-                scrim.style.display = 'none';
-                setTimeout(hidePreview, 1000);
-            });
-        });
         toolbar.appendChild(printButton);
 
         var closeButton = document.createElement('button');
@@ -214,6 +206,26 @@ var mapSyncFuncs = {
             printButton.classList.add('disabled');
             iframe = document.createElement('iframe');
             preview.appendChild(iframe);
+            iframe.onload = function () {
+                console.log('iframe is loaded');
+                syncMaps();
+
+                printButton.addEventListener('click', function (e) {
+                    scrim.style.display = 'block';
+                    if (!processed) {
+                        processForms();
+                    }
+                    iframe.contentWindow.generateReport(options.pdfOptions, processed, function (processSuccessful) {
+                        processed = processSuccessful;
+                        scrim.style.display = 'none';
+                        setTimeout(hidePreview, 1000);
+                    });
+                });
+                printButton.classList.remove('disabled');
+
+                scrim.style.display = 'none';
+            };
+            console.log('iframe appended');
             processStart();
             container.classList.add('active');
             scrim.style.display = 'block';
@@ -234,15 +246,12 @@ var mapSyncFuncs = {
         }
 
         function processEnd() {
+            console.log('# of active processes', activeProcesses);
             if (!--activeProcesses) {
                 iframe.contentWindow.document.open('text/html', 'replace');
                 iframe.contentWindow.document.write(template(tmplData));
                 iframe.contentWindow.document.close();
-                iframe.onload = function () {
-                    syncMaps();
-                    printButton.classList.remove('disabled');
-                    scrim.style.display = 'none';
-                };
+                console.log('iframe is loading...');
             }
         }
 

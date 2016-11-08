@@ -145,12 +145,14 @@
 
     // inject new smoothed getContext
     HTMLCanvasElement.prototype.getContext = getSmoothContext;
+    console.log('HTMLCanvasElement is modified');
 
     var map = L.map(document.getElementById('map'), {
         maxZoom: 12,
         preferCanvas: true,
         attributionControl: false
     });
+    console.log('map is initialized');
 
     function updateStudyArea() {
         var tb = {
@@ -203,12 +205,14 @@
         updateStudyArea();
         updateAccessUrl();
     });
-
+    console.log('map moveend event is added');
+    
     L.tileLayer('//{s}.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
         subdomains: ['server', 'services'],
         maxZoom: 10,
         minZoom: 2
     }).addTo(map);
+    console.log('Basemap is added to the map');
 
     function processMaps(callback) {
         leafletImage(map, function (err, canvas) {
@@ -317,6 +321,7 @@
             page2pdf(pages);
         }
     }
+    console.log('All functions are ready');
 </script>
 </body>
 </html>
