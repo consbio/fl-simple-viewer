@@ -1,12 +1,6 @@
 <html>
 <head>
-    <script type="application/javascript" src="static/reporter/deps/leaflet/leaflet.js"></script>
-    <link rel="stylesheet" type="text/css" href="static/reporter/deps/leaflet/leaflet.css">
-    <script type="application/javascript" src="static/reporter/deps/leaflet-image/leaflet-image.js"></script>
-
-    <script type="application/javascript" src="static/reporter/deps/jspdf/jspdf.min.js"></script>
-
-    <link rel="stylesheet" type="text/css" href="static/src/pdf.css">
+    <link rel="stylesheet" type="text/css" href="static/dist/all-pdf.min.css">
 </head>
 <body>
 
@@ -16,15 +10,15 @@
         <h3 class="selectableText">Peninsular Florida LCC - Simple Map Viewer</h3>
     </div>
 
-    <div id="mapContainer">
-        <div id="boundNorth"></div>
-        <div id="boundSouth"></div>
-        <div id="boundEast"></div>
-        <div id="boundWest"></div>
-        <div id="map"></div>
+    <div id="MapContainer">
+        <div id="BoundNorth"></div>
+        <div id="BoundSouth"></div>
+        <div id="BoundEast"></div>
+        <div id="BoundWest"></div>
+        <div id="Map"></div>
     </div>
 
-    <div id="description" class="table">
+    <div id="Description" class="table">
         <div class="table-row">
             <div class="table-cell form" style="width: 3in;">
                 <b><input type="text" placeholder="Name of the map (optional)"/></b>
@@ -35,9 +29,9 @@
                 {{{legend}}}
             </div>
 
-            <div id="mapThumbnail" class="table-cell" style="width: 2.1in">
+            <div id="MapThumbnail" class="table-cell" style="width: 2.1in">
                 <img src="static/img/preview.jpg"/>
-                <div id="studyArea"></div>
+                <div id="StudyArea"></div>
             </div>
         </div>
     </div>
@@ -82,7 +76,7 @@
         <h3 class="selectableText">Peninsular Florida LCC - Simple Map Viewer</h3>
     </div>
 
-    <div id="dataInfo">
+    <div id="DataInfo">
         <h3 class="selectableText">Data access:</h3>
         <div class="selectableText">
             You can view and download data used to create this report from the Peninsular Florida Conservation Planning Atlas:
@@ -104,7 +98,7 @@
             <br>
             <a href="http://myfwc.com/research/gis/applications/articles/Cooperative-Land-Cover" class="selectableText">http://myfwc.com/research/gis/applications/articles/Cooperative-Land-Cover</a>
         </p>
-        <p id="mapAttribution" class="selectableText">
+        <p id="MapAttribution" class="selectableText">
             Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL,
             Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
         </p>
@@ -119,209 +113,6 @@
     </div>
 </div>
 
-<script>
-    // save old getContext
-    var oldgetContext = HTMLCanvasElement.prototype.getContext;
-
-    // get a context, set it to smoothed if it was a 2d context, and return it.
-    function getSmoothContext(contextType) {
-        var resCtx = oldgetContext.apply(this, arguments);
-
-        function setToFalse(obj, prop) {
-            if (obj[prop] !== undefined) {
-                obj[prop] = false;
-            }
-        }
-
-        if (contextType == '2d') {
-            setToFalse(resCtx, 'imageSmoothingEnabled');
-            setToFalse(resCtx, 'mozImageSmoothingEnabled');
-            setToFalse(resCtx, 'oImageSmoothingEnabled');
-            setToFalse(resCtx, 'webkitImageSmoothingEnabled');
-        }
-
-        return resCtx;
-    }
-
-    // inject new smoothed getContext
-    HTMLCanvasElement.prototype.getContext = getSmoothContext;
-    console.log('HTMLCanvasElement is modified');
-
-    var map = L.map(document.getElementById('map'), {
-        maxZoom: 12,
-        preferCanvas: true,
-        attributionControl: false
-    });
-    console.log('map is initialized');
-
-    function updateStudyArea() {
-        var tb = {
-            west: -90,
-            south: 21.94,
-            east: -78.75,
-            north: 31.95
-        };
-
-        var xRatio = 256 / (tb.east - tb.west);
-        var yRatio = 256 / (tb.south - tb.north);
-
-        var studyAreaBounds = map.getBounds();
-        var right = xRatio * (studyAreaBounds.getEast() - tb.west);
-        var left = xRatio * (studyAreaBounds.getWest() - tb.west);
-        var top = yRatio * (studyAreaBounds.getNorth() - tb.north);
-        var bottom = yRatio * (studyAreaBounds.getSouth() - tb.north);
-
-        right = right > 256 ? 256 : right;
-        left = left < 0 ? 0 : left;
-        top = top < 0 ? 0 : top;
-        bottom = bottom > 256 ? 256 : bottom;
-
-        var thumbnailBound = document.getElementById('studyArea');
-        thumbnailBound.style.top = top + 1;
-        thumbnailBound.style.left = left + 1;
-        thumbnailBound.style.width = right - left - 1;
-        thumbnailBound.style.height = bottom - top - 1;
-    }
-
-    function updateAccessUrl() {
-        var accessUrls = document.querySelectorAll('.accessUrl');
-        var oldUrl = accessUrls[0].innerText;
-        var newUrl = oldUrl.replace(/(&|\?)m=(.*?)(&|$)/, function(match, p1, p2, p3, offset, string) {
-            var c = map.getCenter();
-            return p1 + 'm=' + Math.round(c.lat * 100000) / 100000  + ',' + Math.round(c.lng * 100000) / 100000 + ',' + map.getZoom() + p3;
-        });
-        for (var n = accessUrls.length; n; n--) {
-            accessUrls[n-1].innerText = accessUrls[n-1].href = newUrl;
-        }
-    }
-
-    map.on('moveend', function (e) {
-        var bounds = map.getBounds();
-        document.getElementById('boundNorth').innerHTML = Math.round(bounds.getNorth() * 100) / 100 + '&deg; N';
-        document.getElementById('boundSouth').innerHTML = Math.round(bounds.getSouth() * 100) / 100 + '&deg; S';
-        document.getElementById('boundEast').innerHTML = Math.round(bounds.getEast() * 100) / 100 + '&deg; E';
-        document.getElementById('boundWest').innerHTML = Math.round(bounds.getWest() * 100) / 100 + '&deg; W';
-
-        updateStudyArea();
-        updateAccessUrl();
-    });
-    console.log('map moveend event is added');
-    
-    L.tileLayer('//{s}.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
-        subdomains: ['server', 'services'],
-        maxZoom: 10,
-        minZoom: 2
-    }).addTo(map);
-    console.log('Basemap is added to the map');
-
-    function processMaps(callback) {
-        leafletImage(map, function (err, canvas) {
-            var img = document.createElement('img');
-            img.width = canvas.width;
-            img.height = canvas.height;
-            img.src = canvas.toDataURL();
-
-            var mapContainer = map.getContainer();
-            mapContainer.parentNode.replaceChild(img, mapContainer);
-            callback();
-        })
-    }
-
-    function rgb2hex(rgb) {
-        rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
-        return (rgb && rgb.length === 4) ? "#" +
-        ("0" + parseInt(rgb[1], 10).toString(16)).slice(-2) +
-        ("0" + parseInt(rgb[2], 10).toString(16)).slice(-2) +
-        ("0" + parseInt(rgb[3], 10).toString(16)).slice(-2) : '';
-    }
-    var px2pt = 0.264583 * 72 / 25.4;
-
-    function processTexts(el) {
-        var node, texts = [];
-        var walk = document.createTreeWalker(
-                el,
-                NodeFilter.SHOW_TEXT,
-                {
-                    acceptNode: function (n) {
-                        if (n.parentNode.classList.contains('selectableText')) {
-                        //if (/\bselectableText\b/.test(n.parentNode.className)) {
-                            return NodeFilter.FILTER_ACCEPT;
-                        }
-                        return NodeFilter.FILTER_SKIP;
-                    }
-                },
-                false);
-        var elRect = el.getBoundingClientRect();
-        while (node = walk.nextNode()) {
-            var textContent = node.textContent.trim();
-            if (textContent) {
-                var rect = node.parentNode.getBoundingClientRect();
-                var style = getComputedStyle(node.parentNode);
-                var color = rgb2hex(style.color);
-                texts.push({
-                    text: textContent,
-                    url: node.parentNode.getAttribute('href') || '',
-                    pos: {x: (rect.left - elRect.left) * px2pt, y: (rect.top - elRect.top) * px2pt},
-                    style: {
-                        font: style.font || 'sans-serif',
-                        fontSize: Math.floor(parseInt(style.fontSize.match(/(\d+)/)[1]) * px2pt),
-                        fontStyle: style.fontWeight >= 700 ? 'bold' : 'normal',
-                        color: color
-                    }
-                });
-                node.parentNode.style.color = '#fff';
-            }
-        }
-        return texts;
-    }
-
-    function generateReport(pdfOptions, processed, callback) {
-        if (processed) {
-            makePDF();
-        } else {
-            processMaps(makePDF);
-        }
-
-        function makePDF() {
-            var pdf = new jsPDF(pdfOptions);
-            var pages = Array.prototype.slice.call(document.querySelectorAll('.page')).reverse();
-
-            window.scrollTo(0, 0);  // fixes a bug in chrome; scrolling the preview iframe distorts the final canvas.
-            function page2pdf(pages) {
-                var page = pages.pop();
-                if (!page) {
-                    pdf.save('report.pdf');
-                    processed = true;
-                    callback(processed);
-                    return
-                }
-
-                var texts = processTexts(page);
-
-                pdf.addHTML(page, 0, 15, {
-                    background: '#fff',
-                    logging: false
-                }, function () {
-                    texts.forEach(function (t) {
-                        pdf.setFont(t.style.font)
-                                .setTextColor(t.style.color)
-                                .setFontSize(t.style.fontSize)
-                                .setFontStyle(t.style.fontStyle);
-                        if (t.url) {
-                            pdf.textWithLink(t.text, t.pos.x - 35 * (t.pos.x / 612), t.pos.y + 25 * (1 - t.pos.y / 792), {url: t.url});
-                        } else {
-                            pdf.text(t.text, t.pos.x - 55 * (t.pos.x / 612), t.pos.y + 25 * (1 - t.pos.y / 792));
-                        }
-                    });
-                    page2pdf(pages);
-                    pdf.addPage();
-                });
-            }
-
-            page2pdf(pages);
-        }
-    }
-    console.log('All functions are ready');
-</script>
+<script type="application/javascript" src="static/dist/all-pdf.min.js"></script>
 </body>
 </html>

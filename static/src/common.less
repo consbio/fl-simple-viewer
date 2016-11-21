@@ -1,0 +1,37 @@
+.right {
+  float: right;
+}
+
+.table {
+  display: table;
+  table-layout: fixed;
+}
+
+.table-row {
+  display: table-row;
+}
+
+.table-cell {
+  display: table-cell;
+}
+
+path {
+  &.leaflet-interactive {
+    stroke: #333;
+    stroke-width: 0.5px;
+    stroke-opacity: 0.5;
+    fill-opacity: 0.75;
+
+    .leaflet-interactive:hover {
+      stroke-width: 3px;
+      stroke-opacity: 1 !important;
+      stroke: #333;
+    }
+
+    &.selected {
+      stroke: #e6550d;
+      stroke-width: 2px !important;
+      stroke-opacity: 1 !important;
+    }
+  }
+}

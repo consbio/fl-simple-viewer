@@ -64,14 +64,14 @@ if (L.Browser.ielt9 || (L.Browser.ie && ((/MSIE 9/i).test(navigator.userAgent) |
 
 if (L.Browser.ie) {
     d3.select('#PDFButton').classed('disabled', true).on('mouseover', function() {
-        d3.select('#pdfSupportTooltipContainer').style('display', 'block');
+        d3.select('#PdfSupportTooltipContainer').style('display', 'block');
     }).on('mouseout', function() {
-        d3.select('#pdfSupportTooltipContainer').style('display', 'none');
+        d3.select('#PdfSupportTooltipContainer').style('display', 'none');
     });
-    d3.select('#pdfSupportTooltipContainer').on('mouseover', function() {
-        d3.select('#pdfSupportTooltipContainer').style('display', 'block');
+    d3.select('#PdfSupportTooltipContainer').on('mouseover', function() {
+        d3.select('#PdfSupportTooltipContainer').style('display', 'block');
     }).on('mouseout', function() {
-        d3.select('#pdfSupportTooltipContainer').style('display', 'none');
+        d3.select('#PdfSupportTooltipContainer').style('display', 'none');
     });
 }
 
@@ -266,8 +266,10 @@ var basemaps = [
 
 map = L.map('Map', {
     maxZoom: 12,
+    minZoom: 5,
+    maxBounds: L.latLngBounds(L.latLng(23, -90), L.latLng(32, -76)),
     center: [27.68, -81.69],
-     zoom: 7
+    zoom: 7
 });
 map.zoomControl.setPosition('topright');
 map.addControl(L.control.zoomBox({modal: false, position:'topright'}));
@@ -577,7 +579,7 @@ function load() {
 
     restorePage(window.location.href);
     window.onclick = function() {
-        document.getElementById('sharePageContainer').style.display = 'none';
+        document.getElementById('SharePageContainer').style.display = '';
     };
 }
 
@@ -1451,15 +1453,18 @@ var filterCategories = {
 var slrRadioOrder = ['slr1', 'slr2', 'slr3'];
 var devRadioOrder = ['devCur', 'dev2020', 'dev2040', 'dev2060'];
 
-
-d3.select('#sharePageButton').on('click', function() {
-    d3.event.stopPropagation();
-    var url = getStatusUrl();
-    var sharePageContainer = document.getElementById('sharePageContainer');
-    var urlInput = sharePageContainer.querySelector('input');
-    urlInput.value = url;
-    sharePageContainer.style.display = 'block';
-    urlInput.select();
+d3.select('#SharePageButton').on('click', function() {
+    var sharePageContainer = document.getElementById('SharePageContainer');
+    if (sharePageContainer.style.display != '') {
+        sharePageContainer.style.display = '';
+    } else {
+        d3.event.stopPropagation();
+        var url = getStatusUrl();
+        var urlInput = sharePageContainer.querySelector('input');
+        urlInput.value = url;
+        sharePageContainer.style.display = 'block';
+        urlInput.select();
+    }
 });
 
 function getStatusUrl() {

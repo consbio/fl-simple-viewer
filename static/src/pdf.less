@@ -15,28 +15,12 @@ h4 {
   font-size: 16px;
 }
 
-.right {
-  float: right;
-}
-
 .small {
   font-size: small;
 }
 
 .smaller {
   font-size: smaller;
-}
-
-.table {
-  display: table;
-}
-
-.table-row {
-  display: table-row;
-}
-
-.table-cell {
-  display: table-cell;
 }
 
 .page {
@@ -78,34 +62,34 @@ h4 {
   }
 }
 
-#mapContainer {
+#MapContainer {
   position: absolute;
   top: 0.8in;
   left: 0.4in;
   padding-top: 10px;
 
-  #map, > img {
+  #Map, > img {
     border: 1px solid;
     width: 8in;
     height: 6.2in;
   }
 
-  [id^=bound] {
+  [id^=Bound] {
     position: absolute;
     font-size: 10px;
   }
 
-  #boundNorth {
+  #BoundNorth {
     top: -5px;
     left: 0;
   }
 
-  #boundSouth {
+  #BoundSouth {
     bottom: -15px;
     right: 0;
   }
 
-  #boundEast {
+  #BoundEast {
     bottom: 20px;
     right: -30px;
     -webkit-transform: rotate(-90deg);
@@ -114,7 +98,7 @@ h4 {
     -o-transform: rotate(-90deg);
   }
 
-  #boundWest {
+  #BoundWest {
     top: 30px;
     left: -33px;
     -webkit-transform: rotate(-90deg);
@@ -124,7 +108,7 @@ h4 {
   }
 }
 
-#description {
+#Description {
   position: absolute;
   top: 7.5in;
   left: 0.4in;
@@ -143,10 +127,10 @@ h4 {
     }
   }
 
-  #mapThumbnail {
+  #MapThumbnail {
     position: relative;
 
-    #studyArea {
+    #StudyArea {
       border: 1px solid orange;
       position: absolute;
     }
@@ -166,14 +150,14 @@ h4 {
   width: 90%;
 }
 
-#dataInfo {
+#DataInfo {
   position: absolute;
   top: 0.7in;
   left: 0.2in;
   padding: 20px;
   width: 90%;
 
-  #mapAttribution {
+  #MapAttribution {
     color: #666;
     font-size: 11px;
     width: 80%;
@@ -206,20 +190,7 @@ h4 {
   }
 }
 
-path {
-  &.leaflet-interactive {
-    stroke: #333;
-    stroke-width: 0.5px;
-    stroke-opacity: 0.5;
-    fill-opacity: 0.75;
 
-    &.selected {
-      stroke: #e6550d;
-      stroke-width: 2px !important;
-      stroke-opacity: 1 !important;
-    }
-  }
-}
 
 .filters {
   .chart {

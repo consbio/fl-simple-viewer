@@ -29,25 +29,21 @@
             animation: spin 2s infinite linear;
         }
     </style>
-
-    <!-- reporter -->
-    <link rel="stylesheet" href="static/reporter/reporter.css">
 </head>
 <body>
     <div id="LoadingScrim" style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; z-index: 10000; background: #FFF; padding: 15% 0 0 50%;">
         <div class="spinner" style="width:100px;height:100px;background-size:100px;"></div>
     </div>
 
-    <div id="sharePageContainer" class="tooltipTopRight" onclick="event.stopPropagation();">
+    <div id="SharePageContainer" class="tooltipTopRight" onclick="event.stopPropagation();">
         <div class="pointer"></div>
         <div class="content">
-            <input type="url" readonly="readonly" style="display: table-cell; width: 87%"/>
-            <button class="button button-default right" onclick="this.parentElement.parentElement.style.display='none'" style="font-size: 10px;"><i class="fa fa-close"></i></button>
+            <input type="url" readonly="readonly" style="display: table-cell; width: 97%"/>
             <div style="margin-top: 5px;">Use Ctrl+C (Cmd+C on Mac) to copy the url.</div>
         </div>
     </div>
 
-    <div id="pdfSupportTooltipContainer" class="tooltipTopRight">
+    <div id="PdfSupportTooltipContainer" class="tooltipTopRight">
         <div class="bridge"></div>
         <div class="pointer"></div>
         <div class="content">
@@ -60,11 +56,11 @@
         <div id="Header" class="table-row fullwidth">
             <img src="static/img/logo.png" align="left" />
             <h3 class="left">Peninsular Florida LCC - Simple Map Viewer</h3>
-            <button id="PDFButton" class="button button-default right">
+            <button id="PDFButton" class="button button-default right hidden">
                 <span class="fa fa-file-pdf-o"></span>
-                Report
+                Create Report
             </button>
-            <button id="sharePageButton" class="button button-default right">
+            <button id="SharePageButton" class="button button-default right hidden">
                 <span class="fa fa-share-alt"></span>&nbsp;Share
             </button>
             <div class="clear"></div>
@@ -541,7 +537,5 @@
     </div>
 
     <script src="static/dist/all.min.js"></script>
-
-    <script type="text/javascript" src="static/reporter/reporter.js"></script>
 </body>
 </html>
