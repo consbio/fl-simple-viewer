@@ -1,8 +1,3 @@
-/**
- * reporter.js v0.0.0
- * https://github.com/....
- */
-
 function cssInliner(el) {
     var cssProperties = getComputedStyle(el, null);
     var cssText = '';
@@ -52,16 +47,12 @@ function getStyles(doc) {
 var mapSyncFuncs = {
     // each function get a parent and child, both instances of Leaflet.map
     zoom: function (parent, child) {
-        console.log('Syncing zoom');
         child.setZoom(parent.getZoom());
-        console.log('zoom is done')
     },
     center: function (parent, child) {
-        console.log('Syncing center');
         child.panTo(parent.getCenter());
     },
     layers: function (parent, child) {
-        console.log('Syncing layers');
         var Leaflet = document.querySelector('iframe').contentWindow.L;
         parent.eachLayer(function (layer) {
             if (layer.toGeoJSON) {
@@ -75,12 +66,10 @@ var mapSyncFuncs = {
                     addLayer(l, parent, child);
                 });
             } else if (!layer._path.classList.contains('hidden')) {
-                //} else if (!/\bhidden\b/.test(layer._path.className)) { // IE does not support classList on svg, so regex is used to test whether the elements has hidden class
                 // main map is using svg, while preview must use canvas in order to use leaflet-image; therefore styles set by CSS must be converted somehow.
                 var layerOptions = layer.options;
 
                 layerOptions['fillOpacity'] = 0.75;
-                //if (/\bselected\b/.test(layer._path.className)) {
                 if (layer._path.classList.contains('selected')) {
                     layerOptions['color'] = '#e6550d';
                     layerOptions['weight'] = 2;
@@ -174,7 +163,6 @@ var mapSyncFuncs = {
             iframe = document.createElement('iframe');
             preview.appendChild(iframe);
             iframe.onload = function () {
-                console.log('iframe is loaded');
                 syncMaps();
 
                 printButton.addEventListener('click', function (e) {
@@ -192,7 +180,6 @@ var mapSyncFuncs = {
 
                 scrim.style.display = 'none';
             };
-            console.log('iframe appended');
             processStart();
             container.classList.add('active');
             scrim.style.display = 'block';
@@ -213,12 +200,10 @@ var mapSyncFuncs = {
         }
 
         function processEnd() {
-            console.log('# of active processes', activeProcesses);
             if (!--activeProcesses) {
                 iframe.contentWindow.document.open('text/html', 'replace');
                 iframe.contentWindow.document.write(template(tmplData));
                 iframe.contentWindow.document.close();
-                console.log('iframe is loading...');
             }
         }
 

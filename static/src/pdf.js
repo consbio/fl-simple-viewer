@@ -12,11 +12,11 @@
             }
         }
 
+        var smoothing = ['imageSmoothingEnabled', 'mozImageSmoothingEnabled', 'oImageSmoothingEnabled', 'webkitImageSmoothingEnabled'];
         if (contextType == '2d') {
-            setToFalse(resCtx, 'imageSmoothingEnabled');
-            setToFalse(resCtx, 'mozImageSmoothingEnabled');
-            setToFalse(resCtx, 'oImageSmoothingEnabled');
-            setToFalse(resCtx, 'webkitImageSmoothingEnabled');
+            smoothing.forEach(function(s) {
+                setToFalse(resCtx, s);
+            });
         }
 
         return resCtx;
@@ -24,7 +24,6 @@
 
 // inject new smoothed getContext
     HTMLCanvasElement.prototype.getContext = getSmoothContext;
-    console.log('HTMLCanvasElement is modified');
 
     window.map = L.map(document.getElementById('Map'), {
         maxZoom: 12,
@@ -33,9 +32,8 @@
         preferCanvas: true,
         attributionControl: false
     });
-    console.log('map is initialized');
 
-    function updateStudyArea() {
+    function thumbnailBounds() {
         var tb = {
             west: -90,
             south: 21.94,
@@ -52,7 +50,7 @@
         var top = yRatio * (studyAreaBounds.getNorth() - tb.north);
         var bottom = yRatio * (studyAreaBounds.getSouth() - tb.north);
 
-        right = right > 256 ? 256 : right;
+        right = Math.min(right, 256);
         left = left < 0 ? 0 : left;
         top = top < 0 ? 0 : top;
         bottom = bottom > 256 ? 256 : bottom;
@@ -64,15 +62,20 @@
         thumbnailBound.style.height = bottom - top - 1;
     }
 
+    function roundPrecision(value, precision) {
+      var factor = Math.pow(10, precision);
+      return Math.round(value * factor) / factor;
+    }
+
     function updateAccessUrl() {
         var accessUrls = document.querySelectorAll('.accessUrl');
-        var oldUrl = accessUrls[0].innerText;
+        var oldUrl = accessUrls[0].href;
         var newUrl = oldUrl.replace(/(&|\?)m=(.*?)(&|$)/, function (match, p1, p2, p3, offset, string) {
             var c = map.getCenter();
-            return p1 + 'm=' + Math.round(c.lat * 100000) / 100000 + ',' + Math.round(c.lng * 100000) / 100000 + ',' + map.getZoom() + p3;
+            return p1 + 'm=' + roundPrecision(c.lat, 5) + ',' + roundPrecision(c.lng, 5) + ',' + map.getZoom() + p3;
         });
         for (var n = accessUrls.length; n; n--) {
-            accessUrls[n - 1].innerText = accessUrls[n - 1].href = newUrl;
+            accessUrls[n - 1].href = newUrl;
         }
     }
 
@@ -83,15 +86,13 @@
         document.getElementById('BoundEast').innerHTML = Math.round(bounds.getEast() * 100) / 100 + '&deg; E';
         document.getElementById('BoundWest').innerHTML = Math.round(bounds.getWest() * 100) / 100 + '&deg; W';
 
-        updateStudyArea();
+        thumbnailBounds();
         updateAccessUrl();
     });
-    console.log('map moveend event is added');
 
     L.tileLayer('//{s}.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
         subdomains: ['server', 'services']
     }).addTo(map);
-    console.log('Basemap is added to the map');
 
     function processMaps(callback) {
         leafletImage(map, function (err, canvas) {
@@ -114,7 +115,7 @@
         ("0" + parseInt(rgb[3], 10).toString(16)).slice(-2) : '';
     }
 
-    var px2pt = 0.264583 * 72 / 25.4;
+    var px2pt = 0.264583 * 72 / 25.4; // i.e. 0.75
 
     function processTexts(el) {
         var node, texts = [];
@@ -178,7 +179,8 @@
 
                 var texts = processTexts(page);
 
-                pdf.addHTML(page, 0, 15, {
+                var topX = 0, topY = 15;
+                pdf.addHTML(page, topX, topY, {
                     background: '#fff',
                     logging: false
                 }, function () {
@@ -201,6 +203,4 @@
             page2pdf(pages);
         }
     }
-
-    console.log('All functions are ready');
 })();

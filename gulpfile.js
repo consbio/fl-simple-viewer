@@ -104,12 +104,6 @@ gulp.task('concat-pdf-js', ['compress-pdf-js'], function () {
 gulp.task('copy-files', [], function () {
     gulp.src(['node_modules/leaflet/dist/images/*'])
         .pipe(gulp.dest('static/dist/images'));
-
-    gulp.src(['node_modules/leaflet-geonames/*.svg'])
-        .pipe(gulp.dest('static/dist'));
-
-    gulp.src(['node_modules/leaflet-zoombox/*.svg'])
-        .pipe(gulp.dest('static/dist'));
 });
 
 

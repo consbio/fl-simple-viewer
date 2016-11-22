@@ -1440,28 +1440,14 @@ function updateNodeVisibility(visibleNodes, hiddenNodes) {
 
 }
 
-var filterCategories = {
-    'FilterChart-priority': 'p',
-    'FilterChart-clip': 'p',
-    'FilterChart-bio': 'p',
-    'FilterChart-land': 'p',
-    'FilterChart-water': 'p',
-    'FilterChart-slr': 't',
-    'FilterChart-dev': 't'
-};
-
-var slrRadioOrder = ['slr1', 'slr2', 'slr3'];
-var devRadioOrder = ['devCur', 'dev2020', 'dev2040', 'dev2060'];
-
 d3.select('#SharePageButton').on('click', function() {
     var sharePageContainer = document.getElementById('SharePageContainer');
     if (sharePageContainer.style.display != '') {
         sharePageContainer.style.display = '';
     } else {
         d3.event.stopPropagation();
-        var url = getStatusUrl();
         var urlInput = sharePageContainer.querySelector('input');
-        urlInput.value = url;
+        urlInput.value = getStatusUrl();
         sharePageContainer.style.display = 'block';
         urlInput.select();
     }

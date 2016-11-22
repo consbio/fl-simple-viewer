@@ -527,3 +527,18 @@ var landOwnershipInfo = [
     'Areas not owned by federal, state, or local agencies, and not recorded as private conserved land.'
 ];
 
+
+/* The following are used for saving and recovering the state of the page */
+var filterCategories = {
+    'FilterChart-priority': 'p',
+    'FilterChart-clip': 'p',
+    'FilterChart-bio': 'p',
+    'FilterChart-land': 'p',
+    'FilterChart-water': 'p',
+    'FilterChart-slr': 't',
+    'FilterChart-dev': 't'
+};
+
+var slrRadioOrder = ['slr1', 'slr2', 'slr3'];
+var devRadioOrder = ['devCur', 'dev2020', 'dev2040', 'dev2060'];
+
