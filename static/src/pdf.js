@@ -51,9 +51,9 @@
         var bottom = yRatio * (studyAreaBounds.getSouth() - tb.north);
 
         right = Math.min(right, 256);
-        left = left < 0 ? 0 : left;
-        top = top < 0 ? 0 : top;
-        bottom = bottom > 256 ? 256 : bottom;
+        left = Math.max(left, 0);
+        top = Math.max(top, 0);
+        bottom = Math.min(bottom, 256);
 
         var thumbnailBound = document.getElementById('StudyArea');
         thumbnailBound.style.top = top + 1;
@@ -81,10 +81,10 @@
 
     map.on('moveend', function (e) {
         var bounds = map.getBounds();
-        document.getElementById('BoundNorth').innerHTML = Math.round(bounds.getNorth() * 100) / 100 + '&deg; N';
-        document.getElementById('BoundSouth').innerHTML = Math.round(bounds.getSouth() * 100) / 100 + '&deg; S';
-        document.getElementById('BoundEast').innerHTML = Math.round(bounds.getEast() * 100) / 100 + '&deg; E';
-        document.getElementById('BoundWest').innerHTML = Math.round(bounds.getWest() * 100) / 100 + '&deg; W';
+        document.getElementById('BoundNorth').innerHTML = roundPrecision(bounds.getNorth(), 2) + '&deg; N';
+        document.getElementById('BoundSouth').innerHTML = roundPrecision(bounds.getSouth(), 2) + '&deg; S';
+        document.getElementById('BoundEast').innerHTML = roundPrecision(bounds.getEast(), 2) + '&deg; E';
+        document.getElementById('BoundWest').innerHTML = roundPrecision(bounds.getWest(), 2) + '&deg; W';
 
         thumbnailBounds();
         updateAccessUrl();
