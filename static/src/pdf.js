@@ -12,7 +12,7 @@
             }
         }
 
-        var smoothing = ['imageSmoothingEnabled', 'mozImageSmoothingEnabled', 'oImageSmoothingEnabled', 'webkitImageSmoothingEnabled'];
+        var smoothing = ['imageSmoothingEnabled', 'mozImageSmoothingEnabled', 'oImageSmoothingEnabled', 'msImageSmoothingEnabled'];
         if (contextType == '2d') {
             smoothing.forEach(function(s) {
                 setToFalse(resCtx, s);
@@ -22,16 +22,17 @@
         return resCtx;
     }
 
-// inject new smoothed getContext
+    // inject new smoothed getContext
     HTMLCanvasElement.prototype.getContext = getSmoothContext;
 
-    window.map = L.map(document.getElementById('Map'), {
+    var map = L.map(document.getElementById('Map'), {
         maxZoom: 12,
         minZoom: 5,
         maxBounds: L.latLngBounds(L.latLng(23, -90), L.latLng(32, -76)),
         preferCanvas: true,
         attributionControl: false
     });
+    window.map = map;
 
     function thumbnailBounds() {
         var tb = {
@@ -63,8 +64,8 @@
     }
 
     function roundPrecision(value, precision) {
-      var factor = Math.pow(10, precision);
-      return Math.round(value * factor) / factor;
+        var factor = Math.pow(10, precision);
+        return Math.round(value * factor) / factor;
     }
 
     function updateAccessUrl() {
@@ -80,14 +81,16 @@
     }
 
     map.on('moveend', function (e) {
-        var bounds = map.getBounds();
-        document.getElementById('BoundNorth').innerHTML = roundPrecision(bounds.getNorth(), 2) + '&deg; N';
-        document.getElementById('BoundSouth').innerHTML = roundPrecision(bounds.getSouth(), 2) + '&deg; S';
-        document.getElementById('BoundEast').innerHTML = roundPrecision(bounds.getEast(), 2) + '&deg; E';
-        document.getElementById('BoundWest').innerHTML = roundPrecision(bounds.getWest(), 2) + '&deg; W';
+        if (map) {
+            var bounds = map.getBounds();
+            document.getElementById('BoundNorth').innerHTML = roundPrecision(bounds.getNorth(), 2) + '&deg; N';
+            document.getElementById('BoundSouth').innerHTML = roundPrecision(bounds.getSouth(), 2) + '&deg; S';
+            document.getElementById('BoundEast').innerHTML = roundPrecision(bounds.getEast(), 2) + '&deg; E';
+            document.getElementById('BoundWest').innerHTML = roundPrecision(bounds.getWest(), 2) + '&deg; W';
 
-        thumbnailBounds();
-        updateAccessUrl();
+            thumbnailBounds();
+            updateAccessUrl();
+        }
     });
 
     L.tileLayer('//{s}.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
@@ -103,6 +106,7 @@
 
             var mapContainer = map.getContainer();
             mapContainer.parentNode.replaceChild(img, mapContainer);
+            map = null;
             callback();
         })
     }
@@ -125,7 +129,6 @@
             {
                 acceptNode: function (n) {
                     if (n.parentNode.classList.contains('selectableText')) {
-                        //if (/\bselectableText\b/.test(n.parentNode.className)) {
                         return NodeFilter.FILTER_ACCEPT;
                     }
                     return NodeFilter.FILTER_SKIP;

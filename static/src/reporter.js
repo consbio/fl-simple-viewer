@@ -149,6 +149,18 @@ var mapSyncFuncs = {
         printButton.classList.add('button', 'print', 'button-default', 'disabled');
         toolbar.appendChild(printButton);
 
+        printButton.addEventListener('click', function (e) {
+            scrim.style.display = 'block';
+            if (!processed) {
+                processForms();
+            }
+            iframe.contentWindow.generateReport(options.pdfOptions, processed, function (processSuccessful) {
+                processed = processSuccessful;
+                scrim.style.display = 'none';
+                setTimeout(hidePreview, 1000);
+            });
+        });
+
         var closeButton = document.createElement('button');
         closeButton.innerHTML = 'x';
         closeButton.classList.add('button', 'close', 'button-default', 'right');
@@ -164,18 +176,6 @@ var mapSyncFuncs = {
             preview.appendChild(iframe);
             iframe.onload = function () {
                 syncMaps();
-
-                printButton.addEventListener('click', function (e) {
-                    scrim.style.display = 'block';
-                    if (!processed) {
-                        processForms();
-                    }
-                    iframe.contentWindow.generateReport(options.pdfOptions, processed, function (processSuccessful) {
-                        processed = processSuccessful;
-                        scrim.style.display = 'none';
-                        setTimeout(hidePreview, 1000);
-                    });
-                });
                 printButton.classList.remove('disabled');
 
                 scrim.style.display = 'none';
