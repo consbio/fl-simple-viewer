@@ -12,38 +12,6 @@ function cssInliner(el) {
     }
 }
 
-function getStyles(doc) {
-    /** idea from https://github.com/NYTimes/svg-crowbar **/
-    var styles = '',
-        styleSheets = doc.styleSheets;
-
-    if (styleSheets) {
-        for (var i = 0; i < styleSheets.length; i++) {
-            processStyleSheet(styleSheets[i]);
-        }
-    }
-
-    function processStyleSheet(ss) {
-        if (ss.cssRules) {
-            for (var i = 0; i < ss.cssRules.length; i++) {
-                var rule = ss.cssRules[i];
-                if (rule.type === 3) { // Type 3 is CSSImportRule
-                    processStyleSheet(rule.styleSheet);
-                } else {
-                    // hack for illustrator crashing on descendant selectors
-                    if (rule.selectorText) {
-                        if (rule.selectorText.indexOf('>') === -1) {
-                            styles += '\n' + rule.cssText;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    return styles;
-}
-
 var mapSyncFuncs = {
     // each function get a parent and child, both instances of Leaflet.map
     zoom: function (parent, child) {
@@ -86,6 +54,15 @@ var mapSyncFuncs = {
     }
 };
 
+function textNodesUnder(el) {
+    var n, a = [];
+    var walk = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false);
+    while (n = walk.nextNode()) {
+        a.push(n);
+    }
+    return a;
+}
+
 (function (document) {
     var name = 'pdfReporter',
         global = this,
@@ -103,13 +80,6 @@ var mapSyncFuncs = {
             options[op] = userOptions[op];
         }
 
-        var svgPrefix = {
-            xmlns: "http://www.w3.org/2000/xmlns/",
-            xlink: "http://www.w3.org/1999/xlink",
-            svg: "http://www.w3.org/2000/svg"
-        };
-
-
         for (var i in options.templateHelpers) {
             Handlebars.registerHelper(i, options.templateHelpers[i]);
         }
@@ -118,7 +88,7 @@ var mapSyncFuncs = {
         var processed = false;
         var activeProcesses = 0;
         var tmplData = {};
-        var svgStyle = getStyles(window.document);
+        var tmplSvgData = {};
 
         var container = document.createElement('div');
         container.classList.add('pdfReporterContainer');
@@ -126,9 +96,15 @@ var mapSyncFuncs = {
 
         var scrim = document.createElement('div');
         scrim.classList.add('scrim');
+
         var spinner = document.createElement('div');
         spinner.classList.add('spinner');
         scrim.appendChild(spinner);
+
+        var progress = document.createElement('div');
+        progress.classList.add('progress');
+        scrim.appendChild(progress);
+
         container.appendChild(scrim);
 
         var curtain = document.createElement('div');
@@ -154,7 +130,7 @@ var mapSyncFuncs = {
             if (!processed) {
                 processForms();
             }
-            iframe.contentWindow.generateReport(options.pdfOptions, processed, function (processSuccessful) {
+            iframe.contentWindow.generateReport(options.pdfOptions, processed, updateProgress, function (processSuccessful) {
                 processed = processSuccessful;
                 scrim.style.display = 'none';
                 setTimeout(hidePreview, 1000);
@@ -170,21 +146,16 @@ var mapSyncFuncs = {
         toolbar.appendChild(closeButton);
 
         function showPreview() {
+            processStart();
             processed = false;
             printButton.classList.add('disabled');
             iframe = document.createElement('iframe');
             preview.appendChild(iframe);
-            iframe.onload = function () {
-                syncMaps();
-                printButton.classList.remove('disabled');
-
-                scrim.style.display = 'none';
-            };
-            processStart();
             container.classList.add('active');
             scrim.style.display = 'block';
 
             tmplData = {};
+            tmplSvgData = {};
             addDomElements();
             addData();
             processEnd();
@@ -202,8 +173,22 @@ var mapSyncFuncs = {
         function processEnd() {
             if (!--activeProcesses) {
                 iframe.contentWindow.document.open('text/html', 'replace');
-                iframe.contentWindow.document.write(template(tmplData));
+                iframe.contentWindow.document.write(Handlebars.compile(template(tmplData))(tmplSvgData));
                 iframe.contentWindow.document.close();
+
+                iframe.onload = function () {
+                    syncMaps();
+                    printButton.classList.remove('disabled');
+                    scrim.style.display = 'none';
+                }
+            }
+        }
+
+        function updateProgress(value) {
+            if (!isNaN(value)) {
+                progress.innerText = value + '%';
+            } else {
+                progress.innerText = '';
             }
         }
 
@@ -213,6 +198,10 @@ var mapSyncFuncs = {
             }
 
             options.data.dom.forEach(function (d) {
+                if (d.hasOwnProperty('condition') && !(typeof d.condition == 'function' ? d.condition() : d.condition)) {
+                    return
+                }
+
                 tmplData[d.tmpl] = [];
 
                 var elements = [];
@@ -246,9 +235,9 @@ var mapSyncFuncs = {
                     var svgCollection = {};
                     for (var i = 0; i < svgNodes.length; i++) {
                         var svgEl = svgNodes[i].cloneNode(true);
-                        var svgPlaceholder = d.tmpl + '-' + i;
+                        var svgPlaceholder = d.tmpl + '-' + idx + '-' + i;
                         svgCollection[svgPlaceholder] = svgEl;
-                        svgNodes[i].parentElement.replaceChild(document.createTextNode('{{{' + svgPlaceholder + '}}}'), svgNodes[i]);
+                        svgNodes[i].parentElement.replaceChild(document.createTextNode('{{{ ' + svgPlaceholder + '}}}'), svgNodes[i]);
                     }
 
                     el.style.display = 'block';
@@ -261,46 +250,51 @@ var mapSyncFuncs = {
                     el.parentNode.removeChild(el);
 
                     for (var s in svgCollection) {
-                        processStart();
-                        processSVG(svgCollection[s], d.tmpl, idx, s);
+                        processSVG(svgCollection[s], s, d.svgStyle);
                     }
                 }
             });
         }
 
-        function processSVG(svgEl, tmpl, idx, svgPlaceholder) {
-            /** idea from https://github.com/NYTimes/svg-crowbar **/
-            svgEl.setAttribute("version", "1.1");
+        function processSVG(svgEl, svgPlaceholder, style) {
+            processStart();
 
-            var defsEl = document.createElement("defs");
+            /** idea from https://github.com/NYTimes/svg-crowbar **/
+            svgEl.setAttribute('version', '1.1');
+            if (!svgEl.hasAttribute('width')) {
+                svgEl.setAttribute('width', svgEl.style.width);
+            }
+            if (!svgEl.hasAttribute('height')) {
+                svgEl.setAttribute('height', svgEl.style.height);
+            }
+
+            var defsEl = document.createElement('defs');
             svgEl.insertBefore(defsEl, svgEl.firstChild);
 
-            var styleEl = document.createElement("style");
+            var styleEl = document.createElement('style');
             defsEl.appendChild(styleEl);
-            styleEl.setAttribute("type", "text/css");
+            styleEl.setAttribute('type', 'text/css');
 
             // removing attributes so they aren't doubled up
-            svgEl.removeAttribute("xmlns");
-            svgEl.removeAttribute("xlink");
+            svgEl.removeAttribute('xmlns');
+            svgEl.removeAttribute('xlink');
 
             // These are needed for the svg
-            if (!svgEl.hasAttributeNS(svgPrefix.xmlns, "xmlns")) {
-                svgEl.setAttributeNS(svgPrefix.xmlns, "xmlns", svgPrefix.svg);
+            if (!svgEl.hasAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns')) {
+                svgEl.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns', 'http://www.w3.org/2000/svg');
             }
 
-            if (!svgEl.hasAttributeNS(svgPrefix.xmlns, "xmlns:xlink")) {
-                svgEl.setAttributeNS(svgPrefix.xmlns, "xmlns:xlink", svgPrefix.xlink);
+            if (!svgEl.hasAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xlink')) {
+                svgEl.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xlink', 'http://www.w3.org/1999/xlink');
             }
 
-            var svgString = new XMLSerializer().serializeToString(svgEl).replace('</style>', '<![CDATA[' + svgStyle + ']]></style>');
+            var svgString = (new XMLSerializer()).serializeToString(svgEl).replace('</style>', '<![CDATA[' + (options.svgStyle || '') + (style || '') + ']]></style>');
             var svgBlob = new Blob([svgString], {type: "image/svg+xml;charset=utf-8"});
 
             var reader = new FileReader();
             reader.readAsDataURL(svgBlob);
             reader.onloadend = function () {
-                var svgData = {};
-                svgData[svgPlaceholder] = '<img src="' + reader.result + '" />';
-                tmplData[tmpl][idx] = Handlebars.compile(tmplData[tmpl][idx])(svgData);
+                tmplSvgData[svgPlaceholder] = '<img src="' + reader.result + '" />';
                 processEnd();
             };
         }
@@ -369,7 +363,7 @@ xhr.onload = function () {
                 format: 'letter',
                 unit: 'pt'
             },
-            copyStyle: true,
+            copyStyle: false,
             templateHelpers: { // Handlebars helpers
                 joinFilters: function (charts, sliders, options) {
                     // filters are formed into groups of 3 so each page in the template only shows 3!
@@ -397,6 +391,7 @@ xhr.onload = function () {
                     return pages;
                 }
             },
+            svgStyle: '.nvd3.nv-pie{width:240px;height:240px}.nvd3.nv-pie path{fill-opacity:0.7;stroke: #aaa}',
             data: {
                 dom: [
                     {
@@ -421,6 +416,7 @@ xhr.onload = function () {
                             }
                             return filters;
                         },
+                        svgStyle: 'rect.bar{stroke:none}rect.stack1{stroke:none;fill:red}rect.stack2{stroke:none;fill:green}rect.deselected{stroke:none;fill:#ccc;}.axis path,.axis line{fill:none;stroke:#000;shape-rendering:crispEdges;}.axis text{font:10px sans-serif}.grid-line,.axis .grid-line{fill:none;stroke:#ccc;opacity:.5;shape-rendering:crispEdges}.grid-line line,.axis .grid-line line{fill:none;stroke:#ccc;opacity:.5;shape-rendering:crispEdges}g.row text{fill: black;font-size: 12px}g.row rect{fill-opacity: 0.8}',
                         postProcess: function (processedEl, originalEl) {
                             var filterDiv = document.createElement('div');
                             filterDiv.classList.add('chart');
@@ -443,6 +439,165 @@ xhr.onload = function () {
                             filterDiv.appendChild(tooltipDiv);
 
                             return filterDiv;
+                        }
+                    },
+                    {
+                        tmpl: 'watersheds',
+                        query: '#DetailsHeader',
+                        condition: function () {
+                            return selectedID ? true : false
+                        },
+                        postProcess: function (processedEl, originalEl) {
+                            processedEl.querySelector('ul.tabs.small').remove();
+                            return processedEl
+                        }
+                    },
+                    {
+                        tmpl: 'priorityResources',
+                        query: '#PFLCC_PR_Bars',
+                        condition: function () {
+                            return selectedID ? true : false
+                        }
+                    },
+                    {
+                        tmpl: 'CLIP_Chart',
+                        query: '#CLIP_Chart',
+                        condition: function () {
+                            return selectedID ? true : false
+                        }
+                    },
+                    {
+                        tmpl: 'Bio_Chart',
+                        query: '#Bio_Chart',
+                        condition: function () {
+                            return selectedID ? true : false
+                        }
+                    },
+                    {
+                        tmpl: 'BioRareSpp_Chart',
+                        query: '#BioRareSpp_Chart',
+                        condition: function () {
+                            return selectedID ? true : false
+                        }
+                    },
+                    {
+                        tmpl: 'BioSHCA_Chart',
+                        query: '#BioSHCA_Chart',
+                        condition: function () {
+                            return selectedID ? true : false
+                        }
+                    },
+                    {
+                        tmpl: 'BioSHCATable',
+                        query: '#BioSHCATable',
+                        condition: function () {
+                            return selectedID ? true : false
+                        },
+                        postProcess: function (processedEl, originalEl) {
+                            var allTexts = textNodesUnder(processedEl);
+                            for (var i = allTexts.length; i > 0; i--) {
+                                allTexts[i-1].parentElement.classList.add('selectableText');
+                            }
+                            return processedEl;
+                        }
+                    },
+                    {
+                        tmpl: 'BioPNC_Chart',
+                        query: '#BioPNC_Chart',
+                        condition: function () {
+                            return selectedID ? true : false
+                        }
+                    },
+                    {
+                        tmpl: 'BioPNC_Table',
+                        query: '#BioPNC_Table',
+                        condition: function () {
+                            return selectedID ? true : false
+                        },
+                        postProcess: function (processedEl, originalEl) {
+                            var allTexts = textNodesUnder(processedEl);
+                            for (var i = allTexts.length; i > 0; i--) {
+                                allTexts[i-1].parentElement.classList.add('selectableText');
+                            }
+                            return processedEl;
+                        }
+                    },
+                    {
+                        tmpl: 'BioSppRich_Chart',
+                        query: '#BioSppRich_Chart',
+                        condition: function () {
+                            return selectedID ? true : false
+                        }
+                    },
+                    {
+                        tmpl: 'BioSppRichTable',
+                        query: '#BioSppRichTable',
+                        condition: function () {
+                            return selectedID ? true : false
+                        },
+                        postProcess: function (processedEl, originalEl) {
+                            var allTexts = textNodesUnder(processedEl);
+                            for (var i = allTexts.length; i > 0; i--) {
+                                allTexts[i-1].parentElement.classList.add('selectableText');
+                            }
+                            return processedEl;
+                        }
+                    },
+                    {
+                        tmpl: 'LU_Bars',
+                        query: '#LU_Bars',
+                        condition: function () {
+                            return selectedID ? true : false
+                        }
+                    },
+                    {
+                        tmpl: 'SLR_Bars',
+                        query: '#SLR_Bars',
+                        condition: function () {
+                            return selectedID ? true : false
+                        }
+                    },
+                    {
+                        tmpl: 'Dev_Bars',
+                        query: '#Dev_Bars',
+                        condition: function () {
+                            return selectedID ? true : false
+                        }
+                    },
+                    {
+                        tmpl: 'Owner_Chart',
+                        query: '#Owner_Chart',
+                        condition: function () {
+                            return selectedID ? true : false
+                        }
+                    },
+                    {
+                        tmpl: 'Owner_Table',
+                        query: '#Owner_Table',
+                        condition: function () {
+                            return selectedID ? true : false
+                        },
+                        postProcess: function (processedEl, originalEl) {
+                            var allTexts = textNodesUnder(processedEl);
+                            for (var i = allTexts.length; i > 0; i--) {
+                                allTexts[i-1].parentElement.classList.add('selectableText');
+                            }
+                            return processedEl;
+                        }
+                    },
+                    {
+                        tmpl: 'PartnerTab',
+                        query: '#PartnerTab',
+                        condition: function () {
+                            return selectedID ? true : false
+                        },
+                        postProcess: function (processedEl, originalEl) {
+                            processedEl.querySelector('.small.quiet').remove();
+                            var allTexts = textNodesUnder(processedEl);
+                            for (var i = allTexts.length; i > 0; i--) {
+                                allTexts[i-1].parentElement.classList.add('selectableText');
+                            }
+                            return processedEl;
                         }
                     }
                 ],
@@ -482,6 +637,12 @@ xhr.onload = function () {
                             }
 
                             return sliders;
+                        }
+                    },
+                    {
+                        tmpl: 'hasDetails',
+                        value: function () {
+                            return selectedID ? true : false
                         }
                     },
                     {

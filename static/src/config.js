@@ -542,3 +542,12 @@ var filterCategories = {
 var slrRadioOrder = ['slr1', 'slr2', 'slr3'];
 var devRadioOrder = ['devCur', 'dev2020', 'dev2040', 'dev2060'];
 
+var legendSubheading = {
+    priority: {
+        priority: '% of watershed covered by combined priority resources',
+        default: '% of watershed covered by Priority 1 and 2'
+    },
+    slr: '% of watershed inundated',
+    dev: '% of watershed with urban / suburban development'
+};
+

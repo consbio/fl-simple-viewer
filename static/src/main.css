@@ -195,32 +195,6 @@ input[type=range]::-ms-tooltip {
     overflow-y: auto;
 }
 
-.center {
-    text-align: center;
-}
-
-.small {
-    font-size: smaller;
-}
-
-.quiet {
-    color: #666;
-}
-.quieter {
-    color: #AAA;
-}
-.bold {
-    font-weight: bold;
-}
-
-.font-weight-normal {
-    font-weight: normal;
-}
-
-.italic {
-    font-style: italic;
-}
-
 .hidden {
     display: none !important;
 }
@@ -231,18 +205,6 @@ input[type=range]::-ms-tooltip {
 
 .clear {
     clear: both;
-}
-
-.right {
-    float: right;
-}
-
-.left {
-    float: left;
-}
-
-.align-right {
-    text-align: right;
 }
 
 .button {
@@ -283,15 +245,6 @@ input[type=range]::-ms-tooltip {
 .button-close {
     padding: 3px;
     cursor: pointer;
-}
-
-.inline-top {
-    display: inline-block !important;
-    vertical-align: top;
-}
-.inline-middle {
-    display: inline-block !important;
-    vertical-align: middle;
 }
 
 .reset {
@@ -540,59 +493,6 @@ input[type=range]::-ms-tooltip {
     /*stroke: #333;*/
 }
 
-
-/* dc.js overrides */
-div.dc-chart {
-    float: none;
-}
-
-.dc-chart g.row rect:hover {
-    fill-opacity: 0.3;
-    fill: orange;
-}
-
-
-/* NVD3 overrides */
-.nvd3 text {
-    font-size: 0.8em;
-    font-family: Verdana, Geneva, sans-serif;
-    color: #333;
-}
-.nv-multibarHorizontal .nv-bar {
-    stroke: #DDD !important;
-    shape-rendering: crispEdges;
-}
-
-.nv-multibarHorizontal .nv-bar rect {
-    stroke-opacity: 1 !important;
-}
-
-.nv-multiBarHorizontalChart .tick line {
-    stroke-opacity: 0 !important;
-}
-
-.nvd3 .nv-multibarHorizontal .nv-groups .nv-bar text {
-    font-weight: normal;
-    fill-opacity: 0.6;
-}
-
-
-.nv-axislabel {
-    font-size:14px;
-    font-weight: bold;
-}
-
-.nvd3.nv-pie path {
-    stroke: #AAA;
-}
-
-.nvtooltip {
-    background: #FFF;
-}
-
-
-
-
 /* Page elements */
 
 #Header {
@@ -719,60 +619,6 @@ div.dc-chart {
     border: 1px solid #DDD;
 }
 
-
-
-
-#Details {
-    padding: 6px 12px
-}
-
-#Details section {
-    clear: both;
-}
-
-
-#Details section h4 + div {
-    margin-bottom: 30px;
-}
-
-#Details h5 {
-    border-bottom: 1px solid #DDD;
-}
-
-#Details .detail-table {
-    margin: 20px 0 0 20px;
-}
-
-#Details table + h5 {
-    margin-top: 16px;
-}
-
-#Details table {
-    margin-top: 0;
-    padding-left: 20px;
-    font-size: 0.85em;
-}
-
-#Details tr + tr td {
-    border-top: 1px solid #EEE;
-}
-#Details td.col-name {
-    width: 248px;
-    padding: 4px 16px 4px 4px
-}
-#Details td.col-area {
-    padding: 4px;
-    font-size: small;
-}
-#Details td img {
-    height: 36px;
-    width: 50px;
-    border-radius: 3px;
-    border: 1px solid #DDD;
-    vertical-align: middle;
-    margin-right: 4px;
-}
-
 #Details .tabs {
     padding: 0;
     margin: 10px
@@ -809,149 +655,7 @@ div.dc-chart {
     padding: 2px 8px 8px;
 }
 
-.horiz-bars .nvd3 text {
-    font-size: 0.7em;
-}
-.horiz-bars {
-    line-height: 1;
-    margin: 20px 10px 10px 10px;
-    border-left: 1px solid #555;
-    padding: 10px 10px 10px 0;
-    cursor: default;
-}
-.horiz-bars > div {
-    padding: 8px 0 8px 0;
-}
-.horiz-bars .bar {
-    border: 1px solid #555;
-    border-left: none;
-    height: 1.5em;
-    opacity: 0.75;
-}
-.horiz-bar-title {
-    margin: 0 0 2px 2px;
-    font-size: 0.9em;
-}
-.horiz-bar-label {
-    margin-left: 4px;
-}
-
-
-
-
-
-/* used by pie chart - TODO */
-ul.legend {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-ul.legend.legend-table {
-    padding-left: 14px;
-    padding-right: 10px;
-}
-
-
-.legend-chart li {
-    padding: 0 10px 0 0;
-}
-
-.legend-chart .colorpatch {
-    width: 32px;
-    font-size: 0.8em;
-    padding: 4px;
-    border: 1px solid #DDD;
-    border-radius: 3px;
-    text-align: center;
-    overflow: hidden;
-    vertical-align: middle;
-    display: inline-block;
-    margin-right: 4px;
-    height: 22px;
-    line-height: 2;
-}
-.legend-chart .colorpatch.empty {
-    background: #F6F6F6;
-    color: #AAA;
-}
-
-.legend-chart li + li .colorpatch {
-    border-top: none;
-}
-.legend-chart li:first-child .colorpatch {
-    border-radius: 10px 10px 0 0;
-}
-.legend-chart li:last-child .colorpatch {
-    border-radius: 0 0 10px 10px;
-}
-.legend-chart li:only-child .colorpatch {
-    border-radius: 10px;
-}
-
-.legend-chart .label {
-    max-width: 150px;
-}
-
-
-#Legend {
-    font-size: 1.2em;
-    width: 200px;
-}
-#Legend h4 {
-    margin-top: 0;
-}
-#Legend h5 {
-    font-weight: normal;
-}
-#Legend > select {
-    border: none;
-    cursor: pointer;
-}
-#Legend > div {
-    clear: both;
-    padding: 0 4px;
-    margin-top: 4px;
-}
-#Legend .colorpatch {
-    height: 1.25em;
-    width: 1.25em;
-    vertical-align: middle;
-    display: inline-block;
-    margin: 1px 6px 1px 2px;
-    border: 1px solid #DDD;
-}
-#Legend .colorpatch + div {
-    display: inline-block;
-    vertical-align: middle;
-}
-
-#Legend input[type=range] {
-    width: 130px;
-}
-
-#Legend .legend-count {
-    border-top: 1px solid #DDD;
-    margin-top: 4px;
-    padding-top: 4px;
-    font-weight: bold;
-}
-
-
-
 /* used by filter tabs */
-.filter-subheading {
-    margin-left: 10px;
-    margin-bottom: 2px;
-}
-
-.dc-chart g.row text {
-    fill: black;
-    font-size: 14px;
-}
-
-.dc-chart + div {
-    margin-bottom: 20px;
-}
 
 .filter-reset {
     display: none;
@@ -1133,6 +837,9 @@ h4:hover .fa-map {
   background: transparent url(data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjNjQ2RDVBIiBoZWlnaHQ9IjI0IiB2aWV3Qm94PSIwIDAgMjQgMjQiIHdpZHRoPSIyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4gICAgPHBhdGggZD0iTTEyIDZ2M2w0LTQtNC00djNjLTQuNDIgMC04IDMuNTgtOCA4IDAgMS41Ny40NiAzLjAzIDEuMjQgNC4yNkw2LjcgMTQuOGMtLjQ1LS44My0uNy0xLjc5LS43LTIuOCAwLTMuMzEgMi42OS02IDYtNnptNi43NiAxLjc0TDE3LjMgOS4yYy40NC44NC43IDEuNzkuNyAyLjggMCAzLjMxLTIuNjkgNi02IDZ2LTNsLTQgNCA0IDR2LTNjNC40MiAwIDgtMy41OCA4LTggMC0xLjU3LS40Ni0zLjAzLTEuMjQtNC4yNnoiLz4gICAgPHBhdGggZD0iTTAgMGgyNHYyNEgweiIgZmlsbD0ibm9uZSIvPjwvc3ZnPg==) no-repeat center center;
   background-size: 100px;
   animation: spin 2s infinite linear;
+}
+.pdfReporterContainer .scrim .progress {
+    padding: 15px 30px;
 }
 .pdfReporterContainer .curtain {
   position: fixed;

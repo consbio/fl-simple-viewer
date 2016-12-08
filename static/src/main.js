@@ -405,7 +405,8 @@ function load() {
 
             var header = container.append('h4')
                 .classed('mapped', i == 0)
-                .text(fieldLabels[d]);
+                .text(fieldLabels[d])
+                .attr('data-field', d);
             var chartContainer = container.append('div');
 
             initExpando(container, i <= 1);
@@ -451,7 +452,7 @@ function load() {
 
             var container = d3.select(this).append('section').attr('id', 'Filter-' + d);
 
-            var header = container.append('h4').text(fieldLabels[d]);
+            var header = container.append('h4').text(fieldLabels[d]).attr('data-field', threatLevel[d]);
             var subheading = (i === 0 )? '% of watershed inundated': '% of watershed with urban / suburban development';
             var chartContainer = container.append('div');
 
@@ -874,7 +875,6 @@ function setSelectedField(field, group, subtitle) {
                 .append('span')
                 .classed('quieter small', true)
                 .text(modifier);
-
         });
 }
 
@@ -1471,6 +1471,7 @@ function getStatusUrl() {
 
         var cf = '';
         if (prefix === 't') {
+            // t for threats
             var threatType = anchorName.search('-') + 1;
             var level = threatLevel[anchorName.substr(threatType)];
             cf += level + ',';
@@ -1482,6 +1483,7 @@ function getStatusUrl() {
 
     for(var f in activeFiltersByTab['LandUseFilter']) {
         if (activeFiltersByTab['LandUseFilter'][f]) {
+            // l for land use
             q += 'l' + f.substr(2) + '=' + document.querySelector('#Filter-' + f.substr(2) + ' input.slider-value').value + '&';
         }
     }
@@ -1490,13 +1492,19 @@ function getStatusUrl() {
         if (activeFiltersByTab['SppFilter'][f]) {
             var v = document.querySelector('#Filter-' + f + ' input.slider-value').value;
             if (v > 0) {
+                // s for species
                 q += 's' + f + '=' + v + '&';
             }
         }
     }
 
+    if (selectedID) {
+        // i for id
+        q += 'i=' + selectedID + '&';
+    }
+
     var mapCenter = map.getCenter();
-    q += 'm=' + Math.round(mapCenter.lat * 100000) / 100000  + ',' + Math.round(mapCenter.lng * 100000) / 100000 + ',' + map.getZoom();
+    q += 'g=' + selectedGroup + '&f=' + selectedField + '&m=' + Math.round(mapCenter.lat * 100000) / 100000  + ',' + Math.round(mapCenter.lng * 100000) / 100000 + ',' + map.getZoom();
 
     return window.location.origin + window.location.pathname + q;
 }
@@ -1555,16 +1563,20 @@ function restorePage(url) {
 
             initializeFilterCharts(chart, activeFilter.split(','), section, header);
         } else if (prefix === 'l') {
-            var filterNum = i.substr(1);
             selectTab(d3.select('#MainSidebarHeader li[data-tab=LandUseFilter]'));
-            initializeSliderCharts(filterNum, activeFilter, 'lu' + filterNum);
+            initializeSliderCharts(k, activeFilter, 'lu' + k);
         } else if (prefix === 's') {
             selectTab(d3.select('#MainSidebarHeader li[data-tab=SppFilter]'));
-            var speciesName = i.substr(1);
-            var selectEl = document.querySelector('#SppFilter option[value=' + speciesName + ']').parentElement;
-            selectEl.value = speciesName;
+            var selectEl = document.querySelector('#SppFilter option[value=' + k + ']').parentElement;
+            selectEl.value = k;
             speciesSelect.bind(selectEl)();
-            initializeSliderCharts(speciesName, activeFilter, speciesName);
+            initializeSliderCharts(k, activeFilter, k);
+        } else if (prefix === 'i') {
+            selectUnit(activeFilter);
+        } else if (prefix === 'g') {
+            selectedGroup = activeFilter;
+        } else if (prefix === 'f') {
+            selectedField = activeFilter;
         }
     }
     selectTab(d3.select('#MainSidebarHeader li[data-tab=Intro]'));
@@ -1573,6 +1585,15 @@ function restorePage(url) {
     if (mapStatus) {
         map.setView(L.latLng(mapStatus[0], mapStatus[1]), mapStatus[2]);
     }
+
+    setSelectedField(
+        selectedField,
+        selectedGroup,
+        typeof legendSubheading[selectedGroup] === 'object' ? (legendSubheading[selectedGroup][selectedField] || legendSubheading[selectedGroup]['default']) : legendSubheading[selectedGroup]
+    );
+
+    d3.select('.mapped').classed('mapped', false);
+    d3.select('[data-field^=' + selectedField + ']').classed('mapped', true);
 }
 
 function initializeFilterCharts(chart, values, section, header) {

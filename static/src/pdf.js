@@ -111,14 +111,6 @@
         })
     }
 
-    function rgb2hex(rgb) {
-        rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
-        return (rgb && rgb.length === 4) ? "#" +
-        ("0" + parseInt(rgb[1], 10).toString(16)).slice(-2) +
-        ("0" + parseInt(rgb[2], 10).toString(16)).slice(-2) +
-        ("0" + parseInt(rgb[3], 10).toString(16)).slice(-2) : '';
-    }
-
     var px2pt = 0.264583 * 72 / 25.4; // i.e. 0.75
 
     function processTexts(el) {
@@ -141,15 +133,20 @@
             if (textContent) {
                 var rect = node.parentNode.getBoundingClientRect();
                 var style = getComputedStyle(node.parentNode);
-                var color = rgb2hex(style.color);
+                var colorArray = style.color.slice(4,-1).split(',');
+                var color = {
+                    r: parseInt(colorArray[0]),
+                    g: parseInt(colorArray[1]),
+                    b: parseInt(colorArray[2])
+                };
                 texts.push({
                     text: textContent,
                     url: node.parentNode.getAttribute('href') || '',
                     pos: {x: (rect.left - elRect.left) * px2pt, y: (rect.top - elRect.top) * px2pt},
                     style: {
                         font: style.font || 'sans-serif',
-                        fontSize: Math.floor(parseInt(style.fontSize.match(/(\d+)/)[1]) * px2pt),
-                        fontStyle: style.fontWeight >= 700 ? 'bold' : 'normal',
+                        fontSize: parseInt(style.fontSize.match(/(\d+)/)[1]) * px2pt,
+                        fontStyle: (style.fontWeight >= 700 || style.fontWeight.toLowerCase() === 'bold') ? 'bold' : 'normal',
                         color: color
                     }
                 });
@@ -159,7 +156,7 @@
         return texts;
     }
 
-    window.generateReport = function(pdfOptions, processed, callback) {
+    window.generateReport = function(pdfOptions, processed, updateProgress, callback) {
         if (processed) {
             makePDF();
         } else {
@@ -169,11 +166,16 @@
         function makePDF() {
             var pdf = new jsPDF(pdfOptions);
             var pages = Array.prototype.slice.call(document.querySelectorAll('.page')).reverse();
+            var numberOfPages = pages.length;
+            var processedPages = 1;
 
             window.scrollTo(0, 0);  // fixes a bug in chrome; scrolling the preview iframe distorts the final canvas.
             function page2pdf(pages) {
+                updateProgress(parseInt(100 * processedPages / numberOfPages));
+
                 var page = pages.pop();
                 if (!page) {
+                    updateProgress(NaN);
                     pdf.save('report.pdf');
                     processed = true;
                     callback(processed);
@@ -182,22 +184,22 @@
 
                 var texts = processTexts(page);
 
-                var topX = 0, topY = 15;
+                var topX = 0, topY = 0;
                 pdf.addHTML(page, topX, topY, {
                     background: '#fff',
                     logging: false
                 }, function () {
                     texts.forEach(function (t) {
-                        pdf.setFont(t.style.font)
-                            .setTextColor(t.style.color)
-                            .setFontSize(t.style.fontSize)
-                            .setFontStyle(t.style.fontStyle);
+                        pdf.setFont(t.style.font, t.style.fontStyle)
+                           .setTextColor(t.style.color.r, t.style.color.g, t.style.color.b)
+                           .setFontSize(t.style.fontSize);
                         if (t.url) {
-                            pdf.textWithLink(t.text, t.pos.x - 35 * (t.pos.x / 612), t.pos.y + 25 * (1 - t.pos.y / 792), {url: t.url});
+                            pdf.textWithLink(t.text, t.pos.x - 3, t.pos.y + 17 * (1 - t.pos.y / 792), {url: t.url});
                         } else {
-                            pdf.text(t.text, t.pos.x - 55 * (t.pos.x / 612), t.pos.y + 25 * (1 - t.pos.y / 792));
+                            pdf.text(t.text, t.pos.x, t.pos.y + 17 * (1 - t.pos.y / 792));
                         }
                     });
+                    processedPages++;
                     page2pdf(pages);
                     pdf.addPage();
                 });
