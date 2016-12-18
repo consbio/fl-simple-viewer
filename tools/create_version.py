@@ -14,12 +14,9 @@ deps = [
     "static/features.json",
     "static/summary.csv",
     "static/dist",
-    "static/fonts",
     "static/img",
-    "static/reporter",
     "index.html",
     "preview.html",
-    "static/src/pdf.css"
     # "features" #TODO: uncomment when uploading new data / new version
 ]
 
