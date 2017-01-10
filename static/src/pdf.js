@@ -193,6 +193,9 @@
                         pdf.setFont(t.style.font, t.style.fontStyle)
                            .setTextColor(t.style.color.r, t.style.color.g, t.style.color.b)
                            .setFontSize(t.style.fontSize);
+                        // Position of texts must be adjusted for jsPDF so they appear at approximately the same
+                        // location as in the HTML document. 792 is height of the page in points; the numbers for
+                        // shifting x and y positions (i.e. 3 and 17) are obtained through trial.
                         if (t.url) {
                             pdf.textWithLink(t.text, t.pos.x - 3, t.pos.y + 17 * (1 - t.pos.y / 792), {url: t.url});
                         } else {

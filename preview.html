@@ -80,12 +80,11 @@
     <div class="detailsHeader">
         <h3>Details for Selected Watersheds
             <svg width="25" height="25" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
-
             </svg>
         </h3>
     </div>
 
-    <div class="filters">
+    <div id="SelectedWatersheds" class="filters">
         <h4>Selected Watersheds:</h4>
         <ul>
             <li>{{{watersheds}}}</li>
@@ -302,6 +301,195 @@
                 {{{BioSppRichTable}}}
             </section>
             <div class="tooltip">Potential habitat for one or more rare or vulnerable vertebrate species. Richness refers to the number of species overlapping at any location. FWC modeled potential habitat for 62 species of terrestrial (land-based) vertebrates that may not be adequately protected on existing conservation lands. The most overlapping species in this model is 13.</div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div>
+            <span class="selectableText">Report generated {{date}}</span>
+            <a href="http://peninsularfloridalcc.org/" target="_blank" class="right selectableText">Peninsular Florida LCC</a>
+        </div>
+        <a href="{{access_url}}" target="_blank" class="smaller selectableText accessUrl">open Peninsular Florida LCC - Simple Map Viewer</a>
+    </div>
+</div>
+
+<div class="detail page">
+    <div class="header">
+        <img src="static/img/logo.png">
+        <h3 class="selectableText">Peninsular Florida LCC - Simple Map Viewer</h3>
+    </div>
+
+    <div class="detailsHeader">
+        <h3>Details for Selected Watersheds
+            <svg width="25" height="25" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
+                <path d="M512 896v512h-256v-512h256zm384-512v1024h-256v-1024h256zm1024 1152v128h-2048v-1536h128v1408h1920zm-640-896v768h-256v-768h256zm384-384v1152h-256v-1152h256z"/>
+            </svg>
+        </h3>
+    </div>
+
+    <div class="filters">
+        <h4>CLIP Landscape</h4>
+        <div class="chart">
+            <section>
+                {{{Land_Chart}}}
+            </section>
+            <div class="tooltip">This model is a combination of the two core data layers in the Landscapes Resource Category: Florida Ecological Greenways Network, and Landscape Integrity Index.  See pg. 14-15 of the CLIP Technical Report for the rules used to assign the core data layers into the Biodiversity resource priority model.</div>
+        </div>
+
+        <h4>Florida Ecological Greenways Network</h4>
+        <div class="chart">
+            <section>
+                {{{Greenways_Chart}}}
+            </section>
+            <div class="tooltip">This data layer was created by the University of Florida Center for Landscape Conservation Planning to provide an ecological component to the Statewide Greenways System plan developed by the Dept. of Environmental Protection, Office of Greenways and Trails. It is intended to represent a statewide network of ecological hubs and linkages designed to maintain landscape-scale ecological functions and fragmentation sensitive biodiversity throughout the state.</div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div>
+            <span class="selectableText">Report generated {{date}}</span>
+            <a href="http://peninsularfloridalcc.org/" target="_blank" class="right selectableText">Peninsular Florida LCC</a>
+        </div>
+        <a href="{{access_url}}" target="_blank" class="smaller selectableText accessUrl">open Peninsular Florida LCC - Simple Map Viewer</a>
+    </div>
+</div>
+
+<div class="detail page">
+    <div class="header">
+        <img src="static/img/logo.png">
+        <h3 class="selectableText">Peninsular Florida LCC - Simple Map Viewer</h3>
+    </div>
+
+    <div class="detailsHeader">
+        <h3>Details for Selected Watersheds
+            <svg width="25" height="25" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
+                <path d="M512 896v512h-256v-512h256zm384-512v1024h-256v-1024h256zm1024 1152v128h-2048v-1536h128v1408h1920zm-640-896v768h-256v-768h256zm384-384v1152h-256v-1152h256z"/>
+            </svg>
+        </h3>
+    </div>
+
+    <div class="filters">
+        <h4>Landscape Integrity Index</h4>
+        <div class="chart">
+            <section>
+                {{{LI_Chart}}}
+            </section>
+            <div class="tooltip">This data layer was created by the University of Florida Center for Landscape Conservation Planning specifically for CLIP. It combines two models: natural land cover patch size and land use intensity. Both are based on the Cooperative Land Cover (CLC) data layer and major roads data from the Florida Department of Transportation (which are used to help delineate patches).  Higher values indicate large expanses of remote, intact natural and semi-natural areas.  Lower values indicate more fragmented landscapes with increasingly intensive land uses from agriculture to urban development.</div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div>
+            <span class="selectableText">Report generated {{date}}</span>
+            <a href="http://peninsularfloridalcc.org/" target="_blank" class="right selectableText">Peninsular Florida LCC</a>
+        </div>
+        <a href="{{access_url}}" target="_blank" class="smaller selectableText accessUrl">open Peninsular Florida LCC - Simple Map Viewer</a>
+    </div>
+</div>
+
+<div class="detail page">
+    <div class="header">
+        <img src="static/img/logo.png">
+        <h3 class="selectableText">Peninsular Florida LCC - Simple Map Viewer</h3>
+    </div>
+
+    <div class="detailsHeader">
+        <h3>Details for Selected Watersheds
+            <svg width="25" height="25" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
+                <path d="M512 896v512h-256v-512h256zm384-512v1024h-256v-1024h256zm1024 1152v128h-2048v-1536h128v1408h1920zm-640-896v768h-256v-768h256zm384-384v1152h-256v-1152h256z"/>
+            </svg>
+        </h3>
+    </div>
+
+    <div class="filters">
+        <h4>CLIP Surface Water</h4>
+        <div class="chart">
+            <section>
+                {{{Water_Chart}}}
+            </section>
+            <div class="tooltip">This model is a combination of the three core data layers in the Surface Water Resource Category: Significant Surface Waters, Natural Floodplain, and Wetlands.  See pg. 15 of the CLIP Technical Report for the rules used to assign the core data layers into the Surface Water resource priority model.</div>
+        </div>
+
+        <h4>Significant Surface Waters</h4>
+        <div class="chart">
+            <section>
+                {{{SSW_Chart}}}
+            </section>
+            <div class="tooltip">This data layer was created by FNAI, in consultation with water resource experts, originally to inform the Florida Forever environmental land acquisition program. It identifies buffers to important surface water bodies as well as watersheds that contribute to those water bodies.</div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div>
+            <span class="selectableText">Report generated {{date}}</span>
+            <a href="http://peninsularfloridalcc.org/" target="_blank" class="right selectableText">Peninsular Florida LCC</a>
+        </div>
+        <a href="{{access_url}}" target="_blank" class="smaller selectableText accessUrl">open Peninsular Florida LCC - Simple Map Viewer</a>
+    </div>
+</div>
+
+<div class="detail page">
+    <div class="header">
+        <img src="static/img/logo.png">
+        <h3 class="selectableText">Peninsular Florida LCC - Simple Map Viewer</h3>
+    </div>
+
+    <div class="detailsHeader">
+        <h3>Details for Selected Watersheds
+            <svg width="25" height="25" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
+                <path d="M512 896v512h-256v-512h256zm384-512v1024h-256v-1024h256zm1024 1152v128h-2048v-1536h128v1408h1920zm-640-896v768h-256v-768h256zm384-384v1152h-256v-1152h256z"/>
+            </svg>
+        </h3>
+    </div>
+
+    <div class="filters">
+        <h4>Natural Floodplain</h4>
+        <div class="chart">
+            <section>
+                {{{Floodplain_Chart}}}
+            </section>
+            <div class="tooltip">This data layer was created by FNAI, in consultation with water resource experts, originally to inform the Florida Forever environmental land acquisition program. It identifies FEMA 100-year floodplain for most counties, or a surrogate model for 100-year floodplain (based on wetlands and soils) where FEMA data isn’t complete.</div>
+        </div>
+
+        <h4>Wetlands</h4>
+        <div class="chart">
+            <section>
+                {{{Wetlands_Chart}}}
+            </section>
+            <div class="tooltip">This data layer was created by FNAI, in consultation with water resource experts, originally to inform the Florida Forever environmental land acquisition program. Wetlands were mapped based on the Cooperative Land Cover (CLC) data layer. Highest priorities indicate wetlands within large intact natural landscapes (although the wetlands themselves may be small or large). Lowest priorities indicate wetlands within fragmented landscapes surrounded by intensive agriculture or urban development</div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div>
+            <span class="selectableText">Report generated {{date}}</span>
+            <a href="http://peninsularfloridalcc.org/" target="_blank" class="right selectableText">Peninsular Florida LCC</a>
+        </div>
+        <a href="{{access_url}}" target="_blank" class="smaller selectableText accessUrl">open Peninsular Florida LCC - Simple Map Viewer</a>
+    </div>
+</div>
+
+<div class="detail page">
+    <div class="header">
+        <img src="static/img/logo.png">
+        <h3 class="selectableText">Peninsular Florida LCC - Simple Map Viewer</h3>
+    </div>
+
+    <div class="detailsHeader">
+        <h3>Details for Selected Watersheds
+            <svg width="25" height="25" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
+                <path d="M512 896v512h-256v-512h256zm384-512v1024h-256v-1024h256zm1024 1152v128h-2048v-1536h128v1408h1920zm-640-896v768h-256v-768h256zm384-384v1152h-256v-1152h256z"/>
+            </svg>
+        </h3>
+    </div>
+
+    <div class="filters">
+        <h4>Aquifer Recharge</h4>
+        <div class="chart">
+            <section>
+                {{{Aquifer_Chart}}}
+            </section>
+            <div class="tooltip">This data layer was created by FNAI, in collaboration with Advanced Geospatial, Inc., originally to inform the Florida Forever environmental land acquisition program. AGI developed an initial Recharge Potential model following a similar model to the Florida Aquifer Vulnerability Assessment (FAVA). FNAI removed discharge areas and prioritized the model based on overlap with Springs Protection Areas and buffers to public water supply wells. High priorities indicate high potential for recharge to an underlying aquifer system. The highest priorities indicate high potential for recharge to springs or public water supplies.<br/>Note: Not included in the CLIP surface waters layer or CLIP’s aggregated priorities; original raw prioritizations/scores are included here instead.</div>
         </div>
     </div>
 

@@ -452,7 +452,9 @@ function load() {
 
             var container = d3.select(this).append('section').attr('id', 'Filter-' + d);
 
-            var header = container.append('h4').text(fieldLabels[d]).attr('data-field', threatLevel[d]);
+            var header = container.append('h4')
+                .text(fieldLabels[d])
+                .attr('data-field', threatLevel[d]);
             var subheading = (i === 0 )? '% of watershed inundated': '% of watershed with urban / suburban development';
             var chartContainer = container.append('div');
 

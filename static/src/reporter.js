@@ -55,6 +55,7 @@ var mapSyncFuncs = {
 };
 
 function textNodesUnder(el) {
+    // returns an array containing all texts within the passed DOM element.
     var n, a = [];
     var walk = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false);
     while (n = walk.nextNode()) {
@@ -89,6 +90,7 @@ function textNodesUnder(el) {
         var activeProcesses = 0;
         var tmplData = {};
         var tmplSvgData = {};
+        var xmlns_url = 'http://www.w3.org/2000/xmlns/';
 
         var container = document.createElement('div');
         container.classList.add('pdfReporterContainer');
@@ -280,12 +282,12 @@ function textNodesUnder(el) {
             svgEl.removeAttribute('xlink');
 
             // These are needed for the svg
-            if (!svgEl.hasAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns')) {
-                svgEl.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns', 'http://www.w3.org/2000/svg');
+            if (!svgEl.hasAttributeNS(xmlns_url, 'xmlns')) {
+                svgEl.setAttributeNS(xmlns_url, 'xmlns', 'http://www.w3.org/2000/svg');
             }
 
-            if (!svgEl.hasAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xlink')) {
-                svgEl.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xlink', 'http://www.w3.org/1999/xlink');
+            if (!svgEl.hasAttributeNS(xmlns_url, 'xmlns:xlink')) {
+                svgEl.setAttributeNS(xmlns_url, 'xmlns:xlink', 'http://www.w3.org/1999/xlink');
             }
 
             var svgString = (new XMLSerializer()).serializeToString(svgEl).replace('</style>', '<![CDATA[' + (options.svgStyle || '') + (style || '') + ']]></style>');
@@ -541,6 +543,62 @@ xhr.onload = function () {
                                 allTexts[i-1].parentElement.classList.add('selectableText');
                             }
                             return processedEl;
+                        }
+                    },
+                    {
+                        tmpl: 'Land_Chart',
+                        query: '#Land_Chart',
+                        condition: function () {
+                            return selectedID ? true : false
+                        }
+                    },
+                    {
+                        tmpl: 'Greenways_Chart',
+                        query: '#Greenways_Chart',
+                        condition: function () {
+                            return selectedID ? true : false
+                        }
+                    },
+                    {
+                        tmpl: 'LI_Chart',
+                        query: '#LI_Chart',
+                        condition: function () {
+                            return selectedID ? true : false
+                        }
+                    },
+                    {
+                        tmpl: 'Water_Chart',
+                        query: '#Water_Chart',
+                        condition: function () {
+                            return selectedID ? true : false
+                        }
+                    },
+                    {
+                        tmpl: 'SSW_Chart',
+                        query: '#SSW_Chart',
+                        condition: function () {
+                            return selectedID ? true : false
+                        }
+                    },
+                    {
+                        tmpl: 'Floodplain_Chart',
+                        query: '#Floodplain_Chart',
+                        condition: function () {
+                            return selectedID ? true : false
+                        }
+                    },
+                    {
+                        tmpl: 'Wetlands_Chart',
+                        query: '#Wetlands_Chart',
+                        condition: function () {
+                            return selectedID ? true : false
+                        }
+                    },
+                    {
+                        tmpl: 'Aquifer_Chart',
+                        query: '#Aquifer_Chart',
+                        condition: function () {
+                            return selectedID ? true : false
                         }
                     },
                     {
