@@ -790,6 +790,56 @@ h4:hover .fa-map {
     width: 230px;
 }
 
+#TutorialContainer {
+    display: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 10000;
+}
+
+#TutorialContainer .scrim {
+    background: #eee;
+    width: 100%;
+    height: 100%;
+    opacity: 0.5;
+}
+
+#TutorialContainer .content {
+    position: absolute;
+    top: 20%;
+    left: calc(50% - 280px);
+    width: 560px;
+    height: 315px;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #555;
+    border-radius: 5px;
+}
+
+#TutorialContainer .header {
+    margin: -20px;
+    margin-bottom: 5px;
+    background: #587387;
+    background: linear-gradient(left,#b8673d 0,#646D5A 60px,#a6b398 100%);
+    background: -webkit-linear-gradient(left,#b8673d 0,#646D5A 60px,#a6b398 100%);
+    padding: 5px 10px;
+    border-radius: 5px 5px 0 0;
+    color: #fff;
+}
+
+#TutorialContainer .header span {
+    float: right;
+    font-size: 10px;
+    cursor: pointer;
+    width: 10px;
+    height: 10px;
+    border-radius: 6px;
+    background-color: #eee;
+    color: #000;
+    padding: 1px 0 1px 4px;
+}
+
 #SharePageContainer {
     right: 45px;
 }

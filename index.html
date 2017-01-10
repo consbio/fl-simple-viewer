@@ -35,6 +35,14 @@
         <div class="spinner" style="width:100px;height:100px;background-size:100px;"></div>
     </div>
 
+    <div id="TutorialContainer">
+        <div class="scrim"></div>
+        <div class="content">
+            <div class="header">Tutorial<span onclick="closeTutorial();">x</span></div>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/LbOj8s1Cbg0" frameborder="0" allowfullscreen></iframe>
+        </div>
+    </div>
+
     <div id="SharePageContainer" class="tooltipTopRight" onclick="event.stopPropagation();">
         <div class="pointer"></div>
         <div class="content">
@@ -56,12 +64,15 @@
         <div id="Header" class="table-row fullwidth">
             <img src="static/img/logo.png" align="left" />
             <h3 class="left">Peninsular Florida LCC - Simple Map Viewer</h3>
-            <button id="PDFButton" class="button button-default right hidden">
+            <button id="PDFButton" class="button button-default right">
                 <span class="fa fa-file-pdf-o"></span>
                 Create Report
             </button>
-            <button id="SharePageButton" class="button button-default right hidden">
+            <button id="SharePageButton" class="button button-default right">
                 <span class="fa fa-share-alt"></span>&nbsp;Share
+            </button>
+            <button id="TutorialButton" class="button button-default right">
+                Tutorial
             </button>
             <div class="clear"></div>
         </div>

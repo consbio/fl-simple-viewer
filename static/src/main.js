@@ -1440,6 +1440,23 @@ function updateNodeVisibility(visibleNodes, hiddenNodes) {
 
 }
 
+function closeTutorial(container) {
+    container = container || document.getElementById('TutorialContainer');
+    var videoFrame = container.querySelector('iframe');
+    container.style.display = '';
+    videoFrame.src = videoFrame.src;
+}
+
+d3.select('#TutorialButton').on('click', function() {
+    var tutorialContainer = document.getElementById('TutorialContainer');
+    if (tutorialContainer.style.display != '') {
+        closeTutorial(tutorialContainer);
+    } else {
+        d3.event.stopPropagation();
+        tutorialContainer.style.display = 'block';
+    }
+});
+
 d3.select('#SharePageButton').on('click', function() {
     var sharePageContainer = document.getElementById('SharePageContainer');
     if (sharePageContainer.style.display != '') {

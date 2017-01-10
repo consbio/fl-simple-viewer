@@ -21,7 +21,7 @@ var mapSyncFuncs = {
         child.panTo(parent.getCenter());
     },
     layers: function (parent, child) {
-        var Leaflet = document.querySelector('iframe').contentWindow.L;
+        var Leaflet = document.querySelector('.preview iframe').contentWindow.L;
         parent.eachLayer(function (layer) {
             if (layer.toGeoJSON) {
                 addLayer(layer, parent, child);
