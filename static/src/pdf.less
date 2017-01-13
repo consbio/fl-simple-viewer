@@ -1,0 +1,294 @@
+body, html {
+  font-size: 13px;
+  margin: 0;
+}
+
+p, div, h1, h2, h3, h4, h5, a {
+  font-family: sans-serif !important;
+}
+
+h3 {
+  font-size: 18px;
+}
+
+h4 {
+  font-size: 16px;
+}
+
+.small {
+  font-size: small;
+}
+
+.smaller {
+  font-size: smaller;
+}
+
+.page {
+  position: relative;
+  margin: 20px auto;
+  height: 11in;
+  width: 8.5in;
+  box-shadow: 0 0 0.5cm rgba(0, 0, 0, 0.5);
+  page-break-after: always;
+
+  @media print {
+    box-shadow: none;
+    page-break-after: inherit;
+  }
+
+  .header {
+    display: inline-flex;
+    position: absolute;
+    top: 0.2in;
+    left: 0.25in;
+
+    img {
+      margin: 2px 10px 2px 4px;
+      height: 30px;
+    }
+
+    h3 {
+      margin: 4px 6px;
+    }
+  }
+
+  .footer {
+    position: absolute;
+    bottom: 0.1in;
+    left: 0.25in;
+    width: ~"calc(100% - .5in)";
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+  }
+}
+
+#MapContainer {
+  position: absolute;
+  top: 0.8in;
+  left: 0.25in;
+  padding-top: 10px;
+
+  #Map, > img {
+    border: 1px solid;
+    width: 8in;
+    height: 6.2in;
+  }
+
+  [id^=Bound] {
+    position: absolute;
+    font-size: 10px;
+  }
+
+  #BoundNorth {
+    top: -5px;
+    left: 0;
+  }
+
+  #BoundSouth {
+    bottom: -15px;
+    right: 0;
+  }
+
+  #BoundEast {
+    bottom: 20px;
+    right: -30px;
+    -webkit-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg);
+  }
+
+  #BoundWest {
+    top: 30px;
+    left: -30px;
+    -webkit-transform: rotate(-90deg);
+    -moz-transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg);
+  }
+}
+
+#Description {
+  position: absolute;
+  top: 7.5in;
+  left: 0.25in;
+
+  .table-cell {
+    vertical-align: top;
+
+    &.form {
+
+      * {
+        resize: none;
+        width: 90%;
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+    }
+  }
+
+  #MapThumbnail {
+    position: relative;
+
+    #StudyArea {
+      border: 1px solid orange;
+      position: absolute;
+    }
+  }
+}
+
+.filterTitle {
+  position: absolute;
+  top: 0.7in;
+  left: 0.2in;
+}
+
+.filters {
+  position: absolute;
+  top: 1.5in;
+  left: 0.2in;
+  width: 90%;
+}
+
+#DataInfo {
+  position: absolute;
+  top: 0.7in;
+  left: 0.2in;
+  padding: 20px;
+  width: 90%;
+
+  #MapAttribution {
+    color: #666;
+    font-size: 11px;
+    width: 80%;
+  }
+}
+
+/* Overriding elements fetched from parent */
+* {
+  cursor: inherit !important;
+}
+
+#Legend {
+  box-shadow: none !important;
+  top: -10px !important;
+
+  * {
+    font-size: 10px !important;
+  }
+
+  h4 {
+    font-size: 14px !important;
+  }
+
+  h5 {
+    font-size: 12px !important;
+  }
+
+  span {
+    color: #333 !important;
+  }
+}
+
+.filters {
+  .chart {
+    display: inline-flex;
+
+    section {
+      width: 60% !important;
+
+      h4.filtered {
+        color: #000 !important;
+      }
+
+      label {
+        margin-left: 10px !important;
+      }
+    }
+  }
+
+  .slider {
+    display: inline-flex;
+    margin-bottom: 20px;
+    width: 100%;
+
+    section {
+      display: inline-flex;
+      width: 60%;
+      padding-top: 10px;
+
+      * {
+        padding-right: 10px;
+      }
+    }
+
+  }
+
+  .tooltip {
+    font-size: 11px;
+    line-height: 14px;
+    padding-top: 20px;
+    padding-right: 20px;
+    width: 40%;
+  }
+}
+
+.detailsHeader {
+  position: absolute;
+  top: 0.6in;
+  width: 100%;
+
+  h3 {
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #eee;
+    padding: 10px;
+    border: 1px solid #595959;
+    border-radius: 5px;
+    width: 90%;
+
+    svg {
+      float: right;
+    }
+  }
+}
+
+.detail.page {
+  padding: 0;
+
+  h5 {
+    border-bottom: none;
+  }
+
+  tr + tr td {
+    border-top: none;
+  }
+
+  .filters {
+    left: 0.5in;
+
+    .chart {
+      margin-top: -25px;
+
+      section {
+        width: 70% !important;
+      }
+
+      .tooltip {
+        width: 30% !important;
+      }
+    }
+  }
+}
+
+[id$=_Chart] {
+  img {
+    vertical-align: middle;
+  }
+}
+
+#SelectedWatersheds {
+  h4 {
+    margin-bottom: 4px;
+  }
+}

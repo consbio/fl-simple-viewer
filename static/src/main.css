@@ -1,3 +1,71 @@
+@font-face {
+  font-family: 'fa';
+  src: url(data:font/ttf;base64,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);
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="fa-"], [class*=" fa-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'fa' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.fa-play-circle:before {
+  content: "\e90b";
+}
+.fa-youtube-play:before {
+  content: "\e90c";
+}
+.fa-bar-chart:before {
+  content: "\e906";
+}
+.fa-bar-chart-o:before {
+  content: "\e906";
+}
+.fa-map:before {
+  content: "\e907";
+}
+.fa-caret-right:before {
+  content: "\e908";
+}
+.fa-caret-down:before {
+  content: "\e909";
+}
+.fa-circle:before {
+  content: "\e90a";
+}
+.fa-exclamation-triangle:before {
+  content: "\e900";
+}
+.fa-warning:before {
+  content: "\e900";
+}
+.fa-share-alt:before {
+  content: "\e901";
+}
+.fa-file-pdf-o:before {
+  content: "\e902";
+}
+.fa-eye-slash:before {
+  content: "\e903";
+}
+.fa-eye:before {
+  content: "\e904";
+}
+.fa-times-circle:before {
+  content: "\e905";
+}
+
 html {
     height: 100%;
 }
@@ -9,6 +77,11 @@ body {
     font-family: Verdana, Geneva, sans-serif;
     font-size: 16px;
     color: #333;
+    line-height: 1;
+}
+
+button {
+    line-height: 1;
 }
 
 h4, h5 {
@@ -129,17 +202,6 @@ input[type=range]::-ms-tooltip {
     height: 100%;
 }
 
-.table {
-    display: table;
-    table-layout: fixed;
-}
-.table-row {
-    display: table-row;
-}
-.table-cell {
-    display: table-cell;
-}
-
 .fillspace {
     top: 0;
     bottom: 0;
@@ -148,32 +210,6 @@ input[type=range]::-ms-tooltip {
 }
 .scrolly {
     overflow-y: auto;
-}
-
-.center {
-    text-align: center;
-}
-
-.small {
-    font-size: smaller;
-}
-
-.quiet {
-    color: #666;
-}
-.quieter {
-    color: #AAA;
-}
-.bold {
-    font-weight: bold;
-}
-
-.font-weight-normal {
-    font-weight: normal;
-}
-
-.italic {
-    font-style: italic;
 }
 
 .hidden {
@@ -186,18 +222,6 @@ input[type=range]::-ms-tooltip {
 
 .clear {
     clear: both;
-}
-
-.right {
-    float: right;
-}
-
-.left {
-    float: left;
-}
-
-.align-right {
-    text-align: right;
 }
 
 .button {
@@ -221,20 +245,23 @@ input[type=range]::-ms-tooltip {
     background-color: #286090;
     border-color: #204d74;
 }
-
+.button.button-default {
+    color: #333;
+}
+.button.button-default:hover {
+    background-color: #e6e6e6;
+}
+.button.disabled {
+    color: #bbb;
+}
+.button.disabled:hover {
+    color: #bbb;
+    cursor: not-allowed;
+}
 
 .button-close {
     padding: 3px;
     cursor: pointer;
-}
-
-.inline-top {
-    display: inline-block !important;
-    vertical-align: top;
-}
-.inline-middle {
-    display: inline-block !important;
-    vertical-align: middle;
 }
 
 .reset {
@@ -287,11 +314,6 @@ input[type=range]::-ms-tooltip {
     align-items: center;
     justify-content: center;
 }
-
-
-
-
-
 
 .filter-radio-container {
     padding: 0 14px 10px;
@@ -464,23 +486,6 @@ input[type=range]::-ms-tooltip {
     z-index: 2000;
 }
 
-path.leaflet-interactive {
-    stroke: #333;
-    stroke-width: 0.5px;
-    stroke-opacity: 0.5;
-    fill-opacity: 0.75;
-}
-path.leaflet-interactive:hover {
-    stroke-width: 3px;
-    stroke-opacity: 1 !important;
-    stroke: #333;
-}
-path.leaflet-interactive.selected {
-    stroke: #e6550d;
-    stroke-width: 2px !important;
-    stroke-opacity: 1 !important;
-}
-
 /* transparency levels */
 .t_0 path.leaflet-interactive {
     fill-opacity: 1 !important;
@@ -505,59 +510,6 @@ path.leaflet-interactive.selected {
     /*stroke: #333;*/
 }
 
-
-/* dc.js overrides */
-div.dc-chart {
-    float: none;
-}
-
-.dc-chart g.row rect:hover {
-    fill-opacity: 0.3;
-    fill: orange;
-}
-
-
-/* NVD3 overrides */
-.nvd3 text {
-    font-size: 0.8em;
-    font-family: Verdana, Geneva, sans-serif;
-    color: #333;
-}
-.nv-multibarHorizontal .nv-bar {
-    stroke: #DDD !important;
-    shape-rendering: crispEdges;
-}
-
-.nv-multibarHorizontal .nv-bar rect {
-    stroke-opacity: 1 !important;
-}
-
-.nv-multiBarHorizontalChart .tick line {
-    stroke-opacity: 0 !important;
-}
-
-.nvd3 .nv-multibarHorizontal .nv-groups .nv-bar text {
-    font-weight: normal;
-    fill-opacity: 0.6;
-}
-
-
-.nv-axislabel {
-    font-size:14px;
-    font-weight: bold;
-}
-
-.nvd3.nv-pie path {
-    stroke: #AAA;
-}
-
-.nvtooltip {
-    background: #FFF;
-}
-
-
-
-
 /* Page elements */
 
 #Header {
@@ -576,7 +528,8 @@ div.dc-chart {
     text-shadow: 1px 1px 2px #333;
 }
 #Header .button {
-    margin: 3px 6px 0 0;
+    margin: 4px 6px 0 0;
+    font-size: 14px;
 }
 
 #Footer {
@@ -684,60 +637,6 @@ div.dc-chart {
     border: 1px solid #DDD;
 }
 
-
-
-
-#Details {
-    padding: 6px 12px
-}
-
-#Details section {
-    clear: both;
-}
-
-
-#Details section h4 + div {
-    margin-bottom: 30px;
-}
-
-#Details h5 {
-    border-bottom: 1px solid #DDD;
-}
-
-#Details .detail-table {
-    margin: 20px 0 0 20px;
-}
-
-#Details table + h5 {
-    margin-top: 16px;
-}
-
-#Details table {
-    margin-top: 0;
-    padding-left: 20px;
-    font-size: 0.85em;
-}
-
-#Details tr + tr td {
-    border-top: 1px solid #EEE;
-}
-#Details td.col-name {
-    width: 248px;
-    padding: 4px 16px 4px 4px
-}
-#Details td.col-area {
-    padding: 4px;
-    font-size: small;
-}
-#Details td img {
-    height: 36px;
-    width: 50px;
-    border-radius: 3px;
-    border: 1px solid #DDD;
-    vertical-align: middle;
-    margin-right: 4px;
-}
-
 #Details .tabs {
     padding: 0;
     margin: 10px
@@ -774,149 +673,7 @@ div.dc-chart {
     padding: 2px 8px 8px;
 }
 
-.horiz-bars .nvd3 text {
-    font-size: 0.7em;
-}
-.horiz-bars {
-    line-height: 1;
-    margin: 20px 10px 10px 10px;
-    border-left: 1px solid #555;
-    padding: 10px 10px 10px 0;
-    cursor: default;
-}
-.horiz-bars > div {
-    padding: 8px 0 8px 0;
-}
-.horiz-bars .bar {
-    border: 1px solid #555;
-    border-left: none;
-    height: 1.5em;
-    opacity: 0.75;
-}
-.horiz-bar-title {
-    margin: 0 0 2px 2px;
-    font-size: 0.9em;
-}
-.horiz-bar-label {
-    margin-left: 4px;
-}
-
-
-
-
-
-/* used by pie chart - TODO */
-ul.legend {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-ul.legend.legend-table {
-    padding-left: 14px;
-    padding-right: 10px;
-}
-
-
-.legend-chart li {
-    padding: 0 10px 0 0;
-}
-
-.legend-chart .colorpatch {
-    width: 32px;
-    font-size: 0.8em;
-    padding: 4px;
-    border: 1px solid #DDD;
-    border-radius: 3px;
-    text-align: center;
-    overflow: hidden;
-    vertical-align: middle;
-    display: inline-block;
-    margin-right: 4px;
-    height: 22px;
-    line-height: 2;
-}
-.legend-chart .colorpatch.empty {
-    background: #F6F6F6;
-    color: #AAA;
-}
-
-.legend-chart li + li .colorpatch {
-    border-top: none;
-}
-.legend-chart li:first-child .colorpatch {
-    border-radius: 10px 10px 0 0;
-}
-.legend-chart li:last-child .colorpatch {
-    border-radius: 0 0 10px 10px;
-}
-.legend-chart li:only-child .colorpatch {
-    border-radius: 10px;
-}
-
-.legend-chart .label {
-    max-width: 150px;
-}
-
-
-#Legend {
-    font-size: 1.2em;
-    width: 200px;
-}
-#Legend h4 {
-    margin-top: 0;
-}
-#Legend h5 {
-    font-weight: normal;
-}
-#Legend > select {
-    border: none;
-    cursor: pointer;
-}
-#Legend > div {
-    clear: both;
-    padding: 0 4px;
-    margin-top: 4px;
-}
-#Legend .colorpatch {
-    height: 1.25em;
-    width: 1.25em;
-    vertical-align: middle;
-    display: inline-block;
-    margin: 1px 6px 1px 2px;
-    border: 1px solid #DDD;
-}
-#Legend .colorpatch + div {
-    display: inline-block;
-    vertical-align: middle;
-}
-
-#Legend input[type=range] {
-    width: 130px;
-}
-
-#Legend .legend-count {
-    border-top: 1px solid #DDD;
-    margin-top: 4px;
-    padding-top: 4px;
-    font-weight: bold;
-}
-
-
-
 /* used by filter tabs */
-.filter-subheading {
-    margin-left: 10px;
-    margin-bottom: 2px;
-}
-
-.dc-chart g.row text {
-    fill: black;
-    font-size: 14px;
-}
-
-.dc-chart + div {
-    margin-bottom: 20px;
-}
 
 .filter-reset {
     display: none;
@@ -1015,4 +772,175 @@ h4:hover .fa-map {
 #LTList li {
     font-size: 0.9em;
     padding: 0 0 8px 0;
+}
+
+.tooltipTopRight {
+    display: none;
+    position: absolute;
+    top: 40px;
+    z-index: 10000;
+}
+
+.tooltipTopRight .content {
+    width: 220px;
+    background-color: #fff;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 12px;
+    color: #666;
+}
+
+.tooltipTopRight .pointer {
+    position: absolute;
+    margin-top: -8px;
+    width: 0;
+    height: 0;
+    border-bottom: 10px solid #fff;
+    border-right: 10px solid transparent;
+    border-left: 10px solid transparent;
+}
+
+.tooltipTopRight .bridge {
+    position: absolute;
+    top: -20px;
+    height: 30px;
+    width: 230px;
+}
+
+#TutorialButtonBig {
+    font-size: 1em;
+    width: 200px;
+    height: 40px;
+    margin: 5px calc(50% - 100px);
+}
+
+#TutorialContainer {
+    display: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 10000;
+}
+
+#TutorialContainer .scrim {
+    background: #000;
+    width: 100%;
+    height: 100%;
+    opacity: 0.5;
+}
+
+#TutorialContainer .content {
+    position: absolute;
+    top: 20%;
+    left: calc(50% - 280px);
+    width: 560px;
+    height: 315px;
+    border-radius: 5px;
+}
+
+#TutorialContainer .header {
+    background: #ccc;
+    padding: 5px 10px;
+    border-bottom: 1px solid #999;
+    border-radius: 5px 5px 0 0;
+    color: #434343;
+}
+
+#TutorialContainer .header span {
+    float: right;
+    font-size: 1.1em;
+    cursor: pointer;
+    color: #f6f6f6;
+}
+
+#SharePageContainer {
+    right: 45px;
+}
+
+#SharePageContainer .pointer {
+    right: 90px;
+}
+
+#SharePageContainer .content {
+    right: 60px;
+    width: 330px;
+    padding: 10px;
+}
+
+#PdfSupportTooltipContainer {
+    right: 10px;
+}
+
+#PdfSupportTooltipContainer .pointer {
+    right: 25px;
+}
+
+.pdfReporterContainer {
+  display: none;
+}
+.pdfReporterContainer.active {
+  display: block;
+  z-index: 10000;
+}
+.pdfReporterContainer .scrim {
+  display: none;
+  opacity: 0.7;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100000;
+  background: #fff;
+  padding: 15% 0 0 50%;
+}
+.pdfReporterContainer .scrim .spinner {
+  width: 100px;
+  height: 100px;
+  background: transparent url(data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjNjQ2RDVBIiBoZWlnaHQ9IjI0IiB2aWV3Qm94PSIwIDAgMjQgMjQiIHdpZHRoPSIyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4gICAgPHBhdGggZD0iTTEyIDZ2M2w0LTQtNC00djNjLTQuNDIgMC04IDMuNTgtOCA4IDAgMS41Ny40NiAzLjAzIDEuMjQgNC4yNkw2LjcgMTQuOGMtLjQ1LS44My0uNy0xLjc5LS43LTIuOCAwLTMuMzEgMi42OS02IDYtNnptNi43NiAxLjc0TDE3LjMgOS4yYy40NC44NC43IDEuNzkuNyAyLjggMCAzLjMxLTIuNjkgNi02IDZ2LTNsLTQgNCA0IDR2LTNjNC40MiAwIDgtMy41OCA4LTggMC0xLjU3LS40Ni0zLjAzLTEuMjQtNC4yNnoiLz4gICAgPHBhdGggZD0iTTAgMGgyNHYyNEgweiIgZmlsbD0ibm9uZSIvPjwvc3ZnPg==) no-repeat center center;
+  background-size: 100px;
+  animation: spin 2s infinite linear;
+}
+.pdfReporterContainer .scrim .progress {
+    padding: 15px 30px;
+}
+.pdfReporterContainer .curtain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.5;
+  background: #000;
+  z-index: 10000;
+}
+.pdfReporterContainer .preview {
+  position: absolute;
+  top: 3%;
+  margin-left: 10%;
+  height: 85%;
+  width: 80%;
+  z-index: 10001;
+}
+.pdfReporterContainer .preview .toolbar {
+  width: 9.3in;
+  margin-left: calc((100% - 8.5in) / 2);
+  background: #ccc;
+  border-bottom: 1px solid #999;
+  border-radius: 5px 5px 0 0;
+}
+.pdfReporterContainer .preview .toolbar .fa.fa-times-circle{
+    color: #f6f6f6;
+    font-size: 1.5em;
+    cursor: pointer;
+}
+.pdfReporterContainer .preview .toolbar * {
+  margin: 5px 10px;
+}
+.pdfReporterContainer .preview iframe {
+  background-color: #fff;
+  height: 100%;
+  width: 9.3in;
+  margin-left: calc((100% - 8.5in) / 2);
 }

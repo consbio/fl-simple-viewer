@@ -1,0 +1,338 @@
+.center {
+  text-align: center;
+}
+
+.small {
+  font-size: smaller;
+}
+
+.quiet {
+  color: #666;
+}
+
+.quieter {
+  color: #AAA;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.font-weight-normal {
+  font-weight: normal;
+}
+
+.italic {
+  font-style: italic;
+}
+
+.right {
+  float: right;
+}
+
+.left {
+  float: left;
+}
+
+.align-right {
+  text-align: right;
+}
+
+.inline-top {
+  display: inline-block !important;
+  vertical-align: top;
+}
+
+.inline-middle {
+  display: inline-block !important;
+  vertical-align: middle;
+}
+
+.table {
+  display: table;
+  table-layout: fixed;
+}
+
+.table-row {
+  display: table-row;
+}
+
+.table-cell {
+  display: table-cell;
+}
+
+path {
+  &.leaflet-interactive {
+    stroke: #333;
+    stroke-width: 0.5px;
+    stroke-opacity: 0.5;
+    fill-opacity: 0.75;
+
+    &:hover {
+      stroke-width: 3px;
+      stroke-opacity: 1 !important;
+      stroke: #333;
+    }
+
+    &.selected {
+      stroke: #e6550d;
+      stroke-width: 2px !important;
+      stroke-opacity: 1 !important;
+    }
+  }
+}
+
+/* used by pie chart - TODO */
+ul.legend {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+ul.legend.legend-table {
+  padding-left: 14px;
+  padding-right: 10px;
+}
+
+.legend-chart {
+  li {
+    padding: 0 10px 0 0;
+  }
+
+  .colorpatch {
+    width: 32px;
+    font-size: 0.8em;
+    padding: 4px;
+    border: 1px solid #DDD;
+    border-radius: 3px;
+    text-align: center;
+    overflow: hidden;
+    vertical-align: middle;
+    display: inline-block;
+    margin-right: 4px;
+    height: 22px;
+    line-height: 2;
+  }
+
+  .colorpatch.empty {
+    background: #F6F6F6;
+    color: #AAA;
+  }
+
+  li + li .colorpatch {
+    border-top: none;
+  }
+
+  li:first-child .colorpatch {
+    border-radius: 10px 10px 0 0;
+  }
+
+  li:last-child .colorpatch {
+    border-radius: 0 0 10px 10px;
+  }
+
+  li:only-child .colorpatch {
+    border-radius: 10px;
+  }
+
+  .label {
+    max-width: 150px;
+  }
+}
+
+#Legend {
+  font-size: 1.2em;
+  width: 200px;
+
+  h4 {
+    margin-top: 0;
+  }
+
+  h5 {
+    font-weight: normal;
+  }
+  & > select {
+    border: none;
+    cursor: pointer;
+  }
+
+  & > div {
+    clear: both;
+    padding: 0 4px;
+    margin-top: 4px;
+  }
+
+  .colorpatch {
+    height: 1.25em;
+    width: 1.25em;
+    vertical-align: middle;
+    display: inline-block;
+    margin: 1px 6px 1px 2px;
+    border: 1px solid #DDD;
+  }
+
+  .colorpatch + div {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  input[type=range] {
+    width: 130px;
+  }
+
+  .legend-count {
+    border-top: 1px solid #DDD;
+    margin-top: 4px;
+    padding-top: 4px;
+    font-weight: bold;
+  }
+}
+
+.filter-subheading {
+    margin-left: 10px;
+    margin-bottom: 2px;
+}
+
+/* dc.js overrides */
+.dc-chart {
+  float: none;
+
+  g.row rect:hover {
+    fill-opacity: 0.3;
+    fill: orange;
+  }
+
+  g.row text {
+    fill: black;
+    font-size: 14px;
+  }
+
+  & + div {
+    margin-bottom: 20px;
+  }
+}
+
+.horiz-bars {
+  line-height: 1;
+  margin: 20px 10px 10px 10px;
+  border-left: 1px solid #555;
+  padding: 10px 10px 10px 0;
+  cursor: default;
+
+  .nvd3 text {
+    font-size: 0.7em;
+  }
+
+  & > div {
+    padding: 8px 0 8px 0;
+  }
+
+  .bar {
+    border: 1px solid #555;
+    border-left: none;
+    height: 1.5em;
+    opacity: 0.75;
+  }
+
+  .horiz-bar-title {
+    margin: 0 0 2px 2px;
+    font-size: 0.9em;
+  }
+
+  .horiz-bar-label {
+    margin-left: 4px;
+  }
+}
+
+#Details, .detail.page {
+  padding: 6px 12px;
+
+  section {
+    clear: both;
+
+    h4 + div {
+      margin-bottom: 30px;
+    }
+  }
+
+  h5 {
+    border-bottom: 1px solid #DDD;
+  }
+
+  .detail-table {
+    margin: 20px 0 0 20px;
+  }
+
+  table {
+    margin-top: 0;
+    padding-left: 20px;
+    font-size: 0.85em;
+
+    & + h5 {
+      margin-top: 16px;
+    }
+  }
+
+  tr + tr td {
+    border-top: 1px solid #EEE;
+  }
+
+  td {
+    &.col-name {
+      width: 248px;
+      padding: 4px 16px 4px 4px
+    }
+
+    &.col-area {
+      padding: 4px;
+      font-size: small;
+    }
+
+    & img {
+      height: 36px;
+      width: 50px;
+      border-radius: 3px;
+      border: 1px solid #DDD;
+      vertical-align: middle;
+      margin-right: 4px;
+    }
+  }
+}
+
+/* NVD3 overrides */
+.nvd3 text {
+  font-size: 0.8em;
+  font-family: Verdana, Geneva, sans-serif;
+  color: #333;
+}
+
+.nv-multibarHorizontal .nv-bar {
+  stroke: #DDD !important;
+  shape-rendering: crispEdges;
+}
+
+.nv-multibarHorizontal .nv-bar rect {
+  stroke-opacity: 1 !important;
+}
+
+.nv-multiBarHorizontalChart .tick line {
+  stroke-opacity: 0 !important;
+}
+
+.nvd3 .nv-multibarHorizontal .nv-groups .nv-bar text {
+  font-weight: normal;
+  fill-opacity: 0.6;
+}
+
+.nv-axislabel {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.nvd3.nv-pie path {
+  stroke: #AAA;
+}
+
+.nvtooltip {
+  background: #FFF;
+}

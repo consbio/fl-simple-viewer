@@ -35,10 +35,46 @@
         <div class="spinner" style="width:100px;height:100px;background-size:100px;"></div>
     </div>
 
+    <div id="TutorialContainer">
+        <div class="scrim"></div>
+        <div class="content">
+            <div class="header">Tutorial<span class="fa fa-times-circle" onclick="closeTutorial();"></span></div>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/sL7PPf1lTZw" frameborder="0" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <div id="SharePageContainer" class="tooltipTopRight" onclick="event.stopPropagation();">
+        <div class="pointer"></div>
+        <div class="content">
+            <input type="url" readonly="readonly" style="display: table-cell; width: 97%"/>
+            <div style="margin-top: 5px;">Use Ctrl+C (Cmd+C on Mac) to copy the url.</div>
+        </div>
+    </div>
+
+    <div id="PdfSupportTooltipContainer" class="tooltipTopRight">
+        <div class="bridge"></div>
+        <div class="pointer"></div>
+        <div class="content">
+            Report generation is not supported for Internet Explorer.<br>
+            You can use <a href="https://www.mozilla.org/en-US/firefox/new/" target="_blank">Firefox</a> or <a href="https://www.google.com/chrome/" target="_blank">Chrome</a> for accessing this feature.
+        </div>
+    </div>
+
     <div class="table fullwidth fullheight">
         <div id="Header" class="table-row fullwidth">
             <img src="static/img/logo.png" align="left" />
             <h3 class="left">Peninsular Florida LCC - Simple Map Viewer</h3>
+            <button id="PDFButton" class="button button-default right">
+                <span class="fa fa-file-pdf-o"></span>
+                Create Report
+            </button>
+            <button id="SharePageButton" class="button button-default right">
+                <span class="fa fa-share-alt"></span>&nbsp;Share
+            </button>
+            <button id="TutorialButtonSmall" class="button button-default right">
+                <span class="fa fa-play-circle"></span>
+                Tutorial
+            </button>
             <div class="clear"></div>
         </div>
 
@@ -103,6 +139,13 @@
                                             landscape connectivity and integrity, surface waters and factors
                                             contributing to potential landscape change (sea level rise, urban development).
                                         </p>
+
+                                        <div class="divider divider-light"></div>
+
+                                        <button id="TutorialButtonBig" class="button button-primary">
+                                            <span class="fa-play-circle"></span>
+                                            Video Tutorial
+                                        </button>
 
                                         <div class="divider divider-light"></div>
 
