@@ -1449,7 +1449,7 @@ function closeTutorial(container) {
     videoFrame.src = videoFrame.src;
 }
 
-d3.select('#TutorialButton').on('click', function() {
+d3.selectAll('#TutorialButtonBig, #TutorialButtonSmall').on('click', function() {
     var tutorialContainer = document.getElementById('TutorialContainer');
     if (tutorialContainer.style.display != '') {
         closeTutorial(tutorialContainer);

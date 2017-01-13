@@ -38,8 +38,8 @@
     <div id="TutorialContainer">
         <div class="scrim"></div>
         <div class="content">
-            <div class="header">Tutorial<span onclick="closeTutorial();">x</span></div>
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/LbOj8s1Cbg0" frameborder="0" allowfullscreen></iframe>
+            <div class="header">Tutorial<span class="fa fa-times-circle" onclick="closeTutorial();"></span></div>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/sL7PPf1lTZw" frameborder="0" allowfullscreen></iframe>
         </div>
     </div>
 
@@ -71,7 +71,8 @@
             <button id="SharePageButton" class="button button-default right">
                 <span class="fa fa-share-alt"></span>&nbsp;Share
             </button>
-            <button id="TutorialButton" class="button button-default right">
+            <button id="TutorialButtonSmall" class="button button-default right">
+                <span class="fa fa-play-circle"></span>
                 Tutorial
             </button>
             <div class="clear"></div>
@@ -138,6 +139,13 @@
                                             landscape connectivity and integrity, surface waters and factors
                                             contributing to potential landscape change (sea level rise, urban development).
                                         </p>
+
+                                        <div class="divider divider-light"></div>
+
+                                        <button id="TutorialButtonBig" class="button button-primary">
+                                            <span class="fa-play-circle"></span>
+                                            Video Tutorial
+                                        </button>
 
                                         <div class="divider divider-light"></div>
 

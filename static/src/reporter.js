@@ -124,7 +124,7 @@ function textNodesUnder(el) {
 
         var printButton = document.createElement('button');
         printButton.innerHTML = 'Download PDF';
-        printButton.classList.add('button', 'print', 'button-default', 'disabled');
+        printButton.classList.add('button', 'print', 'button-primary', 'disabled');
         toolbar.appendChild(printButton);
 
         printButton.addEventListener('click', function (e) {
@@ -139,9 +139,8 @@ function textNodesUnder(el) {
             });
         });
 
-        var closeButton = document.createElement('button');
-        closeButton.innerHTML = 'x';
-        closeButton.classList.add('button', 'close', 'button-default', 'right');
+        var closeButton = document.createElement('span');
+        closeButton.classList.add('fa', 'fa-times-circle', 'right');
         closeButton.addEventListener('click', function (e) {
             hidePreview();
         });
@@ -152,6 +151,7 @@ function textNodesUnder(el) {
             processed = false;
             printButton.classList.add('disabled');
             iframe = document.createElement('iframe');
+            iframe.setAttribute('frameborder', '0');
             preview.appendChild(iframe);
             container.classList.add('active');
             scrim.style.display = 'block';
