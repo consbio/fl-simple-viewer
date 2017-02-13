@@ -14,12 +14,13 @@ var labelColorMap = {
 
 // These represent the breaks between quantile classes.  q=0 where value <= bin[0]
 // Except for dev and slr, which are hard-coded breaks
+// The breaks are calculated using extract_HUC_summary.py
 var quantiles = {
-    priority: [59, 75, 85, 92, 101], // known issue for > 100
-    bio: [11, 24, 46, 73, 100],
-    land: [0, 12, 49, 81, 100],
-    water: [7, 18, 33, 55, 100],
-    clip: [23, 45, 70, 92, 100],
+    priority: [23, 51, 75, 92, 101], // known issue for > 100
+    bio: [10, 23, 44, 72, 100],
+    land: [0, 9, 47, 82, 101],
+    water: [6, 17, 31, 50, 103],
+    clip: [22, 44, 68, 92, 101],
 
     devCur: [1, 10, 25, 50, 100],
     dev2020: [1, 10, 25, 50, 100],
@@ -45,7 +46,7 @@ var fieldLabels = {
     'bio': 'CLIP Biodiversity',
     'clip': 'Overall CLIP',
     'land': 'CLIP Landscape',
-    'priority': 'PFLCC DRAFT Priority Resources',
+    'priority': 'PFLCC Blueprint v1 Priority Resources',
     'water': 'CLIP Surface Water',
 
     dev: 'Urban Development / Population Growth',
@@ -65,7 +66,7 @@ var devLevels = ['devCur', 'dev2020', 'dev2040', 'dev2060'];
 
 var fieldTooltips = {
     'bio': 'This model is a combination of the four CLIP core data layers in the Biodiversity Resource Category: Strategic Habitat Conservation Areas (SHCA), Vertebrate Potential Habitat Richness (VertRich), Rare Species Habitat Conservation Priorities (FNAIHAB), and Priority Natural Communities (Natcom).  See pg. 14 of the CLIP Technical Report for the rules used to assign the core data layers into the Biodiversity resource priority model.',
-    'clip': 'The Critical Lands and Waters Identification Project (CLIP) is a collection of spatial data that identify statewide priorities for a broad range of natural resources in Florida. CLIP 3.0 is organized into a set of core natural resource data layers which are combined into resource categories, three of which (biodiversity, landscapes, surface water) have been combined into the Aggregated CLIP model, which identifies five priority levels for natural resource conservation.',
+    'clip': 'The Critical Lands and Waters Identification Project (CLIP) is a collection of spatial data that identify statewide priorities for a broad range of natural resources in Florida. CLIP 4.0 is organized into a set of core natural resource data layers which are combined into resource categories, three of which (biodiversity, landscapes, surface water) have been combined into the Aggregated CLIP model, which identifies five priority levels for natural resource conservation.',
     'land': 'This model is a combination of the two core data layers in the Landscapes Resource Category: Florida Ecological Greenways Network, and Landscape Integrity Index.  See pg. 14-15 of the CLIP Technical Report for the rules used to assign the core data layers into the Landscape resource priority model.',
     'priority': 'Priority resources are the set of biological, ecological, and cultural features and ecological processes collaboratively identified as most important, and are the focus of the PFLCC’s planning.  Priority resources will provide a simple way to measure the overall condition of the Peninsular Florida’s complex systems.  There are currently 12 DRAFT Priority Resources, 9 based on land cover types from the Cooperative Land Cover map (v. 3.1): High Pine and Scrub, Pine Flatwoods and Dry Prairie, Freshwater Forested Wetlands, Hardwood Forested Uplands, Coastal Uplands, Freshwater non-forested Wetlands, Estuarine, Marine, Freshwater Aquatic; and 3 non-CLC based resource types:  Landscape Connectivity, Cultural and Socio-economic, and Working Lands.',
     'water': 'This model is a combination of the three core data layers in the Surface Water Resource Category: Significant Surface Waters, Natural Floodplain, and Wetlands.  See pg. 15 of the CLIP Technical Report for the rules used to assign the core data layers into the Surface Water resource priority model.',
@@ -79,9 +80,9 @@ var priorityLabels6 = priorityLabels.slice(0, 5).concat(['Priority 6']).concat(p
 
 
 // greenways and landscape integrity have different priority categories
-var greenwaysLabels = ['Priority 1', 'Priority 3', 'Priority 4', 'Not a Priority'];
-var greenwaysColors = ["#08519c", "#6baed6", "#bdd7e7", '#ffffcc'];
-var greenwaysLabelColors = ['#FFF', '#FFF', '#333', '#333'];
+var greenwaysLabels = ['Priority 1', 'Priority 2', 'Priority 3', 'Priority 4', 'Not a Priority'];
+var greenwaysColors = ["#08519c", "#3182bd", "#6baed6", "#bdd7e7", '#ffffcc']
+var greenwaysLabelColors = ['#FFF', '#FFF', '#333', '#333', '#333'];
 
 var liLabels = ['Priority 2', 'Priority 3', 'Priority 4', 'Priority 5', 'Not a Priority'];
 var liColors = ["#3182bd", "#6baed6", "#bdd7e7", "#eff3ff", '#ffffcc'];
@@ -271,6 +272,7 @@ var communities = {
 
 
 var priorityResourceLabels = {
+    Conx: 'Connectivity',
     C: 'Cultural',
     E: 'Estuarine',
     FNFW: 'Freshwater Non-forested Wetlands',
@@ -286,6 +288,7 @@ var priorityResourceLabels = {
 };
 
 var priorityResourceTooltips = {
+    Conx: 'Linkages between Priority Resource Habitats, based on the P3 priority level of the CLIP Landscape Priorities.',
     C: 'Important features of the environment or landscape related to social practices, customary beliefs, or economic activity that is influenced by social values.',
     E: 'Deepwater tidal habitats and adjacent tidal wetlands. Usually semi-enclosed by land with open, partly obstructed, or sporadic ocean access, with ocean derived water at least occasionally diluted by freshwater land runoff. The upstream and landward limit is where ocean-derived salts measure ˂ .5 ppt during average annual low flow. The seaward limit is: 1) an imaginary line closing the mouth of a river, bay, or sound; and 2) the seaward limit of wetland emergents, shrubs, or trees when not included in 1).',
     FNFW: 'Herbaceous or shrubby palustrine communities in floodplains or depressions; canopy trees, if present, very sparse and often stunted.',
@@ -303,6 +306,7 @@ var priorityResourceTooltips = {
 
 
 var priorityResourceColors = {
+    Conx: d3.rgb(215,158,158).toString(),
     C: d3.rgb(200, 195, 255).toString(),
     E: d3.rgb(80, 185, 160).toString(),
     FNFW: d3.rgb(125, 210, 255).toString(),

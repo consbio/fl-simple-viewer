@@ -4,12 +4,12 @@ import os
 import fiona
 
 
-indir = r'D:\Projects\PFLCC\Data\PFLCCDataViewerDatasets'
-indir = r'D:\Projects\PFLCC\Data\Consolidated LU By HUC12'
-indir = r'D:\Projects\PFLCC\Data\PFLCCUpdatedPRs'
+indir = '/Volumes/data/projects/PFLCC/data/shapefiles'
+#indir = r'D:\Projects\PFLCC\Data\Consolidated LU By HUC12'
+#indir = r'D:\Projects\PFLCC\Data\PFLCCUpdatedPRs'
 # indir = r'D:\Projects\PFLCC\Data\TIGER_counties'
 
-outdir = r'D:\Projects\PFLCC\Data\tables'
+outdir = '/Volumes/data/projects/PFLCC/data/tables'
 
 for shp in glob.glob(os.path.join(indir, '*.shp')):
     print shp

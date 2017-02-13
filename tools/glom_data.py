@@ -4,7 +4,7 @@ import os
 import pandas as pd
 
 
-working_dir = r'D:\Projects\PFLCC\Data\tables'
+working_dir = '/Volumes/data/projects/PFLCC/data/tables'
 outdir = '../features'
 
 # field_map = dict()
@@ -24,11 +24,11 @@ outdir = '../features'
 
 files = [
     'HUC_12_Names',
-    'PFLCCPRbyHUC12_rev',
-    'CLIPOverallPrioritiesByHUC12',
-    'CLIPBiodiversityPrioritesByHUC12',
-    'CLIPLanScpPrioritiesByHUC12',
-    'CLIPSrfWatPrioritiesByHUC12',
+    'BluePrintV1_HUC12_201701',
+    'Clip4OverPrioByHUC12_201612',
+    'Clip4BiodivByHUC12_201701',
+    'Clip4LanScaPrioByHUC12_201612',
+    'Clip4SrfWatByHUC12_201612',
     'FHAB_L1',
     'SHCA_L1',
     'SHCA_L2_P1',
@@ -55,8 +55,7 @@ files = [
     'WTLND_L1',
     'RCHRG_L1',
 
-    'ConsolidatedCLCByHUC12',
-    # 'LandManagementByHUC12', # obviated by below
+    'LandUseByHUC12_201612',
     'ManagedAreas_FNAI_HUC12',
 
     'Florida2060',
@@ -72,29 +71,35 @@ dfs = dict()
 for filename in files:
     dfs[filename] = pd.read_csv(os.path.join(working_dir, filename + '.csv'), dtype={'HUC_12': str}).set_index('HUC_12')
 
-primary_df = dfs['CLIPOverallPrioritiesByHUC12']
+primary_df = dfs['BluePrintV1_HUC12_201701']
 
 for huc in primary_df.index: #[0:500]:
-    # print('Processing {}'.format(huc))
+    print('Processing {}'.format(huc))
     record = primary_df.loc[huc]
+
+    if record['ActAREA_H'].item() < 1:
+        print('---Skipping, too small---')
+        continue
+
     data = {
-        'hectares': int(round(record['ACRES'].item() * 0.404686)),
+        'hectares': int(round(record['ActAREA_H'].item())),
         'name': dfs['HUC_12_Names'].loc[huc]['Name']
     }
 
     # PFLCC priorities
-    record = dfs['PFLCCPRbyHUC12_rev'].loc[huc]
-    fields = ['HPS_H', 'HFU_H', 'PFDP_H', 'CU_H', 'FA_H', 'E_H', 'M_H', 'FFW_H', 'FNFW_H', 'WL1_H', 'WL2_H', 'C_H']
+    record = dfs['BluePrintV1_HUC12_201701'].loc[huc]
+    fields = ['Conx_H', 'PFDP_H', 'WL1_H', 'WL2_H', 'FNFW_H', 'FFW_H', 'HPS_H', 'HFU_H', 'CU_H', 'FA_H', 'E_H']
     values = [int(round(record[f], 0)) for f in fields]
     data['pflcc_pr'] = dict([x for x in zip([f.replace('_H', '') for f in fields], values) if x[1] > 0])
 
+    ## CLIP v4
     # CLIP priorities
-    record = dfs['CLIPOverallPrioritiesByHUC12'].loc[huc]
-    fields = [u'CLIP_P1', u'CLIP_P2', u'CLIP_P3', u'CLIP_P4', 'CLIP_P5', 'CLIP_0']  # in m2
+    record = dfs['Clip4OverPrioByHUC12_201612'].loc[huc]
+    fields = ['CLIP_P1', 'CLIP_P2', 'CLIP_P3', 'CLIP_P4', 'CLIP_P5', 'CLIP_0'] # in m2
     data['clip'] = [int(round(record[f] / 10000.0, 0)) for f in fields]
 
     # Biodiversity
-    record = dfs['CLIPBiodiversityPrioritesByHUC12'].loc[huc]
+    record = dfs['Clip4BiodivByHUC12_201701'].loc[huc]
     fields = ['BioD_P1', 'BioD_P2', 'BioD_P3', 'BioD_P4', 'BioD_P5', 'BioD_0']  # in m2
     data['bio'] = [int(round(record[f] / 10000.0, 0)) for f in fields]
 
@@ -184,13 +189,13 @@ for huc in primary_df.index: #[0:500]:
 
 
     # Landscapes
-    record = dfs['CLIPLanScpPrioritiesByHUC12'].loc[huc]
+    record = dfs['Clip4LanScaPrioByHUC12_201612'].loc[huc]
     fields = ['Lan_P1', 'Lan_P2', 'Lan_P3', 'Lan_P4', 'Lan_P5', 'Lan_0']  # in m2
     data['land'] = [int(round(record[f] / 10000.0, 0)) for f in fields]
 
     # Landscapes - Greenways
     record = dfs['GRNWAY_L1'].loc[huc]
-    fields = ['GRNWAY_P1', 'GRNWAY_P3', 'GRNWAY_P4', 'GRNWAY_0']  # in m2
+    fields = ['GRNWAY_P1', 'GRNWAY_P2', 'GRNWAY_P3', 'GRNWAY_P4', 'GRNWAY_0']  # in m2
     data['land_greenways'] = [int(round(record[f] / 10000.0, 0)) for f in fields]
 
     # Landscape integrity
@@ -200,7 +205,7 @@ for huc in primary_df.index: #[0:500]:
 
 
     # Surface water
-    record = dfs['CLIPSrfWatPrioritiesByHUC12'].loc[huc]
+    record = dfs['Clip4SrfWatByHUC12_201612'].loc[huc]
     fields = ['SW_P1', 'SW_P2', 'SW_P3', 'SW_P4', 'SW_P5', 'SW_0']  # in m2
     data['water'] = [int(round(record[f] / 10000.0, 0)) for f in fields]
 
@@ -226,10 +231,22 @@ for huc in primary_df.index: #[0:500]:
 
 
     # Land Use
-    record = dfs['ConsolidatedCLCByHUC12'].loc[huc]
-    fields = ['LU_1000_H', 'LU_2000_H', 'LU_3000_H', 'LU_6000_H', 'LU_7000_H', 'LU_8000_H', 'LU_8500_H', 'LU_9000_H']
+    record = dfs['LandUseByHUC12_201612'].loc[huc]
+    # fields = ['LU_1000_H', 'LU_2000_H', 'LU_3000_H', 'LU_6000_H', 'LU_7000_H', 'LU_8000_H', 'LU_8500_H', 'LU_9000_H']
+    fields = ['NatUp_H', 'Wet_H', 'FrAq_H', 'Mar_H', 'RHi_H', 'RLow_H', 'TreeP_H', 'Dev_H']
+    field_LUT = {
+        'NatUp_H': 10,
+        'Wet_H': 20,
+        'FrAq_H': 30,
+        'Mar_H': 60,
+        'RHi_H': 70,
+        'RLow_H': 80,
+        'TreeP_H': 85,
+        'Dev_H': 90
+    }
     values = [int(round(record[f], 0)) for f in fields]
-    data['land_use'] = dict([x for x in zip([f.replace('_H', '').replace('LU_', '')[:2] for f in fields], values) if x[1] > 0])
+    # data['land_use'] = dict([x for x in zip([f.replace('_H', '').replace('LU_', '') for f in fields], values) if x[1] > 0])
+    data['land_use'] = dict([x for x in zip([field_LUT[f] for f in fields], values) if x[1] > 0])
 
 
     # Threats - Sea level rise
