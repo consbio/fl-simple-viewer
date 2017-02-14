@@ -97,8 +97,8 @@ for filename, fields in area_files.items():
     if filename == 'LandUseByHUC12_201612':
         src_df.columns = ['lu{}'.format(field_LUT[x]) for x in src_df.columns]
     elif filename == 'SHCA_Species_List':
-        pass
-        # src_df.columns = [x.replace('_1', '').replace('_H', '').replace('_PH', '') for x in src_df.columns]
+        # pass
+        src_df.columns = [x.replace('_1', '').replace('_H', '').replace('_PH', '') for x in src_df.columns]
 
     df = df.join(src_df.round(0))  # hectares
 

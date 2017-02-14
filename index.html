@@ -127,7 +127,7 @@
 
                                 <div id="MainSidebar">
                                     <div id="Intro" class="tab">
-                                        <p>
+                                        <p style="font-size: 15px;margin-bottom:2px;">
                                             <img src="static/img/ScrubJay.jpg" style="width:50%;margin:0 10px 6px 0; border-radius: 10px 0;box-shadow:2px 2px 5px #AAA;" align="left"/>
                                             <span style="font-weight: bold;">
                                                 Welcome to the Peninsular Florida LCC Simple Map Viewer.
@@ -139,8 +139,6 @@
                                             landscape connectivity and integrity, surface waters and factors
                                             contributing to potential landscape change (sea level rise, urban development).
                                         </p>
-
-                                        <div class="divider divider-light"></div>
 
                                         <button id="TutorialButtonBig" class="button button-primary">
                                             <span class="fa-play-circle"></span>
@@ -154,13 +152,26 @@
                                             <p class="inset" style="font-size: small">
                                                 Use one of the tabs above to explore
                                                 different combinations of key characteristics assessed at the
-                                                watershed scale across the state.
+                                                watershed scale across the state.  Click on the bars in the charts to filter
+                                                the map by that class.  You can combine filters across tabs and across factors within a tab.
+                                                You can also display that factor on the map by clicking the map icon next to the name.
                                             </p>
 
                                             <h4><span class="badge">2</span> Explore Details for a Watershed</h4>
                                             <p class="inset" style="font-size: small">
                                                 To find out more information about a specific watershed, click on it in the map.
                                             </p>
+
+                                            <div id="CreateReportInstruction">
+                                                <h4><span class="badge">3</span> Create a Report</h4>
+                                                <p class="inset" style="font-size: small">
+                                                    You can save your current view, including any filters and selected watersheds, to a detailed PDF report.
+                                                </p>
+                                                <p id="IEWarning" class="alert inset hidden" style="font-size:small; margin-top:-8px;margin-right:32px; padding:3px 6px; background:rgba(255,169,0,.2); border-radius:3px; color:#333;">
+                                                    <i class="fa fa-exclamation-triangle"></i>
+                                                    You are using Internet Explorer.  Unfortunately, you will be unable to Create a Report.  Please use another browser, such as Firefox or Chrome.
+                                                </p>
+                                            </div>
                                         </div>
 
                                         <div class="divider divider-light"></div>
@@ -176,13 +187,17 @@
                                         </p>
                                     </div>
                                     <div id="PriorityFilter" class="tab hidden">
-                                        <p class="small" style="color: #AAA;">
+                                        <p class="small quieter">
                                             Each factor below represents a different conservation related measure.
                                             Each factor is broken into 5 classes.  Each class has an associated range of
                                             values that represent the area of a factor within the watershed (HUC 12).
                                             The bars represent the number of watersheds that fall into each class.
                                             The initial setting divides the number of watersheds approximately equally
                                             across the 5 classes for each factor.
+                                            <br/>
+                                            <br/>
+                                            Click one or more bars to filter the map.  Click the map icon to show that
+                                            factor on the map.
                                         </p>
                                     </div>
                                     <div id="SppFilter" class="tab hidden">
@@ -190,6 +205,9 @@
                                             Select one or more species below to select watersheds that have at least the amount
                                             of potential habitat you specify (up to the maximum amount of potential
                                             habitat area found for that species).
+                                            <br/>
+                                            <br/>
+                                            Use the slider or the number field to provide the maximum area value.
                                         </p>
                                         <div></div>  <!-- selectors -->
                                         <ul class="slider-list"></ul> <!-- items -->
@@ -199,7 +217,10 @@
                                         <p class="small" style="color: #AAA;">
                                             Use one or more of the sliders below to select watersheds that contain at least the amount
                                             you specify of these general land use categories.  The categories were generalized from the
-                                            78 state level land cover types outlined in the Florida Cooperative Land Cover Map (CLC, version 3.1)
+                                            78 state level land cover types outlined in the Florida Cooperative Land Cover Map (CLC, version 3.1).
+                                            <br/>
+                                            <br/>
+                                            Use the slider or the number field to provide the maximum area value.
                                         </p>
                                         <div id="LandUseFilterList" class="slider-list"></div>
                                     </div>
@@ -212,6 +233,10 @@
                                             The bars represent the number of watersheds that fall into each class.
                                             The initial setting divides the number of watersheds approximately equally
                                             across the 5 classes for each factor.
+                                            <br/>
+                                            <br/>
+                                            Click one or more bars to filter the map.  Click the map icon to show that
+                                            factor on the map.
                                         </p>
                                     </div>
                                 </div>

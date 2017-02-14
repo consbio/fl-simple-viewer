@@ -73,6 +73,8 @@ if (L.Browser.ie) {
     }).on('mouseout', function() {
         d3.select('#PdfSupportTooltipContainer').style('display', 'none');
     });
+    d3.select('#CreateReportInstruction').classed('disabled', true);
+    d3.select('#IEWarning').classed('hidden', false);
 }
 
 
