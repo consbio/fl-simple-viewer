@@ -634,7 +634,8 @@ input[type=range]::-ms-tooltip {
 .tooltip-text {
     padding: 4px 0;
     color: #666;
-    font-size: smaller;
+    font-size: small;
+    line-height: 1.2;
     margin: 0;
     clear: both;
 }
