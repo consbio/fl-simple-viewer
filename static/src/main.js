@@ -949,12 +949,15 @@ function showDetails(id) {
     d3.select('#UnitID').text('HUC 12: ' + id);
     d3.select('#UnitArea').text(d3.format(',')(details.hectares));
 
-    var chartColors = colorMap.general;
-    var labelColors = labelColorMap.general;
-    var chartColors4 = chartColors.slice(0, 4).concat(chartColors[5]);
-    var labelColors4 = labelColors.slice(0, 4).concat(labelColors[5]);
-    var chartColors6 = ["#08519c", "#3182bd", "#6baed6", "#9ecae1", "#c6dbef", "#eff3ff", '#ffffcc'];  // same version as colorMap.general but over 7 classes
-    var labelColors6 = labelColors.concat(['#333']);
+    var chartColors4 = colorMap.general4;
+    var chartColors5 = colorMap.general5;
+    var chartColors6 = colorMap.general6;
+    var chartColors7 = colorMap.general7;
+
+    var labelColors4 = labelColorMap.general4;
+    var labelColors5 = labelColorMap.general5;
+    var labelColors6 = labelColorMap.general6;
+    var labelColors7 = labelColorMap.general7;
 
     // Priority resources tab
     var pr_data = d3.entries(details.pflcc_pr).map(function(d) {
@@ -970,10 +973,10 @@ function showDetails(id) {
 
 
     // CLIP tab
-    createPieChart(d3.select('#CLIP_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.clip, priorityLabels, chartColors, labelColors, clipInfo), details.hectares);
-    createPieChart(d3.select('#Bio_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.bio, priorityLabels, chartColors, labelColors, clipBioInfo), details.hectares);
-    createPieChart(d3.select('#BioRareSpp_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.bio_rare_spp, priorityLabels4, chartColors4, labelColors4, clipRareSppInfo), details.hectares);
-    createPieChart(d3.select('#BioSHCA_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.bio_shca, priorityLabels4, chartColors4, labelColors4, clipSHCAInfo), details.hectares);
+    createPieChart(d3.select('#CLIP_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.clip, priorityLabels5, chartColors5, labelColors5, clipInfo), details.hectares);
+    createPieChart(d3.select('#Bio_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.bio, priorityLabels5, chartColors5, labelColors5, clipBioInfo), details.hectares);
+    createPieChart(d3.select('#BioRareSpp_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.bio_rare_spp, priorityLabels6, chartColors6, labelColors6, clipRareSppInfo), details.hectares);
+    createPieChart(d3.select('#BioSHCA_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.bio_shca, priorityLabels5, chartColors5, labelColors5, clipSHCAInfo), details.hectares);
 
 
     var tableNode = d3.select('#BioSHCATable');
@@ -999,7 +1002,7 @@ function showDetails(id) {
     });
 
 
-    createPieChart(d3.select('#BioSppRich_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.bio_spp_rich, priorityLabels, chartColors, labelColors, clipSppRichInfo), details.hectares);
+    createPieChart(d3.select('#BioSppRich_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.bio_spp_rich, priorityLabels5, chartColors5, labelColors5, clipSppRichInfo), details.hectares);
 
     tableNode = d3.select('#BioSppRichTable');
     tableNode.html('');
@@ -1009,20 +1012,17 @@ function showDetails(id) {
     }
 
     // Landscape tab
-    createPieChart(d3.select('#Land_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.land, priorityLabels, chartColors, labelColors, clipLandInfo), details.hectares);
-    //createPieChart2(d3.select('#Land_Chart'), zipIntoObj(['value', 'label', 'color', 'tooltip'], details.land, priorityLabels, chartColors, clipLandInfo), 'ha', details.hectares);
-
-
-    createPieChart(d3.select('#Greenways_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.land_greenways, greenwaysLabels, greenwaysColors, greenwaysLabelColors, clipGreenwayInfo), details.hectares);
+    createPieChart(d3.select('#Land_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.land, priorityLabels5, chartColors5, labelColors5, clipLandInfo), details.hectares);
+    createPieChart(d3.select('#Greenways_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.land_greenways, priorityLabels5, chartColors5, labelColors5, clipGreenwayInfo), details.hectares);
 
     // land integrity has different priority categories
-    createPieChart(d3.select('#LI_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.land_integrity, liLabels, liColors, liLabelColors, clipLIInfo), details.hectares);
+    createPieChart(d3.select('#LI_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.land_integrity, priorityLabels5.slice(1), colorMap.land_integrity, labelColorMap.land_integrity, clipLIInfo), details.hectares);
 
     // Surface water tab
-    createPieChart(d3.select('#Water_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.water, priorityLabels, chartColors, labelColors, clipWaterInfo), details.hectares);
-    createPieChart(d3.select('#SSW_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.water_significant, priorityLabels, chartColors, labelColors, clipSigSurfWaterInfo), details.hectares);
-    createPieChart(d3.select('#Floodplain_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.water_floodplain, priorityLabels, chartColors, labelColors, clipNatFldInfo), details.hectares);
-    createPieChart(d3.select('#Wetlands_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.water_wetland, priorityLabels, chartColors, labelColors, clipWetlandsInfo), details.hectares);
+    createPieChart(d3.select('#Water_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.water, priorityLabels5, chartColors5, labelColors5, clipWaterInfo), details.hectares);
+    createPieChart(d3.select('#SSW_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.water_significant, priorityLabels7, chartColors7, labelColors7, clipSigSurfWaterInfo), details.hectares);
+    createPieChart(d3.select('#Floodplain_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.water_floodplain, priorityLabels6, chartColors6, labelColors6, clipNatFldInfo), details.hectares);
+    createPieChart(d3.select('#Wetlands_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.water_wetland, priorityLabels6, chartColors6, labelColors6, clipWetlandsInfo), details.hectares);
     if (details.water_aquifer) {
         createPieChart(d3.select('#Aquifer_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.water_aquifer, priorityLabels6, chartColors6, labelColors6, aquiferInfo), details.hectares);
     }

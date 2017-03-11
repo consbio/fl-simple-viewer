@@ -12,11 +12,11 @@ working_dir = '/Volumes/data/projects/PFLCC/data/tables'
 # [file root, list of field names]
 metrics = {
     # Priorities
-    'clip': ['Clip4OverPrioByHUC12_201612', ['CLIP_P1', 'CLIP_P2']],
-    'bio': ['Clip4BiodivByHUC12_201701', ['BioD_P1', 'BioD_P2']],
-    'land': ['Clip4LanScaPrioByHUC12_201612', ['Lan_P1', 'Lan_P2']],
-    'priority': ['BluePrintV1_HUC12_201701', ['Conx_H', 'PFDP_H', 'WL1_H', 'WL2_H', 'FNFW_H', 'FFW_H', 'HPS_H', 'HFU_H', 'CU_H', 'FA_H', 'E_H']],
-    'water': ['Clip4SrfWatByHUC12_201612', ['SW_P1', 'SW_P2']],
+    'clip': ['Clip4OverPrioByHUC12', ['CLIP_P1', 'CLIP_P2']],
+    'bio': ['Clip4BiodivByHUC12', ['BioD_P1', 'BioD_P2']],
+    'land': ['Clip4LanScaPrioByHUC12', ['Lan_P1', 'Lan_P2']],
+    'priority': ['BluePrintV1_HUC12', ['Conx_H', 'PFDP_H', 'WL1_H', 'WL2_H', 'FNFW_H', 'FFW_H', 'HPS_H', 'HFU_H', 'CU_H', 'FA_H', 'E_H']],
+    'water': ['Clip4SrfWatByHUC12', ['SW_P1', 'SW_P2']],
 
     # Threats
     # Sea level rise 1m ... 3m
@@ -75,7 +75,7 @@ df = pd.DataFrame(quantiles)
 
 # File name: fields
 area_files = {
-    'LandUseByHUC12_201612': ['NatUp_H', 'Wet_H', 'FrAq_H', 'Mar_H', 'RHi_H', 'RLow_H', 'TreeP_H', 'Dev_H'],
+    'LandUseByHUC12': ['NatUp_H', 'Wet_H', 'FrAq_H', 'Mar_H', 'RHi_H', 'RLow_H', 'TreeP_H', 'Dev_H'],
     'SHCA_Species_List': ['AIBM_H_1', 'ASMS_PH_H', 'CHBM_PH_H', 'GBAT_PH_H', 'GSHP_PH_H', 'KDEER_PH_H', 'LKMR_PH_H', 'PANT_PH_H', 'SABM_PH_H', 'SAVOL_PH_H', 'SIRAT_PH_H', 'BCFS_PH_H', 'BEAR_PH_H', 'CROC_PH_H', 'LOUSP_PH_H', 'MACSP_PH_H', 'NEWT_PH_H', 'PLOVR_PH_H', 'SCRJY_PH_H', 'SESAL_PH_H', 'SNKIT_PH_H', 'SSKNK_PH_H', 'STHA_PH_H', 'SRRAT_PH_H', 'FLOMO_PH_H', 'GSMS_PH_H', 'OWL_PH_H', 'PBTF_PH_H', 'SCTSP_PH_H', 'STKI_PH_H', 'WCPI_PH_H', 'COHA_PH_H', 'MACU_PH_H', 'SEBM_PH_H']
 }
 
@@ -94,7 +94,7 @@ field_LUT = {
 for filename, fields in area_files.items():
     src_df = pd.read_csv(os.path.join(working_dir, filename + '.csv'), dtype={'HUC_12': str}).set_index('HUC_12')[fields]
 
-    if filename == 'LandUseByHUC12_201612':
+    if filename == 'LandUseByHUC12':
         src_df.columns = ['lu{}'.format(field_LUT[x]) for x in src_df.columns]
     elif filename == 'SHCA_Species_List':
         # pass

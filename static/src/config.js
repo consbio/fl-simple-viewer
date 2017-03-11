@@ -4,12 +4,25 @@ var colorMap = {
     priority: ["#006837", "#31a354", "#78c679", "#c2e699", "#ffffcc"],
     dev: ["#993404", "#d95f0e", "#fe9929", "#fed98e", "#ffffd4"],
     slr: ["#253494", "#2c7fb8", "#41b6c4", "#a1dab4", "#ffffcc"],
-    general: ["#08519c", "#3182bd", "#6baed6", "#bdd7e7", "#eff3ff", '#ffffcc'] //blue
+    general4: ["#08519c", "#3182bd", "#6baed6", "#bdd7e7", "#eff3ff"],
+    general5: ["#08519c", "#3182bd", "#6baed6", "#bdd7e7", "#eff3ff", '#ffffcc'],
+    general6: ["#08519c", "#3182bd", "#6baed6", "#9ecae1", "#c6dbef", "#eff3ff", '#ffffcc'],
+    general7: ["#084594", "#2171b5", "#4292c6", "#6baed6", "#9ecae1", "#c6dbef", "#eff3ff", '#ffffcc'],
+    land_integrity: ["#3182bd", "#6baed6", "#bdd7e7", "#eff3ff", '#ffffcc']
 };
 
 var labelColorMap = {
-    general: ['#FFF', '#FFF', '#FFF', '#333', '#333', '#333']
+    general4: ['#FFF', '#FFF', '#FFF', '#333', '#333'],
+    general5: ['#FFF', '#FFF', '#FFF', '#333', '#333', '#333'],
+    general6: ['#FFF', '#FFF', '#FFF', '#333', '#333', '#333', '#333'],
+    general7: ['#FFF', '#FFF', '#FFF', '#333', '#333', '#333', '#333', '#333'],
+    land_integrity: ['#FFF', '#FFF', '#333', '#333', '#333']
 };
+
+var priorityLabels4 = ['Priority 1', 'Priority 2', 'Priority 3', 'Priority 4', 'Not a Priority'];
+var priorityLabels5 = ['Priority 1', 'Priority 2', 'Priority 3', 'Priority 4', 'Priority 5', 'Not a Priority'];
+var priorityLabels6 = ['Priority 1', 'Priority 2', 'Priority 3', 'Priority 4', 'Priority 5', 'Priority 6', 'Not a Priority'];
+var priorityLabels7 = ['Priority 1', 'Priority 2', 'Priority 3', 'Priority 4', 'Priority 5', 'Priority 6', 'Priority 7', 'Not a Priority'];
 
 
 // These represent the breaks between quantile classes.  q=0 where value <= bin[0]
@@ -73,21 +86,6 @@ var fieldTooltips = {
     dev: 'These development projections are derived from the Florida 2060 development dataset. This projections explores the physical reality and consequences of the population growth from 2005 to 2060 if existing land use policy or population growth patterns do not change.  The land use suitability analysis displayed in this dataset was performed by the University of Florida GeoPlan Center for 1000 Friends of Florida. The graph below reports the area affected for each of the three time steps used in this model, the existing extent of urbanization in 2005, and the area unaffected by urbanization. The hectares reported for each of the three time steps are cumulative figures.',
     slr: "These sea level rise projections were produced by the University of Florida Geoplan Center. These projections measure sea level rise in meter increments up until 3 meters. The graph below reports the area affected for each of these three scenarios (as well as the area unaffected). The hectares reported for each of these scenarios are cumulative figures.  <br/><br/>Time ranges were extrapolated from the High Bathtub Projections (for Mean Sea Level Rise) used in the University of Florida GeoPlan Center's Sea Level Rise Sketch tool"
 };
-
-var priorityLabels = ['Priority 1', 'Priority 2', 'Priority 3', 'Priority 4', 'Priority 5', 'Not a Priority'];
-var priorityLabels4 = priorityLabels.slice(0, 4).concat(priorityLabels[5]);
-var priorityLabels6 = priorityLabels.slice(0, 5).concat(['Priority 6']).concat(priorityLabels[5]);
-
-
-// greenways and landscape integrity have different priority categories
-var greenwaysLabels = ['Priority 1', 'Priority 2', 'Priority 3', 'Priority 4', 'Not a Priority'];
-var greenwaysColors = ["#08519c", "#3182bd", "#6baed6", "#bdd7e7", '#ffffcc']
-var greenwaysLabelColors = ['#FFF', '#FFF', '#333', '#333', '#333'];
-
-var liLabels = ['Priority 2', 'Priority 3', 'Priority 4', 'Priority 5', 'Not a Priority'];
-var liColors = ["#3182bd", "#6baed6", "#bdd7e7", "#eff3ff", '#ffffcc'];
-var liLabelColors = ['#FFF', '#FFF', '#333', '#333', '#333'];
-
 
 
 // common name|priority(4 levels, not 5)
@@ -439,19 +437,22 @@ var clipWaterInfo = [
 ];
 //
 var clipRareSppInfo = [
-    'Highest conservation priorities for rare species habitat.',
-    'High conservation priorities for rare species habitat.',
-    'Moderate conservation priorities for rare species habitat.',
-    'Low Conservation Priorities for rare species habitat.',
+    'Species models were scored by weighted Global and State rarity rank multiplied by the habitat suitability score (10-point scale).  Six priority classes were developed using class breaks along the continuum:  Priority 1 is highest and Priority 6 is the lowest.  See Appendix C of CLIP 4.0 Technical Report for further details.',
+    'Species models were scored by weighted Global and State rarity rank multiplied by the habitat suitability score (10-point scale).  Six priority classes were developed using class breaks along the continuum:  Priority 1 is highest and Priority 6 is the lowest.  See Appendix C of CLIP 4.0 Technical Report for further details.',
+    'Species models were scored by weighted Global and State rarity rank multiplied by the habitat suitability score (10-point scale).  Six priority classes were developed using class breaks along the continuum:  Priority 1 is highest and Priority 6 is the lowest.  See Appendix C of CLIP 4.0 Technical Report for further details.',
+    'Species models were scored by weighted Global and State rarity rank multiplied by the habitat suitability score (10-point scale).  Six priority classes were developed using class breaks along the continuum:  Priority 1 is highest and Priority 6 is the lowest.  See Appendix C of CLIP 4.0 Technical Report for further details.',
+    'Species models were scored by weighted Global and State rarity rank multiplied by the habitat suitability score (10-point scale).  Six priority classes were developed using class breaks along the continuum:  Priority 1 is highest and Priority 6 is the lowest.  See Appendix C of CLIP 4.0 Technical Report for further details.',
+    'Species models were scored by weighted Global and State rarity rank multiplied by the habitat suitability score (10-point scale).  Six priority classes were developed using class breaks along the continuum:  Priority 1 is highest and Priority 6 is the lowest.  See Appendix C of CLIP 4.0 Technical Report for further details.',
     'Not designated as a conservation priority.'
 ];
 
 var clipSHCAInfo = [
-    'SHCAs for species with highest conservation rankings.',
-    'SHCAs for species with high conservation rankings.',
-    'SHCAs for species with moderate conservation rankings.',
-    'SHCAs for species with low conservation ranking.',
-    'Not designated as a conservation priority.'
+    'Strategic habitat conservation areas for species with Heritage ranks of S1 and G1-G3.',
+    'Strategic habitat conservation areas for species with Heritage ranks of S1, G4-G5 or S2, G2- G3.',
+    'Strategic habitat conservation areas for species with Heritage ranks of S2, G4-G5 or S3, G3.',
+    'Strategic habitat conservation areas for species with Heritage ranks of S3, G4.',
+    'Strategic habitat conservation areas for species with Heritage ranks of S3, G5 or S4, G4.',
+    'None of the species included in the SHCA analysis fit these criteria.'
 ];
 
 var clipPNCAreaInfo = [
@@ -472,44 +473,50 @@ var clipSppRichInfo = [
 ];
 
 var clipGreenwayInfo = [
-    'Highest priority critical linkages.', // P1
-    'High priority greenways that are not critical linkages.', // P3
-    'Moderate priority regionally significant greenways.', // P4
+    'The Florida Ecological Greenways Network was prioritized by assigning individual corridors to priority classes, based on contribution to a statewide ecological network.  Highest priorities (Priority 1) were given to areas most suitable to facilitate function ecological connectivity connecting major conservation lands throughout the state.  Updates for CLIP 4.0 were designed to address potential changes due to climate change, linking across state boundaries, and focusing on higher priority linkages.  The number of priority levels was reduced to 5.  Additional details are available in Appendix E of the CLIP 4.0 Technical Report.', // P1
+    'The Florida Ecological Greenways Network was prioritized by assigning individual corridors to priority classes, based on contribution to a statewide ecological network.  Highest priorities (Priority 1) were given to areas most suitable to facilitate function ecological connectivity connecting major conservation lands throughout the state.  Updates for CLIP 4.0 were designed to address potential changes due to climate change, linking across state boundaries, and focusing on higher priority linkages.  The number of priority levels was reduced to 5.  Additional details are available in Appendix E of the CLIP 4.0 Technical Report.', // P2
+    'The Florida Ecological Greenways Network was prioritized by assigning individual corridors to priority classes, based on contribution to a statewide ecological network.  Highest priorities (Priority 1) were given to areas most suitable to facilitate function ecological connectivity connecting major conservation lands throughout the state.  Updates for CLIP 4.0 were designed to address potential changes due to climate change, linking across state boundaries, and focusing on higher priority linkages.  The number of priority levels was reduced to 5.  Additional details are available in Appendix E of the CLIP 4.0 Technical Report.', // P3
+    'The Florida Ecological Greenways Network was prioritized by assigning individual corridors to priority classes, based on contribution to a statewide ecological network.  Highest priorities (Priority 1) were given to areas most suitable to facilitate function ecological connectivity connecting major conservation lands throughout the state.  Updates for CLIP 4.0 were designed to address potential changes due to climate change, linking across state boundaries, and focusing on higher priority linkages.  The number of priority levels was reduced to 5.  Additional details are available in Appendix E of the CLIP 4.0 Technical Report.', // P4
+    'The Florida Ecological Greenways Network was prioritized by assigning individual corridors to priority classes, based on contribution to a statewide ecological network.  Highest priorities (Priority 1) were given to areas most suitable to facilitate function ecological connectivity connecting major conservation lands throughout the state.  Updates for CLIP 4.0 were designed to address potential changes due to climate change, linking across state boundaries, and focusing on higher priority linkages.  The number of priority levels was reduced to 5.  Additional details are available in Appendix E of the CLIP 4.0 Technical Report.', // P5
     'Not designated as a conservation priority.'
 ];
 
 var clipLIInfo = [
-    'Areas with highest ecological landscape integrity with very large patches of natural lands.', // P2
-    'Areas with highest ecological landscape integrity.', // P3
-    'Areas with moderately-high to high ecological landscape integrity.', // P4
-    'Areas with moderate ecological landscape integrity', // P5
+    'Landscape Integrity index was prioritized into 4 categories based on the non-weighted average of the patch score and land use intensity indices.  Priority values range from 2 to 5, with priority 2 being the highest and priority 5 being the lower.', // P2
+    'Landscape Integrity index was prioritized into 4 categories based on the non-weighted average of the patch score and land use intensity indices.  Priority values range from 2 to 5, with priority 2 being the highest and priority 5 being the lower.', // P3
+    'Landscape Integrity index was prioritized into 4 categories based on the non-weighted average of the patch score and land use intensity indices.  Priority values range from 2 to 5, with priority 2 being the highest and priority 5 being the lower.', // P4
+    'Landscape Integrity index was prioritized into 4 categories based on the non-weighted average of the patch score and land use intensity indices.  Priority values range from 2 to 5, with priority 2 being the highest and priority 5 being the lower.', // P5
     'Not designated as a conservation priority.'
 ];
 
 var clipSigSurfWaterInfo = [
-    'Highest conservation priorities for surface waters.',
-    'High conservation priorities for surface waters.',
-    'Moderate conservation priorities for surface waters.',
-    'Low Conservation Priorities for surface waters.',
-    'Lowest conservation priorities for surface waters.',
+    'The Significant Surface Waters model is a combination of seven water resource submodels:  Special Outstanding Florida Water (OFW) rivers as defined by DEP, Other OFWs (on conservation lands), OFW lakes and Aquatic Preserves, coastal surface waters, the Florida Keys, springs, and rare fish basins.  For each resource category, drainage basins that contributed to the resource were selected and buffers to water bodies applied.  The final model was grouped into seven priority levels:  Priority 1 is the highest level and Priority 7 is the lowest.  See Appendix A of CLIP 4.0 Technical Report for further details.',
+    'The Significant Surface Waters model is a combination of seven water resource submodels:  Special Outstanding Florida Water (OFW) rivers as defined by DEP, Other OFWs (on conservation lands), OFW lakes and Aquatic Preserves, coastal surface waters, the Florida Keys, springs, and rare fish basins.  For each resource category, drainage basins that contributed to the resource were selected and buffers to water bodies applied.  The final model was grouped into seven priority levels:  Priority 1 is the highest level and Priority 7 is the lowest.  See Appendix A of CLIP 4.0 Technical Report for further details.',
+    'The Significant Surface Waters model is a combination of seven water resource submodels:  Special Outstanding Florida Water (OFW) rivers as defined by DEP, Other OFWs (on conservation lands), OFW lakes and Aquatic Preserves, coastal surface waters, the Florida Keys, springs, and rare fish basins.  For each resource category, drainage basins that contributed to the resource were selected and buffers to water bodies applied.  The final model was grouped into seven priority levels:  Priority 1 is the highest level and Priority 7 is the lowest.  See Appendix A of CLIP 4.0 Technical Report for further details.',
+    'The Significant Surface Waters model is a combination of seven water resource submodels:  Special Outstanding Florida Water (OFW) rivers as defined by DEP, Other OFWs (on conservation lands), OFW lakes and Aquatic Preserves, coastal surface waters, the Florida Keys, springs, and rare fish basins.  For each resource category, drainage basins that contributed to the resource were selected and buffers to water bodies applied.  The final model was grouped into seven priority levels:  Priority 1 is the highest level and Priority 7 is the lowest.  See Appendix A of CLIP 4.0 Technical Report for further details.',
+    'The Significant Surface Waters model is a combination of seven water resource submodels:  Special Outstanding Florida Water (OFW) rivers as defined by DEP, Other OFWs (on conservation lands), OFW lakes and Aquatic Preserves, coastal surface waters, the Florida Keys, springs, and rare fish basins.  For each resource category, drainage basins that contributed to the resource were selected and buffers to water bodies applied.  The final model was grouped into seven priority levels:  Priority 1 is the highest level and Priority 7 is the lowest.  See Appendix A of CLIP 4.0 Technical Report for further details.',
+    'The Significant Surface Waters model is a combination of seven water resource submodels:  Special Outstanding Florida Water (OFW) rivers as defined by DEP, Other OFWs (on conservation lands), OFW lakes and Aquatic Preserves, coastal surface waters, the Florida Keys, springs, and rare fish basins.  For each resource category, drainage basins that contributed to the resource were selected and buffers to water bodies applied.  The final model was grouped into seven priority levels:  Priority 1 is the highest level and Priority 7 is the lowest.  See Appendix A of CLIP 4.0 Technical Report for further details.',
+    'The Significant Surface Waters model is a combination of seven water resource submodels:  Special Outstanding Florida Water (OFW) rivers as defined by DEP, Other OFWs (on conservation lands), OFW lakes and Aquatic Preserves, coastal surface waters, the Florida Keys, springs, and rare fish basins.  For each resource category, drainage basins that contributed to the resource were selected and buffers to water bodies applied.  The final model was grouped into seven priority levels:  Priority 1 is the highest level and Priority 7 is the lowest.  See Appendix A of CLIP 4.0 Technical Report for further details.',
     'Not designated as a conservation priority.'
 ];
 
 var clipNatFldInfo = [
-    'Highest conservation priorities for natural floodplains.',
-    'High conservation priorities for natural floodplains.',
-    'Moderate conservation priorities for natural floodplains.',
-    'Low Conservation Priorities for natural floodplains.',
-    'Lowest conservation priorities for natural floodplains.',
+    'The Natural Floodplain data layer was prioritized using the Land Use Intensity Index as used in the Landscape Integrity Layer and by FNAI Potential Natural Areas. CLIP 4.0 natural floodplain corresponds to FNAI’s Florida Forever Conservation Needs Assessment Functional Wetlands layer v. 4.1. The highest priority areas, with the greatest statewide significance for protection of natural floodplain, are in the Priority 1 level and the lowest priority areas are assigned Priority 6.  See CLIP 4.0 technical report and the Florida Forever Conservation Needs Assessment Report for further details.',
+    'The Natural Floodplain data layer was prioritized using the Land Use Intensity Index as used in the Landscape Integrity Layer and by FNAI Potential Natural Areas. CLIP 4.0 natural floodplain corresponds to FNAI’s Florida Forever Conservation Needs Assessment Functional Wetlands layer v. 4.1. The highest priority areas, with the greatest statewide significance for protection of natural floodplain, are in the Priority 1 level and the lowest priority areas are assigned Priority 6.  See CLIP 4.0 technical report and the Florida Forever Conservation Needs Assessment Report for further details.',
+    'The Natural Floodplain data layer was prioritized using the Land Use Intensity Index as used in the Landscape Integrity Layer and by FNAI Potential Natural Areas. CLIP 4.0 natural floodplain corresponds to FNAI’s Florida Forever Conservation Needs Assessment Functional Wetlands layer v. 4.1. The highest priority areas, with the greatest statewide significance for protection of natural floodplain, are in the Priority 1 level and the lowest priority areas are assigned Priority 6.  See CLIP 4.0 technical report and the Florida Forever Conservation Needs Assessment Report for further details.',
+    'The Natural Floodplain data layer was prioritized using the Land Use Intensity Index as used in the Landscape Integrity Layer and by FNAI Potential Natural Areas. CLIP 4.0 natural floodplain corresponds to FNAI’s Florida Forever Conservation Needs Assessment Functional Wetlands layer v. 4.1. The highest priority areas, with the greatest statewide significance for protection of natural floodplain, are in the Priority 1 level and the lowest priority areas are assigned Priority 6.  See CLIP 4.0 technical report and the Florida Forever Conservation Needs Assessment Report for further details.',
+    'The Natural Floodplain data layer was prioritized using the Land Use Intensity Index as used in the Landscape Integrity Layer and by FNAI Potential Natural Areas. CLIP 4.0 natural floodplain corresponds to FNAI’s Florida Forever Conservation Needs Assessment Functional Wetlands layer v. 4.1. The highest priority areas, with the greatest statewide significance for protection of natural floodplain, are in the Priority 1 level and the lowest priority areas are assigned Priority 6.  See CLIP 4.0 technical report and the Florida Forever Conservation Needs Assessment Report for further details.',
+    'The Natural Floodplain data layer was prioritized using the Land Use Intensity Index as used in the Landscape Integrity Layer and by FNAI Potential Natural Areas. CLIP 4.0 natural floodplain corresponds to FNAI’s Florida Forever Conservation Needs Assessment Functional Wetlands layer v. 4.1. The highest priority areas, with the greatest statewide significance for protection of natural floodplain, are in the Priority 1 level and the lowest priority areas are assigned Priority 6.  See CLIP 4.0 technical report and the Florida Forever Conservation Needs Assessment Report for further details.',
     'Not designated as a conservation priority.'
 ];
 
 var clipWetlandsInfo = [
-    'Highest conservation priorities for wetlands.',
-    'High conservation priorities for wetlands.',
-    'Moderate conservation priorities for wetlands.',
-    'Low Conservation Priorities for wetlands.',
-    'Lowest conservation priorities for wetlands.',
+    'The wetlands layer was assigned priorities based on natural quality using a Land Use Intensity index (LUI) and the FNAI Potential Natural Areas (PNA).  Combinations of these two indices were used to assign Priority level 1 through 6 to wetlands, with Priority 1 being the highest and Priority 6 being the lowest.  See CLIP 4.0 technical report and the Florida Forever Conservation Needs Assessment Report for further details.',
+    'The wetlands layer was assigned priorities based on natural quality using a Land Use Intensity index (LUI) and the FNAI Potential Natural Areas (PNA).  Combinations of these two indices were used to assign Priority level 1 through 6 to wetlands, with Priority 1 being the highest and Priority 6 being the lowest.  See CLIP 4.0 technical report and the Florida Forever Conservation Needs Assessment Report for further details.',
+    'The wetlands layer was assigned priorities based on natural quality using a Land Use Intensity index (LUI) and the FNAI Potential Natural Areas (PNA).  Combinations of these two indices were used to assign Priority level 1 through 6 to wetlands, with Priority 1 being the highest and Priority 6 being the lowest.  See CLIP 4.0 technical report and the Florida Forever Conservation Needs Assessment Report for further details.',
+    'The wetlands layer was assigned priorities based on natural quality using a Land Use Intensity index (LUI) and the FNAI Potential Natural Areas (PNA).  Combinations of these two indices were used to assign Priority level 1 through 6 to wetlands, with Priority 1 being the highest and Priority 6 being the lowest.  See CLIP 4.0 technical report and the Florida Forever Conservation Needs Assessment Report for further details.',
+    'The wetlands layer was assigned priorities based on natural quality using a Land Use Intensity index (LUI) and the FNAI Potential Natural Areas (PNA).  Combinations of these two indices were used to assign Priority level 1 through 6 to wetlands, with Priority 1 being the highest and Priority 6 being the lowest.  See CLIP 4.0 technical report and the Florida Forever Conservation Needs Assessment Report for further details.',
+    'The wetlands layer was assigned priorities based on natural quality using a Land Use Intensity index (LUI) and the FNAI Potential Natural Areas (PNA).  Combinations of these two indices were used to assign Priority level 1 through 6 to wetlands, with Priority 1 being the highest and Priority 6 being the lowest.  See CLIP 4.0 technical report and the Florida Forever Conservation Needs Assessment Report for further details.',
     'Not designated as a conservation priority.'
 ];
 
@@ -519,7 +526,7 @@ var aquiferInfo = [
     'High recharge areas that do not overlap; OR moderate recharge areas that overlap with either Spring Protection Areas and/or public water supply buffers.',
     'Moderate recharge areas that do not overlap; OR moderately low recharge areas that overlap with either Spring Protection Areas and/or public water supply buffers.',
     'Moderately low recharge areas that do not overlap; OR low recharge areas that overlap with either Spring Protection Areas and/or public water supply buffers.',
-    'Low recharge areas that do not overlap.',
+    'Low recharge areas that do not overlap with Springs Protection Areas, public water supply buffers, and/or swallets.',
     'Not designated as a conservation priority.'
 ];
 
