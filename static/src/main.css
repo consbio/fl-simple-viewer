@@ -103,7 +103,10 @@ p {
 p.inset {
     margin-left: 16px;
 }
-
+p.small {
+    line-height: 1.1;
+    font-size: small;
+}
 
 input[type=range]{
     -webkit-appearance: none;
@@ -330,6 +333,15 @@ input[type=range]::-ms-tooltip {
 
 .node-highlight .node-highlight:hover{
     background: #EEE;
+}
+
+
+.disabled h4,
+.disabled p {
+    color: #aaa;
+}
+.disabled .badge {
+    background: #CCC;
 }
 
 
@@ -622,7 +634,8 @@ input[type=range]::-ms-tooltip {
 .tooltip-text {
     padding: 4px 0;
     color: #666;
-    font-size: smaller;
+    font-size: small;
+    line-height: 1.2;
     margin: 0;
     clear: both;
 }

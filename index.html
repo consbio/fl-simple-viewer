@@ -39,7 +39,7 @@
         <div class="scrim"></div>
         <div class="content">
             <div class="header">Tutorial<span class="fa fa-times-circle" onclick="closeTutorial();"></span></div>
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/sL7PPf1lTZw" frameborder="0" allowfullscreen></iframe>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/6F_-n6XYRSE" frameborder="0" allowfullscreen></iframe>
         </div>
     </div>
 
@@ -127,8 +127,8 @@
 
                                 <div id="MainSidebar">
                                     <div id="Intro" class="tab">
-                                        <p>
-                                            <img src="static/img/ScrubJay.jpg" style="width:50%;margin:0 10px 6px 0; border-radius: 10px 0;box-shadow:2px 2px 5px #AAA;" align="left"/>
+                                        <p style="font-size: 15px;margin-bottom:2px;">
+                                            <img src="static/img/ScrubJay.jpg" style="width:50%;margin:0 14px 6px 0; border-radius: 10px 0;box-shadow:2px 2px 5px #AAA;" align="left"/>
                                             <span style="font-weight: bold;">
                                                 Welcome to the Peninsular Florida LCC Simple Map Viewer.
                                             </span>
@@ -139,8 +139,6 @@
                                             landscape connectivity and integrity, surface waters and factors
                                             contributing to potential landscape change (sea level rise, urban development).
                                         </p>
-
-                                        <div class="divider divider-light"></div>
 
                                         <button id="TutorialButtonBig" class="button button-primary">
                                             <span class="fa-play-circle"></span>
@@ -154,21 +152,31 @@
                                             <p class="inset" style="font-size: small">
                                                 Use one of the tabs above to explore
                                                 different combinations of key characteristics assessed at the
-                                                watershed scale across the state.
+                                                watershed scale across the state.  Click on the bars in the charts to filter
+                                                the map by that class.  You can combine filters across tabs and across factors within a tab.
+                                                You can also display that factor on the map by clicking the map icon next to the name.
                                             </p>
 
                                             <h4><span class="badge">2</span> Explore Details for a Watershed</h4>
                                             <p class="inset" style="font-size: small">
                                                 To find out more information about a specific watershed, click on it in the map.
                                             </p>
+
+                                            <div id="CreateReportInstruction">
+                                                <h4><span class="badge">3</span> Create a Report</h4>
+                                                <p class="inset" style="font-size: small">
+                                                    You can save your current view, including any filters and selected watersheds, to a detailed PDF report.
+                                                </p>
+                                                <p id="IEWarning" class="alert inset hidden" style="font-size:small; margin-top:-8px;margin-right:32px; padding:3px 6px; background:rgba(255,169,0,.2); border-radius:3px; color:#333;">
+                                                    <i class="fa fa-exclamation-triangle"></i>
+                                                    You are using Internet Explorer.  Unfortunately, you will be unable to Create a Report.  Please use another browser, such as Firefox or Chrome.
+                                                </p>
+                                            </div>
                                         </div>
 
                                         <div class="divider divider-light"></div>
 
                                         <p class="small quiet" style="margin-top: 20px;">
-                                            This is the initial release of the Peninsular Florida LCC Simple Map Viewer.
-                                            <br/>
-                                            <br/>
                                             We welcome your feedback.  Please <a href="mailto:beth.stys@myfwc.com">contact us</a>
                                             to let us know what we can do to make this viewer more useful for you, or to report
                                             any bugs.
@@ -176,13 +184,17 @@
                                         </p>
                                     </div>
                                     <div id="PriorityFilter" class="tab hidden">
-                                        <p class="small" style="color: #AAA;">
+                                        <p class="small quieter">
                                             Each factor below represents a different conservation related measure.
                                             Each factor is broken into 5 classes.  Each class has an associated range of
                                             values that represent the area of a factor within the watershed (HUC 12).
                                             The bars represent the number of watersheds that fall into each class.
                                             The initial setting divides the number of watersheds approximately equally
                                             across the 5 classes for each factor.
+                                            <br/>
+                                            <br/>
+                                            Click one or more bars to filter the map.  Click the map icon to show that
+                                            factor on the map.
                                         </p>
                                     </div>
                                     <div id="SppFilter" class="tab hidden">
@@ -190,6 +202,9 @@
                                             Select one or more species below to select watersheds that have at least the amount
                                             of potential habitat you specify (up to the maximum amount of potential
                                             habitat area found for that species).
+                                            <br/>
+                                            <br/>
+                                            Use the slider or the number field to provide the maximum area value.
                                         </p>
                                         <div></div>  <!-- selectors -->
                                         <ul class="slider-list"></ul> <!-- items -->
@@ -199,7 +214,10 @@
                                         <p class="small" style="color: #AAA;">
                                             Use one or more of the sliders below to select watersheds that contain at least the amount
                                             you specify of these general land use categories.  The categories were generalized from the
-                                            78 state level land cover types outlined in the Florida Cooperative Land Cover Map (CLC, version 3.1)
+                                            78 state level land cover types outlined in the Florida Cooperative Land Cover Map (CLC, version 3.2).
+                                            <br/>
+                                            <br/>
+                                            Use the slider or the number field to provide the maximum area value.
                                         </p>
                                         <div id="LandUseFilterList" class="slider-list"></div>
                                     </div>
@@ -212,6 +230,10 @@
                                             The bars represent the number of watersheds that fall into each class.
                                             The initial setting divides the number of watersheds approximately equally
                                             across the 5 classes for each factor.
+                                            <br/>
+                                            <br/>
+                                            Click one or more bars to filter the map.  Click the map icon to show that
+                                            factor on the map.
                                         </p>
                                     </div>
                                 </div>
@@ -219,8 +241,8 @@
 
                                 <div id="Details" class="hidden">
                                     <div id="DetailsOverview" class="tab">
-                                        <section class="js-hasTooltip " data-tooltip-title="PFLCC DRAFT Priority Resources" data-tooltip="Priority resources are the set of biological, ecological, and cultural features and ecological processes collaboratively identified as most important, and are the focus of the PFLCC’s planning.  Priority resources will provide a simple way to measure the overall condition of the Peninsular Florida’s complex systems.">
-                                            <h4>PFLCC DRAFT Priority Resources</h4>
+                                        <section class="js-hasTooltip " data-tooltip-title="PFLCC Blueprint v. 1.0 Priority Resources" data-tooltip="Priority resources are the set of biological, ecological, and cultural features and ecological processes collaboratively identified as most important, and are the focus of the PFLCC’s planning.  Priority resources will provide a simple way to measure the overall condition of the Peninsular Florida’s complex systems.">
+                                            <h4>PFLCC Blueprint v. 1.0 Priority Resources</h4>
                                             <div>
                                                 <div id="PFLCC_PR_Bars" class="horiz-bars"></div>
                                             </div>
@@ -230,7 +252,7 @@
                                             <p class="small quiet">
                                                 <a href="http://pflcc.databasin.org/articles/784241b6f9c64be7b51ecd2382919287" target="_blank">Read more</a>
                                                 about priority resources and
-                                                <a href="http://pflcc.databasin.org/datasets/40daad4e23d44850993f5443179bf567" target="_blank">access data.</a>
+                                                <a href="http://pflcc.databasin.org/datasets/ceb614388bc74ecd920e1d0e328c59b5" target="_blank">access data.</a>
                                             </p>
                                         </section>
                                     </div>
@@ -244,7 +266,7 @@
                                         </ul>
 
                                         <div id="CLIPOverall" class="tab">
-                                            <section class="js-hasTooltip" data-tooltip-title="CLIP Overall Priorities" data-tooltip="The Critical Lands and Waters Identification Project (CLIP) is a collection of spatial data that identify statewide priorities for a broad range of natural resources in Florida. CLIP 3.1 is organized into a set of core natural resource data layers which are combined into resource categories, three of which (biodiversity, landscapes, surface water) have been combined into the Aggregated CLIP model, which identifies five priority levels for natural resource conservation.">
+                                            <section class="js-hasTooltip" data-tooltip-title="CLIP Overall Priorities" data-tooltip="The Critical Lands and Waters Identification Project (CLIP) is a collection of spatial data that identify statewide priorities for a broad range of natural resources in Florida. CLIP 4.0 is organized into a set of core natural resource data layers which are combined into resource categories, three of which (biodiversity, landscapes, surface water) have been combined into the Aggregated CLIP model, which identifies five priority levels for natural resource conservation.">
                                                 <!--<br/><br/><img src='static/img/clip3.png' style='width:100%;'/>-->
                                                 <h4>CLIP Overall Priorities</h4>
                                                 <div>
@@ -254,21 +276,21 @@
 
                                             <section class="read-more">
                                                 <p class="small quiet">
-                                                    <a href="http://www.fnai.org/clip.cfm" target="_blank">Read more</a> about CLIP 3.0
-                                                    and <a href="http://pflcc.databasin.org/datasets/5ffe9f3bcebd41f2a43a6215b9e0df56" target="_blank">access data.</a>
+                                                    <a href="http://www.fnai.org/clip.cfm" target="_blank">Read more</a> about CLIP 4.0
+                                                    and <a href="http://pflcc.databasin.org/datasets/7788c43882ef4af3b2b57412ce572ef6" target="_blank">access data.</a>
                                                 </p>
                                             </section>
                                         </div>
 
                                         <div id="CLIPBiodiversity" class="tab hidden">
-                                            <section class="expandable expanded js-hasTooltip" data-tooltip-title="Overall CLIP Biodiversity" data-tooltip="This model is a combination of the four CLIP core data layers in the Biodiversity Resource Category: Strategic Habitat Conservation Areas (SHCA), Vertebrate Potential Habitat Richness (VertRich), Rare Species Habitat Conservation Priorities (FNAIHAB), and Priority Natural Communities (Natcom).  See pg. 14 of the CLIP Technical Report for the rules used to assign the core data layers into the Biodiversity resource priority model.">
+                                            <section class="expandable expanded js-hasTooltip" data-tooltip-title="Overall CLIP Biodiversity" data-tooltip="This model is a combination of the four CLIP core data layers in the Biodiversity Resource Category: Strategic Habitat Conservation Areas (SHCA), Vertebrate Potential Habitat Richness (VertRich), Rare Species Habitat Conservation Priorities (FNAIHAB), and Priority Natural Communities (Natcom).  See the CLIP Technical Report for the rules used to assign the core data layers into the Biodiversity resource priority model.">
                                                 <h4>CLIP Biodiversity</h4>
                                                 <div>
                                                     <div id="Bio_Chart"></div>
                                                 </div>
                                             </section>
 
-                                            <section class="expandable js-hasTooltip" data-tooltip-title="Rare Species" data-tooltip="This data layer was created by FNAI originally to inform the Florida Forever environmental land acquisition program, and was prioritized based partly on the amount of species’ habitat currently protected on conservation lands. The CLIP version has been re-prioritized to reflect more general conservation needs for rare species. FNAI modeled suitable habitat around documented locations for 281 species of plants, invertebrates, and vertebrates, including aquatic species.  Highest priorities could indicate a single species with very high conservation need, or multiple species with high conservation need.">
+                                            <section class="expandable js-hasTooltip" data-tooltip-title="Rare Species" data-tooltip="Species models were scored by weighted Global and State rarity rank multiplied by the habitat suitability score (10-point scale). Six priority classes were developed using class breaks along the continuum: Priority 1 is highest and Priority 6 is the lowest. See Appendix C of CLIP 4.0 Technical Report for further details.">
                                                 <h4>Rare Species</h4>
                                                 <div>
                                                     <div id="BioRareSpp_Chart"></div>
@@ -310,14 +332,14 @@
 
                                             <section class="read-more">
                                                 <p class="small quiet">
-                                                    <a href="http://www.fnai.org/clip.cfm" target="_blank">Read more</a> about CLIP 3.0
-                                                    and <a href="http://pflcc.databasin.org/datasets/5ffe9f3bcebd41f2a43a6215b9e0df56" target="_blank">access data.</a>
+                                                    <a href="http://www.fnai.org/clip.cfm" target="_blank">Read more</a> about CLIP 4.0
+                                                    and <a href="http://pflcc.databasin.org/datasets/7788c43882ef4af3b2b57412ce572ef6" target="_blank">access data.</a>
                                                 </p>
                                             </section>
                                         </div>
 
                                         <div id="CLIPLandscape" class="tab hidden">
-                                            <section  class="expandable expanded js-hasTooltip" data-tooltip-title="CLIP Landscape" data-tooltip="This model is a combination of the two core data layers in the Landscapes Resource Category: Florida Ecological Greenways Network, and Landscape Integrity Index.  See pg. 14-15 of the CLIP Technical Report for the rules used to assign the core data layers into the Biodiversity resource priority model.">
+                                            <section  class="expandable expanded js-hasTooltip" data-tooltip-title="CLIP Landscape" data-tooltip="This model is a combination of the two core data layers in the Landscape Resource Category: Florida Ecological Greenways Network, and Landscape Integrity Index.  See the CLIP Technical Report for the rules used to assign the core data layers into the Landscape resource priority model.">
                                                 <h4>CLIP Landscape</h4>
                                                 <div>
                                                     <div id="Land_Chart"></div>
@@ -331,7 +353,7 @@
                                                 </div>
                                             </section>
 
-                                            <section  class="expandable js-hasTooltip" data-tooltip-title="Landscape Integrity Index" data-tooltip="This data layer was created by the University of Florida Center for Landscape Conservation Planning specifically for CLIP. It combines two models: natural land cover patch size and land use intensity. Both are based on the Cooperative Land Cover (CLC) data layer and major roads data from the Florida Department of Transportation (which are used to help delineate patches).  Higher values indicate large expanses of remote, intact natural and semi-natural areas.  Lower values indicate more fragmented landscapes with increasingly intensive land uses from agriculture to urban development.">
+                                            <section  class="expandable js-hasTooltip" data-tooltip-title="Landscape Integrity Index" data-tooltip="This data layer was created by the University of Florida Center for Landscape Conservation Planning specifically for CLIP. It combines two models: natural land cover patch size and land use intensity. Both are based on the Cooperative Land Cover (CLC) data layer and major roads data from the Florida Department of Transportation (which are used to help delineate patches).  Higher priorites indicate large expanses of remote, intact natural and semi-natural areas.  Lower priorites indicate more fragmented landscapes with increasingly intensive land uses from agriculture to urban development.">
                                                 <h4>Landscape Integrity Index</h4>
                                                 <div>
                                                     <div id="LI_Chart"></div>
@@ -340,14 +362,14 @@
 
                                             <section class="read-more">
                                                 <p class="small quiet">
-                                                    <a href="http://www.fnai.org/clip.cfm" target="_blank">Read more</a> about CLIP 3.0
-                                                    and <a href="http://pflcc.databasin.org/datasets/5ffe9f3bcebd41f2a43a6215b9e0df56" target="_blank">access data.</a>
+                                                    <a href="http://www.fnai.org/clip.cfm" target="_blank">Read more</a> about CLIP 4.0
+                                                    and <a href="http://pflcc.databasin.org/datasets/7788c43882ef4af3b2b57412ce572ef6" target="_blank">access data.</a>
                                                 </p>
                                             </section>
                                         </div>
 
                                         <div id="CLIPWater" class="tab hidden">
-                                            <section class="expandable expanded js-hasTooltip" data-tooltip-title="CLIP Surface Water" data-tooltip="This model is a combination of the three core data layers in the Surface Water Resource Category: Significant Surface Waters, Natural Floodplain, and Wetlands.  See pg. 15 of the CLIP Technical Report for the rules used to assign the core data layers into the Surface Water resource priority model.">
+                                            <section class="expandable expanded js-hasTooltip" data-tooltip-title="CLIP Surface Water" data-tooltip="This model is a combination of the three core data layers in the Surface Water Resource Category: Significant Surface Waters, Natural Floodplain, and Wetlands.  See the CLIP Technical Report for the rules used to assign the core data layers into the Surface Water resource priority model.">
                                                 <h4>CLIP Surface Water</h4>
                                                 <div>
                                                     <div id="Water_Chart"></div>
@@ -381,9 +403,7 @@
                                                 </div>
                                             </section>
 
-                                            <section  class="expandable js-hasTooltip" data-tooltip-title="Aquifer Recharge" data-tooltip="This data layer was created by FNAI, in collaboration with Advanced Geospatial, Inc., originally to inform the Florida Forever environmental land acquisition program. AGI developed an initial Recharge Potential model following a similar model to the Florida Aquifer Vulnerability Assessment (FAVA). FNAI removed discharge areas and prioritized the model based on overlap with Springs Protection Areas and buffers to public water supply wells. High priorities indicate high potential for recharge to an underlying aquifer system. The highest priorities indicate high potential for recharge to springs or public water supplies.
-                                                        <br/><br/>
-                                                        Note: Not included in the CLIP surface waters layer or CLIP’s aggregated priorities; original raw prioritizations/scores are included here instead.">
+                                            <section  class="expandable js-hasTooltip" data-tooltip-title="Aquifer Recharge" data-tooltip="This data layer was created by FNAI, in collaboration with Advanced Geospatial, Inc., originally to inform the Florida Forever environmental land acquisition program. AGI developed an initial Recharge Potential model following a similar model to the Florida Aquifer Vulnerability Assessment (FAVA). FNAI removed discharge areas and prioritized the model based on overlap with Springs Protection Areas and buffers to public water supply wells. High priorities indicate high potential for recharge to an underlying aquifer system. The highest priorities indicate high potential for recharge to springs or public water supplies.">
                                                 <h4>Aquifer Recharge</h4>
                                                 <div>
                                                     <div id="Aquifer_Chart"></div>
@@ -392,15 +412,15 @@
 
                                             <section class="read-more">
                                                 <p class="small quiet">
-                                                    <a href="http://www.fnai.org/clip.cfm" target="_blank">Read more</a> about CLIP 3.0
-                                                    and <a href="http://pflcc.databasin.org/datasets/5ffe9f3bcebd41f2a43a6215b9e0df56" target="_blank">access data.</a>
+                                                    <a href="http://www.fnai.org/clip.cfm" target="_blank">Read more</a> about CLIP 4.0
+                                                    and <a href="http://pflcc.databasin.org/datasets/7788c43882ef4af3b2b57412ce572ef6" target="_blank">access data.</a>
                                                 </p>
                                             </section>
                                         </div>
                                     </div>
 
                                     <div id="DetailsLandUse" class="tab hidden">
-                                        <section class="js-hasTooltip" data-tooltip-title="Land Use" data-tooltip="These land use categories were generalized from the 78 state level land cover types outlined in the Florida Cooperative Land Cover Map (CLC, version 3.1) currently maintained by FWC and FNAI.  This generalization was performed to make visualization and calculation in this tool manageable.">
+                                        <section class="js-hasTooltip" data-tooltip-title="Land Use" data-tooltip="These land use categories were generalized from the 78 state level land cover types outlined in the Florida Cooperative Land Cover Map (CLC, version 3.2) currently maintained by FWC and FNAI.  This generalization was performed to make visualization and calculation in this tool manageable.">
                                             <h4>Land Use</h4>
                                             <div id="LU_Bars" class="horiz-bars"></div>
                                         </section>
@@ -476,7 +496,7 @@
                                                 <h4>Regional / Partner Conservation Efforts</h4>
                                                 <ul id="PartnersList"></ul>
                                                 <p class="small quiet">
-                                                    Read more about partner priorites access data <a href="http://pflcc.databasin.org/galleries/ae944bf240534e46971d3cf9c48c6a32#expand=100185%2C100257" target="_blank">here.</a>
+                                                    Read more about partner priorities access data <a href="http://pflcc.databasin.org/galleries/ae944bf240534e46971d3cf9c48c6a32#expand=100185%2C100257" target="_blank">here.</a>
                                                 </p>
                                             </section>
                                             <section class="js-hasTooltip " data-tooltip-title="Land Trusts by County" data-tooltip="Land Trusts are listed by county by the Land Trust Alliance.  You can follow the link for the county to search for land trusts operating in that area.">
@@ -498,8 +518,6 @@
                             </div>
                         </div>
                     </div>
-
-
                 </div>
             </div>
 
@@ -514,7 +532,7 @@
                     <a href="http://pflcc.databasin.org/" target="_blank">Access Data</a>
                 </li>
                 <li>
-                    <a href="http://www.fnai.org/clip.cfm" target="_blank">CLIP 3.0</a>
+                    <a href="http://www.fnai.org/clip.cfm" target="_blank">CLIP 4.0</a>
                 </li>
                 <li>
                     <a href="mailto:beth.stys@myfwc.com">Contact Us</a>

@@ -17,7 +17,7 @@ deps = [
     "static/img",
     "index.html",
     "preview.html",
-    # "features" #TODO: uncomment when uploading new data / new version
+    #"features" #TODO: uncomment when uploading new data / new version
 ]
 
 
