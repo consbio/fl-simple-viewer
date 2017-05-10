@@ -882,9 +882,79 @@ function setSelectedField(field, group, subtitle) {
         });
 }
 
+
 function mergeIds(ids) {
 
+    var mf = {
+        bio: [0, 0, 0, 0, 0, 0],
+        bio_pnc: [0, 0, 0, 0, 0],
+        //bio_pnc2: {},
+        bio_rare_spp: [0, 0, 0, 0, 0, 0, 0],
+        bio_shca: [0, 0, 0, 0, 0, 0]
+        //bio_shca2: {},
+        bio_spp_rich: [0, 0, 0, 0, 0, 0],
+        //bio_spp_rich2: {},
+        clip: [0, 0, 0, 0, 0, 0],
+        //counties: {},
+        dev: [0, 0, 0, 0],
+        hectares: 0,
+        land: [0, 0, 0, 0, 0, 0],
+        land_greenways: [0, 0, 0, 0, 0, 0],
+        land_integrity: [0, 0, 0, 0, 0],
+        //land_use: {},
+        //name: {},
+        //partners: {},
+        //pflcc_pr: {},
+        slr: [0, 0, 0],
+        water: [0, 0, 0, 0, 0, 0],
+        water_aquifer: [0, 0, 0, 0, 0, 0, 0],
+        water_floodplain: [0, 0, 0, 0, 0, 0, 0],
+        water_significant: [0, 0, 0, 0, 0, 0, 0, 0],
+        water_wetland: [0, 0, 0, 0, 0, 0, 0],
+    };
 
+    var arF = [];
+    var ar_bio = [];
+    var ar_land_use = [];
+
+    ids.forEach( function(id) {
+        var r = featureCache[id];
+        if (r == null || r == undefined) { return }  //TODO: Need to throw and show user a data fetch failed
+
+        mf.hectares += r.hectares;
+        ar_bio.push(r.bio);
+        ar_land_use.push(r.land_use);
+
+        console.log('water_wetland: ', r.water_wetland);
+
+        for (var idx=0; idx<r.bio.length; idx++) { mf.bio[idx] += r.bio[idx]; }
+        for (var idx=0; idx<r.bio_pnc.length; idx++) { mf.bio_pnc[idx] += r.bio_pnc[idx]; }
+        for (var idx=0; idx<r.bio_rare_spp.length; idx++) { mf.bio_rare_spp[idx] += r.bio_rare_spp[idx]; }
+        for (var idx=0; idx<r.bio_shca.length; idx++) { mf.bio_shca[idx] += r.bio_shca[idx]; }
+        for (var idx=0; idx<r.bio_spp_rich.length; idx++) { mf.bio_spp_rich[idx] += r.bio_spp_rich[idx]; }
+        for (var idx=0; idx<r.clip.length; idx++) { mf.clip[idx] += r.clip[idx]; }
+        for (var idx=0; idx<r.dev.length; idx++) { mf.dev[idx] += r.dev[idx]; }
+        mf.hectares += r.hectares;
+        for (var idx=0; idx<r.land.length; idx++) { mf.land[idx] += r.land[idx]; }
+        for (var idx=0; idx<r.land_greenways.length; idx++) { mf.land_greenways[idx] += r.land_greenways[idx]; }
+        for (var idx=0; idx<r.land_integrity.length; idx++) { mf.land_integrity[idx] += r.land_integrity[idx]; }
+        for (var idx=0; idx<r.slr.length; idx++) { mf.slr[idx] += r.slr[idx]; }
+        for (var idx=0; idx<r.water.length; idx++) { mf.water[idx] += r.water[idx]; }
+        for (var idx=0; idx<r.water_aquifer.length; idx++) { mf.water_aquifer[idx] += r.water_aquifer[idx]; }
+        for (var idx=0; idx<r.water_floodplain.length; idx++) { mf.water_floodplain[idx] += r.water_floodplain[idx]; }
+        for (var idx=0; idx<r.water_significant.length; idx++) { mf.water_significant[idx] += r.water_significant[idx]; }
+        for (var idx=0; idx<r.water_wetland.length; idx++) { mf.water_wetland[idx] += r.water_wetland[idx]; }
+
+    });
+
+    var ar_bio_sum = _.zip(ar_bio);
+    console.log('mf.ar_bio_sum: ', ar_bio_sum);
+
+    console.log('mf.water_wetland: ', mf.water_wetland);
+
+    console.log('mf.hectares: ', mf.hectares);
+
+    return mf;
 }
 
 
@@ -902,18 +972,21 @@ function selectUnit(id){
         //pendingRequest.abort();
     }
 
+    var savedId = id;
+
     ///*
     //var allDone = _.after(ids.length, showDetails('031001010302'));
     var allDone = _.after(ids.length, function() {
       console.log('allDone complete');
-      //showDetails('031001010302');
+      loadingUnit = false;
+      var mf = mergeIds(ids);
+      showDetails('031001010302', mf);
     });
 
     ids.forEach( function(id) {
         console.log('ids.forEach: ', id);
         if (featureCache[id] != null){
             console.log('id in cache: ', id);
-            loadingUnit = false;
             allDone();
         }
         else {
@@ -932,7 +1005,7 @@ function selectUnit(id){
 
     _.delay(function(){
             //if (loadingUnit){
-                updateNodeVisibility(['#SidebarLoadingScrim'], ['#SidebarContents']);
+                //updateNodeVisibility(['#SidebarLoadingScrim'], ['#SidebarContents']);
             //}
         },
         250
@@ -972,7 +1045,7 @@ function deselectUnit() {
 }
 
 
-function showDetails(id) {
+function showDetails(id, mf) {
     var record = index.get('id');
     var details = featureCache[id];
     console.log('details: ', id);
@@ -993,7 +1066,7 @@ function showDetails(id) {
 
     d3.select('#Unit').text(details.name);
     d3.select('#UnitID').text('HUC 12: ' + id);
-    d3.select('#UnitArea').text(d3.format(',')(details.hectares));
+    d3.select('#UnitArea').text(d3.format(',')(mf.hectares));
 
     var chartColors4 = colorMap.general4;
     var chartColors5 = colorMap.general5;
@@ -1015,14 +1088,14 @@ function showDetails(id) {
         }
     });
     pr_data.sort(valueSort);
-    createInlineBarChart(d3.select('#PFLCC_PR_Bars'), pr_data, details.hectares);
+    createInlineBarChart(d3.select('#PFLCC_PR_Bars'), pr_data, mf.hectares);
 
 
     // CLIP tab
-    createPieChart(d3.select('#CLIP_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.clip, priorityLabels5, chartColors5, labelColors5, clipInfo), details.hectares);
-    createPieChart(d3.select('#Bio_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.bio, priorityLabels5, chartColors5, labelColors5, clipBioInfo), details.hectares);
-    createPieChart(d3.select('#BioRareSpp_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.bio_rare_spp, priorityLabels6, chartColors6, labelColors6, clipRareSppInfo), details.hectares);
-    createPieChart(d3.select('#BioSHCA_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.bio_shca, priorityLabels5, chartColors5, labelColors5, clipSHCAInfo), details.hectares);
+    createPieChart(d3.select('#CLIP_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.clip, priorityLabels5, chartColors5, labelColors5, clipInfo), mf.hectares);
+    createPieChart(d3.select('#Bio_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.bio, priorityLabels5, chartColors5, labelColors5, clipBioInfo), mf.hectares);
+    createPieChart(d3.select('#BioRareSpp_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.bio_rare_spp, priorityLabels6, chartColors6, labelColors6, clipRareSppInfo), mf.hectares);
+    createPieChart(d3.select('#BioSHCA_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.bio_shca, priorityLabels5, chartColors5, labelColors5, clipSHCAInfo), mf.hectares);
 
 
     var tableNode = d3.select('#BioSHCATable');
@@ -1035,7 +1108,7 @@ function showDetails(id) {
         createAreaTable(tableNode.append('table').attr('cellspacing', 0).append('tbody'), createTableLabeLinks(values, species, speciesLinks), true);
     });
 
-    createPieChart(d3.select('#BioPNC_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.bio_pnc, priorityLabels4, chartColors4, labelColors4, clipPNCAreaInfo), details.hectares);
+    createPieChart(d3.select('#BioPNC_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.bio_pnc, priorityLabels4, chartColors4, labelColors4, clipPNCAreaInfo), mf.hectares);
 
     tableNode = d3.select('#BioPNC_Table');
     tableNode.html('');
@@ -1048,7 +1121,7 @@ function showDetails(id) {
     });
 
 
-    createPieChart(d3.select('#BioSppRich_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.bio_spp_rich, priorityLabels5, chartColors5, labelColors5, clipSppRichInfo), details.hectares);
+    createPieChart(d3.select('#BioSppRich_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.bio_spp_rich, priorityLabels5, chartColors5, labelColors5, clipSppRichInfo), mf.hectares);
 
     tableNode = d3.select('#BioSppRichTable');
     tableNode.html('');
@@ -1058,19 +1131,19 @@ function showDetails(id) {
     }
 
     // Landscape tab
-    createPieChart(d3.select('#Land_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.land, priorityLabels5, chartColors5, labelColors5, clipLandInfo), details.hectares);
-    createPieChart(d3.select('#Greenways_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.land_greenways, priorityLabels5, chartColors5, labelColors5, clipGreenwayInfo), details.hectares);
+    createPieChart(d3.select('#Land_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.land, priorityLabels5, chartColors5, labelColors5, clipLandInfo), mf.hectares);
+    createPieChart(d3.select('#Greenways_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.land_greenways, priorityLabels5, chartColors5, labelColors5, clipGreenwayInfo), mf.hectares);
 
     // land integrity has different priority categories
-    createPieChart(d3.select('#LI_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.land_integrity, priorityLabels5.slice(1), colorMap.land_integrity, labelColorMap.land_integrity, clipLIInfo), details.hectares);
+    createPieChart(d3.select('#LI_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.land_integrity, priorityLabels5.slice(1), colorMap.land_integrity, labelColorMap.land_integrity, clipLIInfo), mf.hectares);
 
     // Surface water tab
-    createPieChart(d3.select('#Water_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.water, priorityLabels5, chartColors5, labelColors5, clipWaterInfo), details.hectares);
-    createPieChart(d3.select('#SSW_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.water_significant, priorityLabels7, chartColors7, labelColors7, clipSigSurfWaterInfo), details.hectares);
-    createPieChart(d3.select('#Floodplain_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.water_floodplain, priorityLabels6, chartColors6, labelColors6, clipNatFldInfo), details.hectares);
-    createPieChart(d3.select('#Wetlands_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.water_wetland, priorityLabels6, chartColors6, labelColors6, clipWetlandsInfo), details.hectares);
+    createPieChart(d3.select('#Water_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.water, priorityLabels5, chartColors5, labelColors5, clipWaterInfo), mf.hectares);
+    createPieChart(d3.select('#SSW_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.water_significant, priorityLabels7, chartColors7, labelColors7, clipSigSurfWaterInfo), mf.hectares);
+    createPieChart(d3.select('#Floodplain_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.water_floodplain, priorityLabels6, chartColors6, labelColors6, clipNatFldInfo), mf.hectares);
+    createPieChart(d3.select('#Wetlands_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.water_wetland, priorityLabels6, chartColors6, labelColors6, clipWetlandsInfo), mf.hectares);
     if (details.water_aquifer) {
-        createPieChart(d3.select('#Aquifer_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.water_aquifer, priorityLabels6, chartColors6, labelColors6, aquiferInfo), details.hectares);
+        createPieChart(d3.select('#Aquifer_Chart'), zipIntoObj(['value', 'label', 'color', 'labelColor', 'tooltip'], details.water_aquifer, priorityLabels6, chartColors6, labelColors6, aquiferInfo), mf.hectares);
     }
     else {
         d3.select('#Aquifer_Chart').append('div').classed('quiet center', true).html('No data available');
@@ -1089,14 +1162,14 @@ function showDetails(id) {
             }
         });
     luData.sort(valueSort);
-    createInlineBarChart(d3.select('#LU_Bars'), luData, details.hectares);
+    createInlineBarChart(d3.select('#LU_Bars'), luData, mf.hectares);
 
 
     // Threats tab
 
     var slrData = [];
     var slrHa = d3.max(details.slr);
-    var notAffectedBySLR = details.hectares - slrHa;
+    var notAffectedBySLR = mf.hectares - slrHa;
     if (slrHa) {
         // only keep nonzero entries
         slrData = slrLevels.map(function (d, i) {
@@ -1120,12 +1193,12 @@ function showDetails(id) {
             "May be impacted by higher levels of sea level rise."
         })
     }
-    createInlineBarChart(d3.select('#SLR_Bars'), slrData, details.hectares);
+    createInlineBarChart(d3.select('#SLR_Bars'), slrData, mf.hectares);
 
 
     var devData = [];
     var devHa = d3.max(details.dev);
-    var notDeveloped = details.hectares - devHa;
+    var notDeveloped = mf.hectares - devHa;
     if (devHa > 0) {
         devData = devLevels.map(function (d, i) {
             var tooltip = null;
@@ -1152,7 +1225,7 @@ function showDetails(id) {
             tooltip: 'Area not affected by development projections up to 2060.'
         });
     }
-    createInlineBarChart(d3.select('#Dev_Bars'), devData, details.hectares);
+    createInlineBarChart(d3.select('#Dev_Bars'), devData, mf.hectares);
 
 
     // Partners tab
@@ -1186,17 +1259,17 @@ function showDetails(id) {
             createAreaTable(tableNode.append('table').attr('cellspacing', 0).append('tbody'), detailedOwnerData, true);
         }
     });
-    if (totalManaged < details.hectares) {
+    if (totalManaged < mf.hectares) {
         ownershipData.push({
             label: 'Other Lands',
-            value: details.hectares - totalManaged,
+            value: mf.hectares - totalManaged,
             color: chartColors4[4],
             labelColor: labelColors4[4],
             tooltip: landOwnershipInfo[4]
         });
     }
 
-    createPieChart(d3.select('#Owner_Chart'), ownershipData, details.hectares);
+    createPieChart(d3.select('#Owner_Chart'), ownershipData, mf.hectares);
 
     // Partners
     var partnersList = d3.select('#PartnersList');
