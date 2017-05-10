@@ -890,7 +890,7 @@ function mergeIds(ids) {
         bio_pnc: [0, 0, 0, 0, 0],
         //bio_pnc2: {},
         bio_rare_spp: [0, 0, 0, 0, 0, 0, 0],
-        bio_shca: [0, 0, 0, 0, 0, 0]
+        bio_shca: [0, 0, 0, 0, 0, 0],
         //bio_shca2: {},
         bio_spp_rich: [0, 0, 0, 0, 0, 0],
         //bio_spp_rich2: {},
@@ -913,7 +913,6 @@ function mergeIds(ids) {
         water_wetland: [0, 0, 0, 0, 0, 0, 0],
     };
 
-    var arF = [];
     var ar_bio = [];
     var ar_land_use = [];
 
@@ -921,11 +920,11 @@ function mergeIds(ids) {
         var r = featureCache[id];
         if (r == null || r == undefined) { return }  //TODO: Need to throw and show user a data fetch failed
 
-        mf.hectares += r.hectares;
         ar_bio.push(r.bio);
         ar_land_use.push(r.land_use);
+        //ar_land_use.push(r.land_use);
 
-        console.log('water_wetland: ', r.water_wetland);
+        console.log('r.bio: ', r.bio);
 
         for (var idx=0; idx<r.bio.length; idx++) { mf.bio[idx] += r.bio[idx]; }
         for (var idx=0; idx<r.bio_pnc.length; idx++) { mf.bio_pnc[idx] += r.bio_pnc[idx]; }
@@ -947,12 +946,20 @@ function mergeIds(ids) {
 
     });
 
-    var ar_bio_sum = _.zip(ar_bio);
-    console.log('mf.ar_bio_sum: ', ar_bio_sum);
+    //var ar_bio_sum = d3.groupBy(ar_bio);
+    //console.log('mf.ar_bio_sum: ', ar_bio_sum);
 
-    console.log('mf.water_wetland: ', mf.water_wetland);
+    var data = d3.entries(ar_land_use);
 
-    console.log('mf.hectares: ', mf.hectares);
+
+ /*   var data = d3.nest()
+        .key(function(d) { return d.date;})
+        .rollup(function(d) {
+            return d3.sum(d, function(g) {return g.value; });
+        }).entries(ar_land_use);
+
+*/
+    console.log('data: ', data);
 
     return mf;
 }

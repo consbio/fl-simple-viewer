@@ -4,7 +4,15 @@ var strip = require('gulp-strip-comments');
 var cleanCSS = require('gulp-clean-css');
 var concat = require('gulp-concat');
 var less = require('gulp-less');
+var util = require('gulp-util');
+var expect = require('gulp-expect-file');
+var rename = require('gulp-rename');
 
+// in development (no minify) mode, call this as
+// > gulp build --debug
+var config = {
+    debug: !!util.env.debug
+};
 
 gulp.task('less', function () {
     return gulp.src([
@@ -17,7 +25,7 @@ gulp.task('less', function () {
 
 
 gulp.task('compress-css', ['less'], function () {
-    gulp.src([
+    return gulp.src([
         'node_modules/leaflet/dist/leaflet.css',
         'node_modules/leaflet-geonames/L.Control.Geonames.css',
         'node_modules/leaflet-zoombox/L.Control.ZoomBox.css',
@@ -29,25 +37,26 @@ gulp.task('compress-css', ['less'], function () {
     ])
         .pipe(cleanCSS())
         .pipe(concat('all.min.css'))
-        .pipe(gulp.dest('static/dist'))
+        .pipe(gulp.dest('static/dist'));
 });
 
 
+// compress our JS files
 gulp.task('compress-js', function () {
-    gulp.src([
+    return gulp.src([
         'static/src/config.js',
         'static/src/utils.js',
         'static/src/main.js',
         'static/src/reporter.js'
     ])
         .pipe(concat('core.js'))
-        .pipe(minify())
-        .pipe(gulp.dest('build'))
+        .pipe(!config.debug? minify(): rename('core-min.js'))  // only minify if not debug
+        .pipe(gulp.dest('build'));
 });
 
-
-gulp.task('concat-js', ['compress-js'], function () {
-    gulp.src([
+// concatenate all dependences
+gulp.task('concat-js', [], function () {
+    return gulp.src([
         'node_modules/leaflet/dist/leaflet.js',
         'node_modules/leaflet-omnivore/leaflet-omnivore.min.js',
         'node_modules/leaflet-geonames/L.Control.Geonames.min.js',
@@ -59,36 +68,47 @@ gulp.task('concat-js', ['compress-js'], function () {
         'node_modules/dc/dc.min.js',
         'node_modules/nvd3/build/nv.d3.min.js',
         'node_modules/handlebars/dist/handlebars.min.js',
-        'build/core-min.js'
     ])
         .pipe(strip())
-        .pipe(concat('all.min.js'))
+        .pipe(concat('deps.min.js'))
+        .pipe(gulp.dest('build'))
+});
 
+// merge our files with the dependencies
+gulp.task('merge-js', ['concat-js', 'compress-js'], function () {
+    var files = [
+        'build/deps.min.js',
+        'build/core-min.js'
+    ];
+    return gulp.src(files)
+        .pipe(expect({reportMissing: true}, files))
+        .pipe(concat('all.min.js'))
         .pipe(gulp.dest('static/dist'))
 });
 
+
 gulp.task('compress-pdf-css', ['less'], function () {
-    gulp.src([
+    return gulp.src([
         'node_modules/leaflet/dist/leaflet.css',
         'build/common.css',
         'build/pdf.css'
     ])
         .pipe(cleanCSS())
         .pipe(concat('all-pdf.min.css'))
-        .pipe(gulp.dest('static/dist'))
+        .pipe(gulp.dest('static/dist'));
 });
 
 gulp.task('compress-pdf-js', function () {
-    gulp.src([
+    return gulp.src([
         'static/src/pdf.js'
     ])
         .pipe(concat('pdf.js'))
         .pipe(minify())
-        .pipe(gulp.dest('build'))
+        .pipe(gulp.dest('build'));
 });
 
 gulp.task('concat-pdf-js', ['compress-pdf-js'], function () {
-    gulp.src([
+    return gulp.src([
         'node_modules/leaflet/dist/leaflet.js',
         'node_modules/leaflet-image/leaflet-image.js',
         'node_modules/jspdf/dist/jspdf.min.js',
@@ -97,24 +117,24 @@ gulp.task('concat-pdf-js', ['compress-pdf-js'], function () {
         .pipe(strip())
         .pipe(concat('all-pdf.min.js'))
 
-        .pipe(gulp.dest('static/dist'))
+        .pipe(gulp.dest('static/dist'));
 });
 
 
 gulp.task('copy-files', [], function () {
-    gulp.src(['node_modules/leaflet/dist/images/*'])
+    return gulp.src(['node_modules/leaflet/dist/images/*'])
         .pipe(gulp.dest('static/dist/images'));
 });
 
 
-gulp.task('build', ['concat-js', 'compress-css', 'concat-pdf-js', 'compress-pdf-css', 'copy-files'], function () {
+gulp.task('build', ['merge-js', 'compress-css', 'concat-pdf-js', 'compress-pdf-css', 'copy-files'], function () {
 });
 
 
 gulp.task('watch', function () {
     gulp.watch('static/src/*.less', ['compress-css', 'compress-pdf-css']);
     gulp.watch('static/src/*.css', ['compress-css', 'compress-pdf-css']);
-    gulp.watch('static/src/*.js', ['concat-js', 'concat-pdf-js']);
+    gulp.watch('static/src/*.js', ['merge-js', 'concat-pdf-js']);
 });
 
 
