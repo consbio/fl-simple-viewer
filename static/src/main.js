@@ -882,21 +882,64 @@ function setSelectedField(field, group, subtitle) {
         });
 }
 
+function mergeIds(ids) {
+
+
+}
 
 
 function selectUnit(id){
     console.log('select ', id);
+
+    var ids = ['031001010302', '031001010303'];
 
     if (!detailsShowing){
         updateNodeVisibility(['#SidebarLoadingScrim'], ['#SidebarContents', '#MainSidebar', '#MainSidebarHeader', '#ClearFilterContainer']);
     }
     detailsShowing = true;
 
-
     if (pendingRequest != null) {
-        pendingRequest.abort();
+        //pendingRequest.abort();
     }
 
+    ///*
+    //var allDone = _.after(ids.length, showDetails('031001010302'));
+    var allDone = _.after(ids.length, function() {
+      console.log('allDone complete');
+      //showDetails('031001010302');
+    });
+
+    ids.forEach( function(id) {
+        console.log('ids.forEach: ', id);
+        if (featureCache[id] != null){
+            console.log('id in cache: ', id);
+            loadingUnit = false;
+            allDone();
+        }
+        else {
+            console.log('requesting json for: ', id);
+            loadingUnit = true;
+            pendingRequest = d3.json(featuresURL + id + '.json', function (r) {
+                if (r == null || r == undefined) { return }  //should handle case where no data is available
+                //pendingRequest = null;
+                console.log('caching: ', id);
+                featureCache[id] = r;
+                console.log('calling allDone for: ', id);
+                allDone();
+            });
+        }
+    });
+
+    _.delay(function(){
+            //if (loadingUnit){
+                updateNodeVisibility(['#SidebarLoadingScrim'], ['#SidebarContents']);
+            //}
+        },
+        250
+    );
+   //*/
+
+   /*
     if (featureCache[id] != null){
         loadingUnit = false;
         showDetails(id);
@@ -918,6 +961,8 @@ function selectUnit(id){
             selectUnit(id);
         });
     }
+    */
+
 }
 
 function deselectUnit() {
@@ -930,6 +975,7 @@ function deselectUnit() {
 function showDetails(id) {
     var record = index.get('id');
     var details = featureCache[id];
+    console.log('details: ', id);
     // console.log('details', details);
 
     if (!DEBUG) {
