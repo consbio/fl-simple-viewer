@@ -15,10 +15,9 @@ var transparency = 25;  //on 0-100% scale
 var featureCache = {};
 var pendingRequest = null;
 var featuresURL = 'features/';
-var selectedID = null;
 var loadingUnit = false;
 var detailsShowing = false;
-var selected_ids = [];
+var selectedIds = [];
 
 
 // Have to tell Leaflet where the marker images are
@@ -881,7 +880,7 @@ function setSelectedField(field, group, subtitle) {
 }
 
 
-function mergeIds(ids) {
+function mergeDataForIds(ids) {
 
     var mf = {
         ids: '',
@@ -937,106 +936,103 @@ function mergeIds(ids) {
     var ar_water_significant = [];
     var ar_water_wetland = [];
 
+    try {
+        ids.forEach( function(id) {
+            var r = featureCache[id];
+            if (r == null || r == undefined) { throw "Not found in cache"; }
 
-    ids.forEach( function(id) {
-        var r = featureCache[id];
-        if (r == null || r == undefined) { return }  //TODO: Need to throw and show user a data fetch failed
+            ar_bio.push(r.bio);
+            ar_bio_pnc.push(r.bio_pnc);
+            ar_bio_pnc2.push(r.bio_pnc2);
+            ar_bio_rare_spp.push(r.bio_rare_spp);
+            ar_bio_shca.push(r.bio_shca);
+            ar_bio_shca2.push(r.bio_shca2);
+            ar_bio_spp_rich.push(r.bio_spp_rich);
+            ar_bio_spp_rich2.push(r.bio_spp_rich2);
+            ar_clip.push(r.clip);
+            ar_counties.push(r.counties);
+            ar_dev.push(r.dev);
+            mf.hectares += r.hectares;
+            ar_land.push(r.land);
+            ar_land_greenways.push(r.land_greenways);
+            ar_land_integrity.push(r.land_integrity);
+            ar_land_use.push(r.land_use);
+            ar_name.push(r.name);
+            ar_partners.push(r.partners);
+            ar_pflcc_pr.push(r.pflcc_pr);
+            ar_slr.push(r.slr);
+            ar_water.push(r.water);
+            ar_water_aquifer.push(r.water_aquifer);
+            ar_water_floodplain.push(r.water_floodplain);
+            ar_water_significant.push(r.water_significant);
+            ar_water_wetland.push(r.water_wetland);
 
-        ar_bio.push(r.bio);
-        ar_bio_pnc.push(r.bio_pnc);
-        ar_bio_pnc2.push(r.bio_pnc2);
-        ar_bio_rare_spp.push(r.bio_rare_spp);
-        ar_bio_shca.push(r.bio_shca);
-        ar_bio_shca2.push(r.bio_shca2);
-        ar_bio_spp_rich.push(r.bio_spp_rich);
-        ar_bio_spp_rich2.push(r.bio_spp_rich2);
-        ar_clip.push(r.clip);
-        ar_counties.push(r.counties);
-        ar_dev.push(r.dev);
-        mf.hectares += r.hectares;
-        ar_land.push(r.land);
-        ar_land_greenways.push(r.land_greenways);
-        ar_land_integrity.push(r.land_integrity);
-        ar_land_use.push(r.land_use);
-        ar_name.push(r.name);
-        ar_partners.push(r.partners);
-        ar_pflcc_pr.push(r.pflcc_pr);
-        ar_slr.push(r.slr);
-        ar_water.push(r.water);
-        ar_water_aquifer.push(r.water_aquifer);
-        ar_water_floodplain.push(r.water_floodplain);
-        ar_water_significant.push(r.water_significant);
-        ar_water_wetland.push(r.water_wetland);
+        });
 
-
-        //console.log('r.bio_spp_rich2: ', r.bio_spp_rich2);
-        //console.log('r.counties: ', r.counties);
-        //console.log('r.partners: ', r.partners);
-        //console.log('r.pflcc_pr: ', r.pflcc_pr);
-
-    });
-
-    mf.ids = ids[0];
-    if (ids.length > 0)
-        mf.ids = 'multiple areas';
-/*
-    for (var idx=1; idx<ids.length; idx++) {
-        var theId = ids[idx];
-        if (mf.ids.length < 50) {
-            mf.ids += ', ' + theId;
-        } else {
-            mf.ids += ', ...';
-            break;
+        mf.ids = ids[0];
+        if (ids.length > 0)
+            mf.ids = 'multiple areas';
+    /*
+        for (var idx=1; idx<ids.length; idx++) {
+            var theId = ids[idx];
+            if (mf.ids.length < 50) {
+                mf.ids += ', ' + theId;
+            } else {
+                mf.ids += ', ...';
+                break;
+            }
         }
-    }
-*/
+    */
 
-    mf.bio = arraySum(ar_bio);
-    mf.bio_pnc = arraySum(ar_bio_pnc);
-    mf.bio_pnc2 = aggregateMerge(ar_bio_pnc2);
-    mf.bio_rare_spp = arraySum(ar_bio_rare_spp);
-    mf.bio_shca = arraySum(ar_bio_shca);
-    mf.bio_shca2 = aggregateMerge(ar_bio_shca2);
-    mf.bio_spp_rich = arraySum(ar_bio_spp_rich);
-    mf.bio_spp_rich2 = aggregateMerge(ar_bio_spp_rich2);
-    //console.log('mf.bio_spp_rich2: ', mf.bio_spp_rich2);
-    mf.clip = arraySum(ar_clip);
-    mf.counties = mergeSimpleObjectNumericValues(ar_counties);
-    //console.log('mf.counties: ', mf.counties);
-    mf.dev = arraySum(ar_dev);
-    mf.land = arraySum(ar_land);
-    mf.land_greenways = arraySum(ar_land_greenways);
-    mf.land_integrity = arraySum(ar_land_integrity);
-    mf.land_use = aggregateMerge(ar_land_use);
+        mf.bio = arraySum(ar_bio);
+        mf.bio_pnc = arraySum(ar_bio_pnc);
+        mf.bio_pnc2 = aggregateMerge(ar_bio_pnc2);
+        mf.bio_rare_spp = arraySum(ar_bio_rare_spp);
+        mf.bio_shca = arraySum(ar_bio_shca);
+        mf.bio_shca2 = aggregateMerge(ar_bio_shca2);
+        mf.bio_spp_rich = arraySum(ar_bio_spp_rich);
+        mf.bio_spp_rich2 = aggregateMerge(ar_bio_spp_rich2);
+        //console.log('mf.bio_spp_rich2: ', mf.bio_spp_rich2);
+        mf.clip = arraySum(ar_clip);
+        mf.counties = mergeSimpleObjectNumericValues(ar_counties);
+        //console.log('mf.counties: ', mf.counties);
+        mf.dev = arraySum(ar_dev);
+        mf.land = arraySum(ar_land);
+        mf.land_greenways = arraySum(ar_land_greenways);
+        mf.land_integrity = arraySum(ar_land_integrity);
+        mf.land_use = aggregateMerge(ar_land_use);
 
 
-    mf.names = ar_name[0];
-    if (ids.length > 0)
-        mf.names = 'multiple areas';
-/*
-    for (var idx=1; idx<ar_name.length; idx++) {
-        var theName = ar_name[idx];
-        if (mf.names.length < 50) {
-            mf.names += ', ' + theName;
-        }else{
-            mf.names += ', ...';
-            break;
+        mf.names = ar_name[0];
+        if (ids.length > 0)
+            mf.names = 'multiple areas';
+    /*
+        for (var idx=1; idx<ar_name.length; idx++) {
+            var theName = ar_name[idx];
+            if (mf.names.length < 50) {
+                mf.names += ', ' + theName;
+            }else{
+                mf.names += ', ...';
+                break;
+            }
         }
+    */
+
+        mf.partners = mergeSimpleObjectNumericValues(ar_partners);
+        mf.pflcc_pr = aggregateMerge(ar_pflcc_pr);
+        mf.slr = arraySum(ar_slr);
+        mf.water = arraySum(ar_water);
+        mf.water_aquifer = arraySum(ar_water_aquifer);
+        mf.water_floodplain = arraySum(ar_water_floodplain);
+        mf.water_significant = arraySum(ar_water_significant);
+        mf.water_wetland = arraySum(ar_water_wetland);
+
     }
-*/
+    catch(err) {
+        //TODO: Bubble something up to the user...
+    }
 
-    mf.partners = mergeSimpleObjectNumericValues(ar_partners);
-    //console.log('mf.partners: ', mf.partners);
-    mf.pflcc_pr = aggregateMerge(ar_pflcc_pr);
-    //console.log('mf.pflcc_pr: ', mf.pflcc_pr);
-    mf.slr = arraySum(ar_slr);
-    mf.water = arraySum(ar_water);
-    mf.water_aquifer = arraySum(ar_water_aquifer);
-    mf.water_floodplain = arraySum(ar_water_floodplain);
-    mf.water_significant = arraySum(ar_water_significant);
-    mf.water_wetland = arraySum(ar_water_wetland);
-
-    //console.log('data: ', data);
+    //console.log('mf: ', mf);
 
     return mf;
 }
@@ -1051,47 +1047,45 @@ function closeOutDetails() {
 
 function selectUnit(id){
     console.log('selectUnit ', id);
-    console.log('selectUnit - selected_ids ', selected_ids);
+    console.log('selectUnit - selectedIds ', selectedIds);
 
-    var index = selected_ids.indexOf(id);
+    var index = selectedIds.indexOf(id);
     if (index > -1) {
-        if (selected_ids.length == 1) {
+        if (selectedIds.length == 1) {
             // deselecting last unit. close everything out.
             closeOutDetails();
         }else{
-            selected_ids.splice(index, 1);
+            selectedIds.splice(index, 1);
             updateStats();
         }
     }else{
-        selected_ids.push(id);
+        selectedIds.push(id);
         updateStats();
     }
 }
 
 function updateStats() {
 
-    console.log('updateStats - selected_ids ', selected_ids);
+    console.log('updateStats - selectedIds ', selectedIds);
 
     if (!detailsShowing){
         updateNodeVisibility(['#SidebarLoadingScrim'], ['#SidebarContents', '#MainSidebar', '#MainSidebarHeader', '#ClearFilterContainer']);
     }
     detailsShowing = true;
 
-    if (pendingRequest != null) {
-        //pendingRequest.abort();
-    }
+    //if (pendingRequest != null) {
+    //    pendingRequest.abort();
+    //}
 
-    ///*
-    //var allDone = _.after(selected_ids.length, showDetails('031001010302'));
-    var allDone = _.after(selected_ids.length, function() {
+    var allDone = _.after(selectedIds.length, function() {
       console.log('allDone complete');
       loadingUnit = false;
-      var mf = mergeIds(selected_ids);
+      var mf = mergeDataForIds(selectedIds);
       showDetails(mf);
     });
 
-    selected_ids.forEach( function(id) {
-        console.log('selected_ids.forEach: ', id);
+    selectedIds.forEach( function(id) {
+        console.log('selectedIds.forEach: ', id);
         if (featureCache[id] != null){
             console.log('id in cache: ', id);
             allDone();
@@ -1111,38 +1105,12 @@ function updateStats() {
     });
 
     _.delay(function(){
-            //if (loadingUnit){
-                //updateNodeVisibility(['#SidebarLoadingScrim'], ['#SidebarContents']);
-            //}
+            if (loadingUnit){
+                updateNodeVisibility(['#SidebarLoadingScrim'], ['#SidebarContents']);
+            }
         },
         250
     );
-   //*/
-
-   /*
-    if (featureCache[id] != null){
-        loadingUnit = false;
-        showDetails(id);
-    }
-    else {
-        loadingUnit = true;
-        _.delay(function(){
-                if (loadingUnit){
-                    updateNodeVisibility(['#SidebarLoadingScrim'], ['#SidebarContents']);
-                }
-            },
-            250
-        );
-
-        pendingRequest = d3.json(featuresURL + id + '.json', function (r) {
-            if (r == null || r == undefined) { return }  //should handle case where no data is available
-            pendingRequest = null;
-            featureCache[id] = r;
-            selectUnit(id);
-        });
-    }
-    */
-
 
 }
 
@@ -1150,12 +1118,12 @@ function deselectUnit() {
 
     console.log('deselectUnit');
 
-    selected_ids.forEach( function(id) {
+    selectedIds.forEach( function(id) {
         if (!id) { return; }
         d3.select(featureIndex.get(id)._path).classed('selected', false);
     })
 
-    selected_ids = [];
+    selectedIds = [];
 }
 
 
@@ -1170,7 +1138,7 @@ function showDetails(details) {
 
     d3.selectAll('path.selected').classed('selected', false);
 
-    selected_ids.forEach( function(id) {
+    selectedIds.forEach( function(id) {
         var feature = featureIndex.get(id);
         feature.bringToFront();
         var path = d3.select(feature._path);
@@ -1748,9 +1716,9 @@ function getStatusUrl() {
         }
     }
 
-    if (selected_ids.length > 0) {
+    if (selectedIds.length > 0) {
         // i for id
-        q += 'i=' + selected_ids.join(',') + '&';
+        q += 'i=' + selectedIds.join(',') + '&';
     }
 
     var mapCenter = map.getCenter();
