@@ -879,8 +879,7 @@ function setSelectedField(field, group, subtitle) {
         });
 }
 
-
-function mergeDataForIds(ids) {
+function createMergedFeature() {
 
     var mf = {
         ids: '',
@@ -911,6 +910,13 @@ function mergeDataForIds(ids) {
         water_wetland: [0, 0, 0, 0, 0, 0, 0],
     };
 
+    return mf;
+}
+
+function mergeDataForIds(ids) {
+
+    var mf = createMergedFeature();
+
     var ar_bio = [];
     var ar_bio_pnc = [];
     var ar_bio_pnc2 = [];
@@ -937,6 +943,7 @@ function mergeDataForIds(ids) {
     var ar_water_wetland = [];
 
     try {
+
         ids.forEach( function(id) {
             var r = featureCache[id];
             if (r == null || r == undefined) { throw "Not found in cache"; }
@@ -970,19 +977,17 @@ function mergeDataForIds(ids) {
         });
 
         mf.ids = ids[0];
-        if (ids.length > 0)
-            mf.ids = 'multiple areas';
-    /*
         for (var idx=1; idx<ids.length; idx++) {
             var theId = ids[idx];
-            if (mf.ids.length < 50) {
+            if (mf.ids.length < 200) {
                 mf.ids += ', ' + theId;
             } else {
                 mf.ids += ', ...';
                 break;
             }
         }
-    */
+        //if (ids.length > 0)
+        //     mf.ids = 'multiple areas';
 
         mf.bio = arraySum(ar_bio);
         mf.bio_pnc = arraySum(ar_bio_pnc);
@@ -1006,7 +1011,7 @@ function mergeDataForIds(ids) {
         mf.names = ar_name[0];
         if (ids.length > 0)
             mf.names = 'multiple areas';
-    /*
+    /* Names are too long to show here
         for (var idx=1; idx<ar_name.length; idx++) {
             var theName = ar_name[idx];
             if (mf.names.length < 50) {
@@ -1030,6 +1035,7 @@ function mergeDataForIds(ids) {
     }
     catch(err) {
         //TODO: Bubble something up to the user...
+        mf = createMergedFeature();
     }
 
     //console.log('mf: ', mf);
@@ -1078,10 +1084,23 @@ function updateStats() {
     //}
 
     var allDone = _.after(selectedIds.length, function() {
-      console.log('allDone complete');
-      loadingUnit = false;
-      var mf = mergeDataForIds(selectedIds);
-      showDetails(mf);
+
+        var success = true;
+        selectedIds.forEach( function(id) {
+            var r = featureCache[id];
+            if (r == null || r == undefined) {
+                success = false;
+            }
+        })
+
+        if (success) {
+            console.log('allDone SUCCESS');
+            loadingUnit = false;
+            var mf = mergeDataForIds(selectedIds);
+            showDetails(mf);
+        }else{
+            console.log('allDone FAILED');
+        }
     });
 
     selectedIds.forEach( function(id) {
