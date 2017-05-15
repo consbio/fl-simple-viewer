@@ -899,7 +899,8 @@ function createMergedFeature() {
         land_greenways: [0, 0, 0, 0, 0, 0],
         land_integrity: [0, 0, 0, 0, 0],
         land_use: {},
-        names: '',
+        names: [],
+        selected_info: [],
         partners: {},
         pflcc_pr: {},
         slr: [0, 0, 0],
@@ -932,7 +933,6 @@ function mergeDataForIds(ids) {
     var ar_land_greenways = [];
     var ar_land_integrity = [];
     var ar_land_use = [];
-    var ar_name = [];
     var ar_partners = [];
     var ar_pflcc_pr = [];
     var ar_slr = [];
@@ -964,7 +964,8 @@ function mergeDataForIds(ids) {
             ar_land_greenways.push(r.land_greenways);
             ar_land_integrity.push(r.land_integrity);
             ar_land_use.push(r.land_use);
-            ar_name.push(r.name);
+            mf.names.push(r.name);
+            mf.selected_info.push({name: r.name, area: r.hectares, huc_id: id});
             ar_partners.push(r.partners);
             ar_pflcc_pr.push(r.pflcc_pr);
             ar_slr.push(r.slr);
@@ -1007,12 +1008,12 @@ function mergeDataForIds(ids) {
         mf.land_integrity = arraySum(ar_land_integrity);
         mf.land_use = aggregateMerge(ar_land_use);
 
+        mf.names = ids[0];
+        if (ids.length > 1)
+             mf.names = ids.length.toString() + ' selected watersheds';
 
-        mf.names = ar_name[0];
-        if (ids.length > 0)
-            mf.names = 'multiple areas';
-    /* Names are too long to show here
-        for (var idx=1; idx<ar_name.length; idx++) {
+       /*
+        for (var idx=0; idx<ar_name.length; idx++) {
             var theName = ar_name[idx];
             if (mf.names.length < 50) {
                 mf.names += ', ' + theName;
@@ -1021,7 +1022,7 @@ function mergeDataForIds(ids) {
                 break;
             }
         }
-    */
+        */
 
         mf.partners = mergeSimpleObjectNumericValues(ar_partners);
         mf.pflcc_pr = aggregateMerge(ar_pflcc_pr);
@@ -1164,8 +1165,25 @@ function showDetails(details) {
         path.classed('selected', true);
     })
 
-    d3.select('#Unit').text('[' + details.names + ']');
-    d3.select('#UnitID').text('HUC 12: [' + details.ids + ']');
+
+    var selectedWSList = d3.select('#PFLCC_SelectedWS_List');
+    selectedWSList.html('');
+    var selectedIDNodes = selectedWSList.selectAll('li').data(details.selected_info);
+    selectedIDNodes.enter()
+        .append('li')
+        .html(function(d) {
+            console.log("d: ", d);
+            var strInfo = d.name + d.area.toString();
+            return '<h5>' + d.name +
+                        '<br><div style="font-weight: normal; font-size: small">(HUC 12: [' + d.huc_id.toString() + '], ' + d3.format(',')(d.area) + ' hectares)</div></br>' +
+                    '</h5>';
+        });
+
+
+    d3.select('#Unit').text(details.names);
+    if (details.ids.length == 1) {
+        d3.select('#UnitID').text('HUC 12: [' + details.ids + ']');
+    }
     d3.select('#UnitArea').text(d3.format(',')(details.hectares));
 
     var chartColors4 = colorMap.general4;
