@@ -447,7 +447,7 @@ xhr.onload = function () {
                         tmpl: 'watersheds',
                         query: '#DetailsHeader',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0 ? true : false
                         },
                         postProcess: function (processedEl, originalEl) {
                             processedEl.querySelector('ul.tabs.small').remove();
@@ -458,42 +458,42 @@ xhr.onload = function () {
                         tmpl: 'priorityResources',
                         query: '#PFLCC_PR_Bars',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0 ? true : false
                         }
                     },
                     {
                         tmpl: 'CLIP_Chart',
                         query: '#CLIP_Chart',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0 ? true : false
                         }
                     },
                     {
                         tmpl: 'Bio_Chart',
                         query: '#Bio_Chart',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0 ? true : false
                         }
                     },
                     {
                         tmpl: 'BioRareSpp_Chart',
                         query: '#BioRareSpp_Chart',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0 ? true : false
                         }
                     },
                     {
                         tmpl: 'BioSHCA_Chart',
                         query: '#BioSHCA_Chart',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0 ? true : false
                         }
                     },
                     {
                         tmpl: 'BioSHCATable',
                         query: '#BioSHCATable',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0 ? true : false
                         },
                         postProcess: function (processedEl, originalEl) {
                             var allTexts = textNodesUnder(processedEl);
@@ -507,14 +507,14 @@ xhr.onload = function () {
                         tmpl: 'BioPNC_Chart',
                         query: '#BioPNC_Chart',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0 ? true : false
                         }
                     },
                     {
                         tmpl: 'BioPNC_Table',
                         query: '#BioPNC_Table',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0 ? true : false
                         },
                         postProcess: function (processedEl, originalEl) {
                             var allTexts = textNodesUnder(processedEl);
@@ -528,14 +528,14 @@ xhr.onload = function () {
                         tmpl: 'BioSppRich_Chart',
                         query: '#BioSppRich_Chart',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0 ? true : false
                         }
                     },
                     {
                         tmpl: 'BioSppRichTable',
                         query: '#BioSppRichTable',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0 ? true : false
                         },
                         postProcess: function (processedEl, originalEl) {
                             var allTexts = textNodesUnder(processedEl);
@@ -549,91 +549,91 @@ xhr.onload = function () {
                         tmpl: 'Land_Chart',
                         query: '#Land_Chart',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0 ? true : false
                         }
                     },
                     {
                         tmpl: 'Greenways_Chart',
                         query: '#Greenways_Chart',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0 ? true : false
                         }
                     },
                     {
                         tmpl: 'LI_Chart',
                         query: '#LI_Chart',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0 ? true : false
                         }
                     },
                     {
                         tmpl: 'Water_Chart',
                         query: '#Water_Chart',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0 ? true : false
                         }
                     },
                     {
                         tmpl: 'SSW_Chart',
                         query: '#SSW_Chart',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0 ? true : false
                         }
                     },
                     {
                         tmpl: 'Floodplain_Chart',
                         query: '#Floodplain_Chart',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0 ? true : false
                         }
                     },
                     {
                         tmpl: 'Wetlands_Chart',
                         query: '#Wetlands_Chart',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0 ? true : false
                         }
                     },
                     {
                         tmpl: 'Aquifer_Chart',
                         query: '#Aquifer_Chart',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0 ? true : false
                         }
                     },
                     {
                         tmpl: 'LU_Bars',
                         query: '#LU_Bars',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0 ? true : false
                         }
                     },
                     {
                         tmpl: 'SLR_Bars',
                         query: '#SLR_Bars',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0 ? true : false
                         }
                     },
                     {
                         tmpl: 'Dev_Bars',
                         query: '#Dev_Bars',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0 ? true : false
                         }
                     },
                     {
                         tmpl: 'Owner_Chart',
                         query: '#Owner_Chart',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0 ? true : false
                         }
                     },
                     {
                         tmpl: 'Owner_Table',
                         query: '#Owner_Table',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0 ? true : false
                         },
                         postProcess: function (processedEl, originalEl) {
                             var allTexts = textNodesUnder(processedEl);
@@ -647,7 +647,7 @@ xhr.onload = function () {
                         tmpl: 'PartnerTab',
                         query: '#PartnerTab',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0 ? true : false
                         },
                         postProcess: function (processedEl, originalEl) {
                             processedEl.querySelector('.small.quiet').remove();
@@ -700,7 +700,7 @@ xhr.onload = function () {
                     {
                         tmpl: 'hasDetails',
                         value: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0 ? true : false
                         }
                     },
                     {

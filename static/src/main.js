@@ -1038,7 +1038,7 @@ function mergeDataForIds(ids) {
         mf = createMergedFeature();
     }
 
-    //console.log('mf: ', mf);
+    console.log('mf: ', mf);
 
     return mf;
 }
