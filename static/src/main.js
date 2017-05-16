@@ -975,7 +975,8 @@ function mergeDataForIds(ids) {
             ar_water_significant.push(r.water_significant);
             ar_water_wetland.push(r.water_wetland);
 
-        });
+            //console.log('r: ', r);
+       });
 
         mf.ids = ids[0];
         for (var idx=1; idx<ids.length; idx++) {
@@ -987,8 +988,6 @@ function mergeDataForIds(ids) {
                 break;
             }
         }
-        //if (ids.length > 0)
-        //     mf.ids = 'multiple areas';
 
         mf.bio = arraySum(ar_bio);
         mf.bio_pnc = arraySum(ar_bio_pnc);
@@ -998,10 +997,8 @@ function mergeDataForIds(ids) {
         mf.bio_shca2 = aggregateMerge(ar_bio_shca2);
         mf.bio_spp_rich = arraySum(ar_bio_spp_rich);
         mf.bio_spp_rich2 = aggregateMerge(ar_bio_spp_rich2);
-        //console.log('mf.bio_spp_rich2: ', mf.bio_spp_rich2);
         mf.clip = arraySum(ar_clip);
         mf.counties = mergeSimpleObjectNumericValues(ar_counties);
-        //console.log('mf.counties: ', mf.counties);
         mf.dev = arraySum(ar_dev);
         mf.land = arraySum(ar_land);
         mf.land_greenways = arraySum(ar_land_greenways);
@@ -1012,19 +1009,7 @@ function mergeDataForIds(ids) {
         if (ids.length > 1)
              mf.names = ids.length.toString() + ' selected watersheds';
 
-       /*
-        for (var idx=0; idx<ar_name.length; idx++) {
-            var theName = ar_name[idx];
-            if (mf.names.length < 50) {
-                mf.names += ', ' + theName;
-            }else{
-                mf.names += ', ...';
-                break;
-            }
-        }
-        */
-
-        mf.partners = mergeSimpleObjectNumericValues(ar_partners);
+        mf.partners = mergePartnerValues(ar_partners);
         mf.pflcc_pr = aggregateMerge(ar_pflcc_pr);
         mf.slr = arraySum(ar_slr);
         mf.water = arraySum(ar_water);
@@ -1036,6 +1021,7 @@ function mergeDataForIds(ids) {
     }
     catch(err) {
         //TODO: Bubble something up to the user...
+        // Reset the merged feature so that no data will show
         mf = createMergedFeature();
     }
 
@@ -1043,6 +1029,28 @@ function mergeDataForIds(ids) {
 
     return mf;
 }
+
+
+function mergePartnerValues(arrPartnerValues){
+    var out = [];
+    var arr = [];
+    arrPartnerValues.forEach(function(partnerArray){
+        partnerArray.forEach(function(item){
+            if (Array.isArray(item)) {
+                 arr = _.union(item, arr);
+            } else {
+                if (out.indexOf(item) < 0) {
+                    out.push(item);
+                }
+           }
+        });
+    });
+    if (arr.length > 0) {
+        out.push(arr);
+    }
+    return out;
+}
+
 
 function closeOutDetails() {
     detailsShowing = false;
@@ -1053,8 +1061,8 @@ function closeOutDetails() {
 
 
 function selectUnit(id){
-    console.log('selectUnit ', id);
-    console.log('selectUnit - selectedIds ', selectedIds);
+    //console.log('selectUnit ', id);
+    //console.log('selectUnit - selectedIds ', selectedIds);
 
     var index = selectedIds.indexOf(id);
     if (index > -1) {
@@ -1072,8 +1080,6 @@ function selectUnit(id){
 }
 
 function updateStats() {
-
-    console.log('updateStats - selectedIds ', selectedIds);
 
     if (!detailsShowing){
         updateNodeVisibility(['#SidebarLoadingScrim'], ['#SidebarContents', '#MainSidebar', '#MainSidebarHeader', '#ClearFilterContainer']);
@@ -1095,19 +1101,14 @@ function updateStats() {
         })
 
         if (success) {
-            console.log('allDone SUCCESS');
             loadingUnit = false;
             var mf = mergeDataForIds(selectedIds);
             showDetails(mf);
-        }else{
-            console.log('allDone FAILED');
         }
     });
 
     selectedIds.forEach( function(id) {
-        console.log('selectedIds.forEach: ', id);
         if (featureCache[id] != null){
-            console.log('id in cache: ', id);
             allDone();
         }
         else {
@@ -1115,10 +1116,7 @@ function updateStats() {
             loadingUnit = true;
             pendingRequest = d3.json(featuresURL + id + '.json', function (r) {
                 if (r == null || r == undefined) { return }  //should handle case where no data is available
-                //pendingRequest = null;
-                console.log('caching: ', id);
                 featureCache[id] = r;
-                console.log('calling allDone for: ', id);
                 allDone();
             });
         }
@@ -1136,8 +1134,6 @@ function updateStats() {
 
 function deselectUnit() {
 
-    console.log('deselectUnit');
-
     selectedIds.forEach( function(id) {
         if (!id) { return; }
         d3.select(featureIndex.get(id)._path).classed('selected', false);
@@ -1148,8 +1144,7 @@ function deselectUnit() {
 
 
 function showDetails(details) {
-    //var record = index.get('id');
-    console.log('details: ', details);
+    //console.log('details: ', details);
 
     if (!DEBUG) {
         // log via google analytics
@@ -1172,7 +1167,6 @@ function showDetails(details) {
     selectedIDNodes.enter()
         .append('li')
         .html(function(d) {
-            console.log("d: ", d);
             var strInfo = d.name + d.area.toString();
             return '<h5>' + d.name +
                         '<br><div style="font-weight: normal; font-size: small">(HUC 12: [' + d.huc_id.toString() + '], ' + d3.format(',')(d.area) + ' hectares)</div></br>' +
@@ -1269,7 +1263,6 @@ function showDetails(details) {
 
     // Land use tab
     var lu_data = d3.entries(details.land_use).map(function(d) {
-        console.log("d: ",  d);
         return {
             value: d.value,
             label: landUseLabels[d.key],
