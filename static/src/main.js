@@ -894,8 +894,7 @@ function mergeDataForIds2(ids) {
 
         hectares: _.sum(_.map(records, 'hectares')),
         names: (records.length > 1)? records.length.toString() + ' selected watersheds': records[0].name,
-        //partners: _.spread(_.union)(_.map(records, 'partners')),  // merge partners into unique list
-        partners: {},
+        partners: _.spread(_.union)(_.map(records, 'partners')),  // merge partners into unique list
         selected_info: [],
     };
 
@@ -912,43 +911,16 @@ function mergeDataForIds2(ids) {
     // values for counties have an odd structure, need to flatten the single value arrays for each county code.
     merged.counties =_.mapValues(merged.counties, function(value){return value[0]});
 
-    // This block was still necessary to return the expected format
-    var arrayPartners = ids.map(function(id){
-        return featureCache[id].partners;
-    });
-    merged.partners = mergePartnerValues(arrayPartners);
-
-    // Since the huc_id is not part of the records, we will add it here
+    // Since the huc_id is not part of the records, we will add it here for displaying the Selected Watersheds
     ids.forEach( function(id) {
         var r = featureCache[id];
-        console.log("featureCache[id]: ", r.bio_shca2);
+        //console.log("featureCache[id]: ", r);
         merged.selected_info.push({name: r.name, hectares: r.hectares, huc_id: id});
     });
 
-    console.log('merged: ', merged.bio_shca2);
+    //console.log('merged: ', merged);
 
     return merged;
-}
-
-
-function mergePartnerValues(arrPartnerValues){
-    var out = [];
-    var arr = [];
-    arrPartnerValues.forEach(function(partnerArray){
-        partnerArray.forEach(function(item){
-            if (Array.isArray(item)) {
-                 arr = _.union(item, arr);
-            } else {
-                if (out.indexOf(item) < 0) {
-                    out.push(item);
-                }
-           }
-        });
-    });
-    if (arr.length > 0) {
-        out.push(arr);
-    }
-    return out;
 }
 
 
@@ -989,12 +961,7 @@ function updateStats() {
     }
     detailsShowing = true;
 
-    //if (pendingRequest != null) {
-    //    pendingRequest.abort();
-    //}
-
     var allDone = _.after(selectedIds.length, function() {
-        console.log("allDone");
         var success = true;
         selectedIds.forEach( function(id) {
             var r = featureCache[id];
