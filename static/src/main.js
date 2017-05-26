@@ -879,155 +879,55 @@ function setSelectedField(field, group, subtitle) {
         });
 }
 
-function createMergedFeature() {
+function mergeDataForIds2(ids) {
+    var arrayFields = ['bio', 'bio_pnc', 'bio_rare_spp', 'bio_shca', 'bio_spp_rich', 'clip', 'dev', 'land',
+        'land_greenways', 'land_integrity', 'names', 'slr', 'water', 'water_aquifer', 'water_floodplain',
+        'water_significant', 'water_wetland'];
+    var objFields = ['bio_pnc2', 'bio_shca2', 'bio_spp_rich2', 'counties', 'land_use', 'pflcc_pr' ];
 
-    var mf = {
-        ids: '',
-        bio: [0, 0, 0, 0, 0, 0],
-        bio_pnc: [0, 0, 0, 0, 0],
-        bio_pnc2: {},
-        bio_rare_spp: [0, 0, 0, 0, 0, 0, 0],
-        bio_shca: [0, 0, 0, 0, 0, 0],
-        bio_shca2: {},
-        bio_spp_rich: [0, 0, 0, 0, 0, 0],
-        bio_spp_rich2: {},
-        clip: [0, 0, 0, 0, 0, 0],
-        counties: {},
-        dev: [0, 0, 0, 0],
-        hectares: 0,
-        land: [0, 0, 0, 0, 0, 0],
-        land_greenways: [0, 0, 0, 0, 0, 0],
-        land_integrity: [0, 0, 0, 0, 0],
-        land_use: {},
-        names: [],
-        selected_info: [],
+    var records = ids.map(function(id){
+        return featureCache[id];
+    });
+
+    var merged = {
+        records: records,  // keep full records instead of selected info
+
+        hectares: _.sum(_.map(records, 'hectares')),
+        names: (records.length > 1)? records.length.toString() + ' selected watersheds': records[0].name,
+        //partners: _.spread(_.union)(_.map(records, 'partners')),  // merge partners into unique list
         partners: {},
-        pflcc_pr: {},
-        slr: [0, 0, 0],
-        water: [0, 0, 0, 0, 0, 0],
-        water_aquifer: [0, 0, 0, 0, 0, 0, 0],
-        water_floodplain: [0, 0, 0, 0, 0, 0, 0],
-        water_significant: [0, 0, 0, 0, 0, 0, 0, 0],
-        water_wetland: [0, 0, 0, 0, 0, 0, 0],
+        selected_info: [],
     };
 
-    return mf;
-}
+    arrayFields.forEach(function(field) {
+        var values = _.map(records, field);
+        merged[field] = sumArraysByIndex(values);
+    });
 
-function mergeDataForIds(ids) {
+    objFields.forEach(function(field) {
+        var values = _.map(records, field);
+        merged[field] = aggregateMerge(values);
+    });
 
-    var mf = createMergedFeature();
+    // values for counties have an odd structure, need to flatten the single value arrays for each county code.
+    merged.counties =_.mapValues(merged.counties, function(value){return value[0]});
 
-    var ar_bio = [];
-    var ar_bio_pnc = [];
-    var ar_bio_pnc2 = [];
-    var ar_bio_rare_spp = [];
-    var ar_bio_shca = [];
-    var ar_bio_shca2 = [];
-    var ar_bio_spp_rich = [];
-    var ar_bio_spp_rich2 = [];
-    var ar_clip = [];
-    var ar_counties = [];
-    var ar_dev = [];
-    var ar_land = [];
-    var ar_land_greenways = [];
-    var ar_land_integrity = [];
-    var ar_land_use = [];
-    var ar_partners = [];
-    var ar_pflcc_pr = [];
-    var ar_slr = [];
-    var ar_water = [];
-    var ar_water_aquifer = [];
-    var ar_water_floodplain = [];
-    var ar_water_significant = [];
-    var ar_water_wetland = [];
+    // This block was still necessary to return the expected format
+    var arrayPartners = ids.map(function(id){
+        return featureCache[id].partners;
+    });
+    merged.partners = mergePartnerValues(arrayPartners);
 
-    try {
+    // Since the huc_id is not part of the records, we will add it here
+    ids.forEach( function(id) {
+        var r = featureCache[id];
+        console.log("featureCache[id]: ", r.bio_shca2);
+        merged.selected_info.push({name: r.name, hectares: r.hectares, huc_id: id});
+    });
 
-        ids.forEach( function(id) {
-            var r = featureCache[id];
-            if (r == null || r == undefined) { throw "Not found in cache"; }
+    console.log('merged: ', merged.bio_shca2);
 
-            ar_bio.push(r.bio);
-            ar_bio_pnc.push(r.bio_pnc);
-            ar_bio_pnc2.push(r.bio_pnc2);
-            ar_bio_rare_spp.push(r.bio_rare_spp);
-            ar_bio_shca.push(r.bio_shca);
-            ar_bio_shca2.push(r.bio_shca2);
-            ar_bio_spp_rich.push(r.bio_spp_rich);
-            ar_bio_spp_rich2.push(r.bio_spp_rich2);
-            ar_clip.push(r.clip);
-            ar_counties.push(r.counties);
-            ar_dev.push(r.dev);
-            mf.hectares += r.hectares;
-            ar_land.push(r.land);
-            ar_land_greenways.push(r.land_greenways);
-            ar_land_integrity.push(r.land_integrity);
-            ar_land_use.push(r.land_use);
-            mf.names.push(r.name);
-            mf.selected_info.push({name: r.name, area: r.hectares, huc_id: id});
-            ar_partners.push(r.partners);
-            ar_pflcc_pr.push(r.pflcc_pr);
-            ar_slr.push(r.slr);
-            ar_water.push(r.water);
-            ar_water_aquifer.push(r.water_aquifer);
-            ar_water_floodplain.push(r.water_floodplain);
-            ar_water_significant.push(r.water_significant);
-            ar_water_wetland.push(r.water_wetland);
-
-            //console.log('r: ', r);
-       });
-
-        mf.ids = ids[0];
-        for (var idx=1; idx<ids.length; idx++) {
-            var theId = ids[idx];
-            if (mf.ids.length < 200) {
-                mf.ids += ', ' + theId;
-            } else {
-                mf.ids += ', ...';
-                break;
-            }
-        }
-
-        mf.bio = arraySum(ar_bio);
-        mf.bio_pnc = arraySum(ar_bio_pnc);
-        mf.bio_pnc2 = aggregateMerge(ar_bio_pnc2);
-        mf.bio_rare_spp = arraySum(ar_bio_rare_spp);
-        mf.bio_shca = arraySum(ar_bio_shca);
-        mf.bio_shca2 = aggregateMerge(ar_bio_shca2);
-        mf.bio_spp_rich = arraySum(ar_bio_spp_rich);
-        mf.bio_spp_rich2 = aggregateMerge(ar_bio_spp_rich2);
-        mf.clip = arraySum(ar_clip);
-        mf.counties = mergeSimpleObjectNumericValues(ar_counties);
-        mf.dev = arraySum(ar_dev);
-        mf.land = arraySum(ar_land);
-        mf.land_greenways = arraySum(ar_land_greenways);
-        mf.land_integrity = arraySum(ar_land_integrity);
-        mf.land_use = aggregateMerge(ar_land_use);
-
-        mf.names = ids[0];
-        if (ids.length > 1)
-             mf.names = ids.length.toString() + ' selected watersheds';
-
-        mf.partners = mergePartnerValues(ar_partners);
-        mf.pflcc_pr = aggregateMerge(ar_pflcc_pr);
-        mf.slr = arraySum(ar_slr);
-        mf.water = arraySum(ar_water);
-        mf.water_aquifer = arraySum(ar_water_aquifer);
-        mf.water_floodplain = arraySum(ar_water_floodplain);
-        mf.water_significant = arraySum(ar_water_significant);
-        mf.water_wetland = arraySum(ar_water_wetland);
-
-    }
-    catch(err) {
-        //TODO: Bubble something up to the user...
-        // Reset the merged feature so that no data will show
-        mf = createMergedFeature();
-    }
-
-    console.log('mf: ', mf);
-
-    return mf;
+    return merged;
 }
 
 
@@ -1056,7 +956,7 @@ function closeOutDetails() {
     detailsShowing = false;
     updateNodeVisibility(['#MainSidebar', '#MainSidebarHeader'], ['#Details', '#DetailsHeader']);
     d3.select('#ClearFilterContainer').classed('hidden', !hasFilters());
-    deselectUnit();
+    deselectUnits();
 }
 
 
@@ -1069,15 +969,18 @@ function selectUnit(id){
         if (selectedIds.length == 1) {
             // deselecting last unit. close everything out.
             closeOutDetails();
-        }else{
+        }
+        else {
             selectedIds.splice(index, 1);
             updateStats();
         }
-    }else{
+    }
+    else {
         selectedIds.push(id);
         updateStats();
     }
 }
+
 
 function updateStats() {
 
@@ -1091,18 +994,20 @@ function updateStats() {
     //}
 
     var allDone = _.after(selectedIds.length, function() {
-
+        console.log("allDone");
         var success = true;
         selectedIds.forEach( function(id) {
             var r = featureCache[id];
             if (r == null || r == undefined) {
+                // This may be called while other downloads are being completed, so we
+                // may not have everything we need to display
                 success = false;
             }
         })
 
         if (success) {
             loadingUnit = false;
-            var mf = mergeDataForIds(selectedIds);
+            var mf = mergeDataForIds2(selectedIds);
             showDetails(mf);
         }
     });
@@ -1132,7 +1037,7 @@ function updateStats() {
 
 }
 
-function deselectUnit() {
+function deselectUnits() {
 
     selectedIds.forEach( function(id) {
         if (!id) { return; }
@@ -1144,7 +1049,6 @@ function deselectUnit() {
 
 
 function showDetails(details) {
-    //console.log('details: ', details);
 
     if (!DEBUG) {
         // log via google analytics
@@ -1160,25 +1064,29 @@ function showDetails(details) {
         path.classed('selected', true);
     })
 
-
+    d3.select('#DetailsSelectedWS').classed('hidden', selectedIds.length < 2);
     var selectedWSList = d3.select('#PFLCC_SelectedWS_List');
     selectedWSList.html('');
     var selectedIDNodes = selectedWSList.selectAll('li').data(details.selected_info);
     selectedIDNodes.enter()
         .append('li')
         .html(function(d) {
-            var strInfo = d.name + d.area.toString();
-            return '<h5>' + d.name +
-                        '<br><div style="font-weight: normal; font-size: small">(HUC 12: [' + d.huc_id.toString() + '], ' + d3.format(',')(d.area) + ' hectares)</div></br>' +
-                    '</h5>';
+            return '<div>' + d.name +
+                        '<br><div style="font-weight: normal; font-size: small; Line-Height: 1.6em">(HUC 12: ' + d.huc_id.toString() + ', ' + d3.format(',')(d.hectares) + ' hectares)</div></br>' +
+                    '</div>';
         });
 
 
-    d3.select('#Unit').text(details.names);
-    if (details.ids.length == 1) {
-        d3.select('#UnitID').text('HUC 12: [' + details.ids + ']');
+    if (selectedIds.length == 1) {
+        d3.select('#Unit').text(details.records[0].name);
+        d3.select('#UnitID').text('HUC 12: ' + selectedIds[0]);
+        d3.select('#UnitArea').text(d3.format(',')(details.hectares));
     }
-    d3.select('#UnitArea').text(d3.format(',')(details.hectares));
+    else {
+        d3.select('#Unit').text(details.names);
+        d3.select('#UnitID').text('');
+        d3.select('#UnitArea').text(d3.format(',')(details.hectares));
+    }
 
     var chartColors4 = colorMap.general4;
     var chartColors5 = colorMap.general5;
