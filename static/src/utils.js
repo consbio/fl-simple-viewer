@@ -246,23 +246,3 @@ function aggregateMerge(items){
 function sumArraysByIndex(items){
     return _.spread(_.zip)(items).map(_.sum)
 }
-
-/**
- * Merge the data for non-nested object
- * @requires lodash
- *
- * Example:
- * var j={A: 44, B: 22}
- * var k={A: 44, C: 22}
- * mergeSimpleObjectNumericValues({A: 88, B: 22, C: 22})
- *
- * @param {items} array of like objects
- * @returns {Object} Returns Object with merged values
- */
-function mergeSimpleObjectNumericValues(items){
-  var out = {};
-  items.forEach(function(item){
-    _.merge(out, item)
-  });
-  return out;
-}
