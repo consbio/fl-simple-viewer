@@ -879,14 +879,14 @@ function setSelectedField(field, group, subtitle) {
         });
 }
 
-function mergeDataForIds2(ids) {
+function mergeSelectedUnits(ids) {
     var arrayFields = ['bio', 'bio_pnc', 'bio_rare_spp', 'bio_shca', 'bio_spp_rich', 'clip', 'dev', 'land',
-        'land_greenways', 'land_integrity', 'names', 'slr', 'water', 'water_aquifer', 'water_floodplain',
+        'land_greenways', 'land_integrity', 'ownership_detailed', 'slr', 'water', 'water_aquifer', 'water_floodplain',
         'water_significant', 'water_wetland'];
     var objFields = ['bio_pnc2', 'bio_shca2', 'bio_spp_rich2', 'counties', 'land_use', 'pflcc_pr' ];
 
     var records = ids.map(function(id){
-        return featureCache[id];
+        return _.merge({'id': id}, featureCache[id]);
     });
 
     var merged = {
@@ -895,7 +895,6 @@ function mergeDataForIds2(ids) {
         hectares: _.sum(_.map(records, 'hectares')),
         names: (records.length > 1)? records.length.toString() + ' selected watersheds': records[0].name,
         partners: _.spread(_.union)(_.map(records, 'partners')),  // merge partners into unique list
-        selected_info: [],
     };
 
     arrayFields.forEach(function(field) {
@@ -911,15 +910,6 @@ function mergeDataForIds2(ids) {
     // values for counties have an odd structure, need to flatten the single value arrays for each county code.
     merged.counties =_.mapValues(merged.counties, function(value){return value[0]});
 
-    // Since the huc_id is not part of the records, we will add it here for displaying the Selected Watersheds
-    ids.forEach( function(id) {
-        var r = featureCache[id];
-        //console.log("featureCache[id]: ", r);
-        merged.selected_info.push({name: r.name, hectares: r.hectares, huc_id: id});
-    });
-
-    //console.log('merged: ', merged);
-
     return merged;
 }
 
@@ -932,9 +922,7 @@ function closeOutDetails() {
 }
 
 
-function selectUnit(id){
-    //console.log('selectUnit ', id);
-    //console.log('selectUnit - selectedIds ', selectedIds);
+function selectUnit(id) {
 
     var index = selectedIds.indexOf(id);
     if (index > -1) {
@@ -974,7 +962,7 @@ function updateStats() {
 
         if (success) {
             loadingUnit = false;
-            var mf = mergeDataForIds2(selectedIds);
+            var mf = mergeSelectedUnits(selectedIds);
             showDetails(mf);
         }
     });
@@ -1009,7 +997,7 @@ function deselectUnits() {
     selectedIds.forEach( function(id) {
         if (!id) { return; }
         d3.select(featureIndex.get(id)._path).classed('selected', false);
-    })
+    });
 
     selectedIds = [];
 }
@@ -1029,31 +1017,21 @@ function showDetails(details) {
         feature.bringToFront();
         var path = d3.select(feature._path);
         path.classed('selected', true);
-    })
+    });
 
     d3.select('#DetailsSelectedWS').classed('hidden', selectedIds.length < 2);
     var selectedWSList = d3.select('#PFLCC_SelectedWS_List');
     selectedWSList.html('');
-    var selectedIDNodes = selectedWSList.selectAll('li').data(details.selected_info);
+    var selectedIDNodes = selectedWSList.selectAll('li').data(details.records);
     selectedIDNodes.enter()
         .append('li')
-        .html(function(d) {
-            return '<div>' + d.name +
-                        '<br><div style="font-weight: normal; font-size: small; Line-Height: 1.6em">(HUC 12: ' + d.huc_id.toString() + ', ' + d3.format(',')(d.hectares) + ' hectares)</div></br>' +
-                    '</div>';
+        .html(function(d){
+            return d.name + '<div class="quiet small">(HUC 12: ' + d.id + ', ' + d3.format(',')(d.hectares) + ' hectares)</div>';
         });
 
-
-    if (selectedIds.length == 1) {
-        d3.select('#Unit').text(details.records[0].name);
-        d3.select('#UnitID').text('HUC 12: ' + selectedIds[0]);
-        d3.select('#UnitArea').text(d3.format(',')(details.hectares));
-    }
-    else {
-        d3.select('#Unit').text(details.names);
-        d3.select('#UnitID').text('');
-        d3.select('#UnitArea').text(d3.format(',')(details.hectares));
-    }
+    d3.select('#Unit').text(details.names);
+    d3.select('#UnitID').text((selectedIds.length == 1)? 'HUC 12: ' + selectedIds[0]: '');
+    d3.select('#UnitArea').text(d3.format(',')(details.hectares));
 
     var chartColors4 = colorMap.general4;
     var chartColors5 = colorMap.general5;

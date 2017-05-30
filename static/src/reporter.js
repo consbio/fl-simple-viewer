@@ -445,13 +445,17 @@ xhr.onload = function () {
                     },
                     {
                         tmpl: 'watersheds',
-                        query: '#DetailsHeader',
+                        query: '#PFLCC_SelectedWS_List',
                         condition: function () {
                             return selectedIds.length > 0
                         },
                         postProcess: function (processedEl, originalEl) {
-                            processedEl.querySelector('ul.tabs.small').remove();
-                            return processedEl
+                            var allTexts = textNodesUnder(processedEl);
+                            for (var i = allTexts.length; i > 0; i--) {
+                                allTexts[i-1].parentElement.classList.add('selectableText');
+                            }
+                            processedEl.style = 'font-size:1.3em;';
+                            return processedEl;
                         }
                     },
                     {
