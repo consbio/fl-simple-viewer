@@ -812,7 +812,6 @@ function updateMap() {
 
 // reset handler
 function handleChartReset(id) {
-    // console.log('reset', id)
     d3.event.stopPropagation();
     var chart = _.find(dc.chartRegistry.list(), function(d){ return d.root().node().id === id });
     chart.filterAll();
@@ -881,9 +880,9 @@ function setSelectedField(field, group, subtitle) {
 
 function mergeSelectedUnits(ids) {
     var arrayFields = ['bio', 'bio_pnc', 'bio_rare_spp', 'bio_shca', 'bio_spp_rich', 'clip', 'dev', 'land',
-        'land_greenways', 'land_integrity', 'ownership_detailed', 'slr', 'water', 'water_aquifer', 'water_floodplain',
+        'land_greenways', 'land_integrity', 'slr', 'water', 'water_aquifer', 'water_floodplain',
         'water_significant', 'water_wetland'];
-    var objFields = ['bio_pnc2', 'bio_shca2', 'bio_spp_rich2', 'counties', 'land_use', 'pflcc_pr' ];
+    var objFields = ['bio_pnc2', 'bio_shca2', 'bio_spp_rich2', 'counties', 'land_use', 'pflcc_pr', 'ownership_detailed'];
 
     var records = ids.map(function(id){
         return _.merge({'id': id}, featureCache[id]);
@@ -943,7 +942,6 @@ function selectUnit(id) {
 
 
 function updateStats() {
-
     if (!detailsShowing){
         updateNodeVisibility(['#SidebarLoadingScrim'], ['#SidebarContents', '#MainSidebar', '#MainSidebarHeader', '#ClearFilterContainer']);
     }
@@ -972,7 +970,7 @@ function updateStats() {
             allDone();
         }
         else {
-            console.log('requesting json for: ', id);
+            // console.log('requesting json for: ', id);
             loadingUnit = true;
             pendingRequest = d3.json(featuresURL + id + '.json', function (r) {
                 if (r == null || r == undefined) { return }  //should handle case where no data is available
@@ -993,7 +991,6 @@ function updateStats() {
 }
 
 function deselectUnits() {
-
     selectedIds.forEach( function(id) {
         if (!id) { return; }
         d3.select(featureIndex.get(id)._path).classed('selected', false);

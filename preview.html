@@ -187,7 +187,7 @@
             <div class="tooltip">This model is a combination of the four CLIP core data layers in the Biodiversity Resource Category: Strategic Habitat Conservation Areas (SHCA), Vertebrate Potential Habitat Richness (VertRich), Rare Species Habitat Conservation Priorities (FNAIHAB), and Priority Natural Communities (Natcom). See the CLIP Technical Report for the rules used to assign the core data layers into the Biodiversity resource priority model.</div>
         </div>
 
-        <h4>Rare Species</h4>
+        <h4 style="margin-top: 72px;">Rare Species</h4>
         <div class="chart">
             <section>
                 {{{BioRareSpp_Chart}}}
@@ -223,11 +223,13 @@
         <h4>Strategic Habitat Conservation Areas</h4>
         <div class="chart">
             <section>
-                {{{BioSHCA_Chart}}}
-                {{{BioSHCATable}}}
+                {{{Bio_Chart}}}
             </section>
             <div class="tooltip">This data layer was created by FWC to identify gaps in the existing statewide system of wildlife conservation areas, and to inform ongoing land acquisition and conservation efforts. FWC modeled areas of habitat that are essential to sustain viable populations for 34 species of terrestrial (land-based) vertebrates that are not adequately protected on existing conservation lands. The CLIP version also identifies habitat on conservation lands for all 62 species analyzed for the project.</div>
         </div>
+        <section style="margin-top:40px;">
+            {{{BioSHCATable}}}
+        </section>
     </div>
 
     <div class="footer">
@@ -258,7 +260,6 @@
         <div class="chart">
             <section>
                 {{{BioPNC_Chart}}}
-                {{{BioPNC_Table}}}
             </section>
             <div class="tooltip">
                 This data layer was created by FNAI originally to inform the Florida Forever environmental land acquisition program. The natural communities were mapped primarily based on the FNAI/FWC Cooperative Land Cover (CLC) data layer. This layer includes 12 priority natural community types: upland glades, pine rocklands, seepage slopes, scrub, sandhill, sandhill upland lakes, rockland hammock, coastal uplands, imperiled coastal lakes, dry prairie, upland pine, pine flatwoods, upland hardwood forest, or coastal wetlands. These natural communities are prioritized by a combination of their heritage global status rank (G-rank) and landscape context, based on the Land Use Intensity Index (subset of CLIP Landscape Integrity Index) and FNAI Potential Natural Areas.
@@ -266,6 +267,9 @@
                 The qualifiers (Very High, High, Moderate) for the Priority Natural Communities in CLIP were based on the Landscape Integrity Priority Classifications created by FNAI. A more specific description of these prioritization can be found in Appendix D of the CLIP Technical Report.
             </div>
         </div>
+        <section style="margin-top: 40px;">
+            {{{BioPNC_Table}}}
+        </section>
     </div>
 
     <div class="footer">
@@ -296,10 +300,12 @@
         <div class="chart">
             <section>
                 {{{BioSppRich_Chart}}}
-                {{{BioSppRichTable}}}
             </section>
             <div class="tooltip">Potential habitat for one or more rare or vulnerable vertebrate species. Richness refers to the number of species overlapping at any location. FWC modeled potential habitat for 62 species of terrestrial (land-based) vertebrates that may not be adequately protected on existing conservation lands. The most overlapping species in this model is 13.</div>
         </div>
+        <section>
+            {{{BioSppRichTable}}}
+        </section>
     </div>
 
     <div class="footer">
@@ -334,7 +340,7 @@
             <div class="tooltip">This model is a combination of the two core data layers in the Landscape Resource Category: Florida Ecological Greenways Network, and Landscape Integrity Index.  See the CLIP Technical Report for the rules used to assign the core data layers into the Landscape resource priority model.</div>
         </div>
 
-        <h4>Florida Ecological Greenways Network</h4>
+        <h4 style="margin-top: 72px;">Florida Ecological Greenways Network</h4>
         <div class="chart">
             <section>
                 {{{Greenways_Chart}}}
@@ -408,7 +414,7 @@
             <div class="tooltip">This model is a combination of the three core data layers in the Surface Water Resource Category: Significant Surface Waters, Natural Floodplain, and Wetlands.  See the CLIP Technical Report for the rules used to assign the core data layers into the Surface Water resource priority model.</div>
         </div>
 
-        <h4>Significant Surface Waters</h4>
+        <h4 style="margin-top: 72px;">Significant Surface Waters</h4>
         <div class="chart">
             <section>
                 {{{SSW_Chart}}}
@@ -449,7 +455,7 @@
             <div class="tooltip">This data layer was created by FNAI, in consultation with water resource experts, originally to inform the Florida Forever environmental land acquisition program. It identifies FEMA 100-year floodplain for most counties, or a surrogate model for 100-year floodplain (based on wetlands and soils) where FEMA data isn’t complete.</div>
         </div>
 
-        <h4>Wetlands</h4>
+        <h4 style="margin-top: 72px;">Wetlands</h4>
         <div class="chart">
             <section>
                 {{{Wetlands_Chart}}}
@@ -559,7 +565,7 @@
             </div>
         </div>
 
-        <h4>Urban Development / Population Growth</h4>
+        <h4 style="margin-top: 72px;">Urban Development / Population Growth</h4>
         <div class="chart">
             <section>
                 {{{Dev_Bars}}}
@@ -596,10 +602,12 @@
         <div class="chart">
             <section>
                 {{{Owner_Chart}}}
-                {{{Owner_Table}}}
             </section>
             <div class="tooltip">Land ownership is broken down into Federal, State, Local, Private Conserved Land, and Other Lands categories.</div>
         </div>
+        <section>
+            <!--{{{Owner_Table}}}-->
+        </section>
     </div>
 
     <div class="footer">
@@ -610,6 +618,38 @@
         <a href="{{access_url}}" target="_blank" class="smaller selectableText accessUrl">open Peninsular Florida LCC - Simple Map Viewer</a>
     </div>
 </div>
+
+<div class="detail page">
+    <div class="header">
+        <img src="static/img/logo.png">
+        <h3 class="selectableText">Peninsular Florida LCC - Simple Map Viewer</h3>
+    </div>
+
+    <div class="detailsHeader">
+        <h3>Details for Selected Watersheds
+            <svg width="25" height="25" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
+                <path d="M512 896v512h-256v-512h256zm384-512v1024h-256v-1024h256zm1024 1152v128h-2048v-1536h128v1408h1920zm-640-896v768h-256v-768h256zm384-384v1152h-256v-1152h256z"/>
+            </svg>
+        </h3>
+    </div>
+
+    <div style="top: 1.4in; left: 0.5in; position:absolute;">
+        <h4 style="margin: 0 0 10px 0;">Overall Ownership</h4>
+        <section>
+            {{{Owner_Table}}}
+        </section>
+    </div>
+
+    <div class="footer">
+        <div>
+            <span class="selectableText">Report generated {{date}}</span>
+            <a href="http://peninsularfloridalcc.org/" target="_blank" class="right selectableText">Peninsular Florida LCC</a>
+        </div>
+        <a href="{{access_url}}" target="_blank" class="smaller selectableText accessUrl">open Peninsular Florida LCC - Simple Map Viewer</a>
+    </div>
+</div>
+
+
 
 <div class="detail page">
     <div class="header">

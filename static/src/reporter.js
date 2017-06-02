@@ -450,11 +450,17 @@ xhr.onload = function () {
                             return selectedIds.length > 0
                         },
                         postProcess: function (processedEl, originalEl) {
-                            var allTexts = textNodesUnder(processedEl);
-                            for (var i = allTexts.length; i > 0; i--) {
-                                allTexts[i-1].parentElement.classList.add('selectableText');
+                            var rows = processedEl.querySelectorAll('li');
+                            if (rows.length > 15) {
+                                processedEl.classList.add('columns', 'columns-2');
                             }
-                            processedEl.style = 'font-size:1.3em;';
+                            else {
+                                // these break when there are multiple columns
+                                var allTexts = textNodesUnder(processedEl);
+                                for (var i = allTexts.length; i > 0; i--) {
+                                    allTexts[i-1].parentElement.classList.add('selectableText');
+                                }
+                            }
                             return processedEl;
                         }
                     },
@@ -500,9 +506,16 @@ xhr.onload = function () {
                             return selectedIds.length > 0
                         },
                         postProcess: function (processedEl, originalEl) {
-                            var allTexts = textNodesUnder(processedEl);
-                            for (var i = allTexts.length; i > 0; i--) {
-                                allTexts[i-1].parentElement.classList.add('selectableText');
+                            var rows = processedEl.querySelectorAll('tr');
+                            if (rows.length > 16) {
+                                processedEl.classList.add('columns', 'columns-2');
+                            }
+                            else {
+                                // these break when there are multiple columns
+                                var allTexts = textNodesUnder(processedEl);
+                                for (var i = allTexts.length; i > 0; i--) {
+                                    allTexts[i-1].parentElement.classList.add('selectableText');
+                                }
                             }
                             return processedEl;
                         }
@@ -521,9 +534,16 @@ xhr.onload = function () {
                             return selectedIds.length > 0
                         },
                         postProcess: function (processedEl, originalEl) {
-                            var allTexts = textNodesUnder(processedEl);
-                            for (var i = allTexts.length; i > 0; i--) {
-                                allTexts[i-1].parentElement.classList.add('selectableText');
+                            var rows = processedEl.querySelectorAll('tr');
+                            if (rows.length > 16) {
+                                processedEl.classList.add('columns', 'columns-2');
+                            }
+                            else {
+                                // these break when there are multiple columns
+                                var allTexts = textNodesUnder(processedEl);
+                                for (var i = allTexts.length; i > 0; i--) {
+                                    allTexts[i-1].parentElement.classList.add('selectableText');
+                                }
                             }
                             return processedEl;
                         }
@@ -542,9 +562,16 @@ xhr.onload = function () {
                             return selectedIds.length > 0
                         },
                         postProcess: function (processedEl, originalEl) {
-                            var allTexts = textNodesUnder(processedEl);
-                            for (var i = allTexts.length; i > 0; i--) {
-                                allTexts[i-1].parentElement.classList.add('selectableText');
+                            var rows = processedEl.querySelectorAll('tr');
+                            if (rows.length > 16) {
+                                processedEl.classList.add('columns', 'columns-2');
+                            }
+                            else {
+                                // these break when there are multiple columns
+                                var allTexts = textNodesUnder(processedEl);
+                                for (var i = allTexts.length; i > 0; i--) {
+                                    allTexts[i-1].parentElement.classList.add('selectableText');
+                                }
                             }
                             return processedEl;
                         }
@@ -640,9 +667,23 @@ xhr.onload = function () {
                             return selectedIds.length > 0
                         },
                         postProcess: function (processedEl, originalEl) {
-                            var allTexts = textNodesUnder(processedEl);
-                            for (var i = allTexts.length; i > 0; i--) {
-                                allTexts[i-1].parentElement.classList.add('selectableText');
+                            // this can get really long
+
+                            var rows = processedEl.querySelectorAll('tr');
+
+                            if (rows.length > 50) {
+                                processedEl.classList.add('columns', 'columns-3', 'smaller');
+                            }
+
+                            else if (rows.length > 16) {
+                                processedEl.classList.add('columns', 'columns-2');
+                            }
+                            else {
+                                // these break when there are multiple columns
+                                var allTexts = textNodesUnder(processedEl);
+                                for (var i = allTexts.length; i > 0; i--) {
+                                    allTexts[i-1].parentElement.classList.add('selectableText');
+                                }
                             }
                             return processedEl;
                         }
@@ -655,9 +696,18 @@ xhr.onload = function () {
                         },
                         postProcess: function (processedEl, originalEl) {
                             processedEl.querySelector('.small.quiet').remove();
-                            var allTexts = textNodesUnder(processedEl);
-                            for (var i = allTexts.length; i > 0; i--) {
-                                allTexts[i-1].parentElement.classList.add('selectableText');
+
+                            var list = processedEl.querySelector('#LTList');
+                            var rows = list.querySelectorAll('li');
+                            if (rows.length > 16) {
+                                list.classList.add('columns', 'columns-2');
+                            }
+                            else {
+                                // these break when there are multiple columns
+                                var allTexts = textNodesUnder(processedEl);
+                                for (var i = allTexts.length; i > 0; i--) {
+                                    allTexts[i-1].parentElement.classList.add('selectableText');
+                                }
                             }
                             return processedEl;
                         }
