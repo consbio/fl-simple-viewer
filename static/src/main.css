@@ -780,11 +780,12 @@ h4:hover .fa-map {
     margin-top: -12px;
 }
 
-
 #PartnersList li,
-#LTList li {
+#LTList li,
+#PFLCC_SelectedWS_List li {
     font-size: 0.9em;
     padding: 0 0 8px 0;
+    line-height: 1.3;
 }
 
 .tooltipTopRight {

@@ -445,60 +445,77 @@ xhr.onload = function () {
                     },
                     {
                         tmpl: 'watersheds',
-                        query: '#DetailsHeader',
+                        query: '#PFLCC_SelectedWS_List',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0
                         },
                         postProcess: function (processedEl, originalEl) {
-                            processedEl.querySelector('ul.tabs.small').remove();
-                            return processedEl
+                            var rows = processedEl.querySelectorAll('li');
+                            if (rows.length > 15) {
+                                processedEl.classList.add('columns', 'columns-2');
+                            }
+                            else {
+                                // these break when there are multiple columns
+                                var allTexts = textNodesUnder(processedEl);
+                                for (var i = allTexts.length; i > 0; i--) {
+                                    allTexts[i-1].parentElement.classList.add('selectableText');
+                                }
+                            }
+                            return processedEl;
                         }
                     },
                     {
                         tmpl: 'priorityResources',
                         query: '#PFLCC_PR_Bars',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0
                         }
                     },
                     {
                         tmpl: 'CLIP_Chart',
                         query: '#CLIP_Chart',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0
                         }
                     },
                     {
                         tmpl: 'Bio_Chart',
                         query: '#Bio_Chart',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0
                         }
                     },
                     {
                         tmpl: 'BioRareSpp_Chart',
                         query: '#BioRareSpp_Chart',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0
                         }
                     },
                     {
                         tmpl: 'BioSHCA_Chart',
                         query: '#BioSHCA_Chart',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0
                         }
                     },
                     {
                         tmpl: 'BioSHCATable',
                         query: '#BioSHCATable',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0
                         },
                         postProcess: function (processedEl, originalEl) {
-                            var allTexts = textNodesUnder(processedEl);
-                            for (var i = allTexts.length; i > 0; i--) {
-                                allTexts[i-1].parentElement.classList.add('selectableText');
+                            var rows = processedEl.querySelectorAll('tr');
+                            if (rows.length > 16) {
+                                processedEl.classList.add('columns', 'columns-2');
+                            }
+                            else {
+                                // these break when there are multiple columns
+                                var allTexts = textNodesUnder(processedEl);
+                                for (var i = allTexts.length; i > 0; i--) {
+                                    allTexts[i-1].parentElement.classList.add('selectableText');
+                                }
                             }
                             return processedEl;
                         }
@@ -507,19 +524,26 @@ xhr.onload = function () {
                         tmpl: 'BioPNC_Chart',
                         query: '#BioPNC_Chart',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0
                         }
                     },
                     {
                         tmpl: 'BioPNC_Table',
                         query: '#BioPNC_Table',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0
                         },
                         postProcess: function (processedEl, originalEl) {
-                            var allTexts = textNodesUnder(processedEl);
-                            for (var i = allTexts.length; i > 0; i--) {
-                                allTexts[i-1].parentElement.classList.add('selectableText');
+                            var rows = processedEl.querySelectorAll('tr');
+                            if (rows.length > 16) {
+                                processedEl.classList.add('columns', 'columns-2');
+                            }
+                            else {
+                                // these break when there are multiple columns
+                                var allTexts = textNodesUnder(processedEl);
+                                for (var i = allTexts.length; i > 0; i--) {
+                                    allTexts[i-1].parentElement.classList.add('selectableText');
+                                }
                             }
                             return processedEl;
                         }
@@ -528,19 +552,26 @@ xhr.onload = function () {
                         tmpl: 'BioSppRich_Chart',
                         query: '#BioSppRich_Chart',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0
                         }
                     },
                     {
                         tmpl: 'BioSppRichTable',
                         query: '#BioSppRichTable',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0
                         },
                         postProcess: function (processedEl, originalEl) {
-                            var allTexts = textNodesUnder(processedEl);
-                            for (var i = allTexts.length; i > 0; i--) {
-                                allTexts[i-1].parentElement.classList.add('selectableText');
+                            var rows = processedEl.querySelectorAll('tr');
+                            if (rows.length > 16) {
+                                processedEl.classList.add('columns', 'columns-2');
+                            }
+                            else {
+                                // these break when there are multiple columns
+                                var allTexts = textNodesUnder(processedEl);
+                                for (var i = allTexts.length; i > 0; i--) {
+                                    allTexts[i-1].parentElement.classList.add('selectableText');
+                                }
                             }
                             return processedEl;
                         }
@@ -549,96 +580,110 @@ xhr.onload = function () {
                         tmpl: 'Land_Chart',
                         query: '#Land_Chart',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0
                         }
                     },
                     {
                         tmpl: 'Greenways_Chart',
                         query: '#Greenways_Chart',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0
                         }
                     },
                     {
                         tmpl: 'LI_Chart',
                         query: '#LI_Chart',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0
                         }
                     },
                     {
                         tmpl: 'Water_Chart',
                         query: '#Water_Chart',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0
                         }
                     },
                     {
                         tmpl: 'SSW_Chart',
                         query: '#SSW_Chart',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0
                         }
                     },
                     {
                         tmpl: 'Floodplain_Chart',
                         query: '#Floodplain_Chart',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0
                         }
                     },
                     {
                         tmpl: 'Wetlands_Chart',
                         query: '#Wetlands_Chart',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0
                         }
                     },
                     {
                         tmpl: 'Aquifer_Chart',
                         query: '#Aquifer_Chart',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0
                         }
                     },
                     {
                         tmpl: 'LU_Bars',
                         query: '#LU_Bars',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0
                         }
                     },
                     {
                         tmpl: 'SLR_Bars',
                         query: '#SLR_Bars',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0
                         }
                     },
                     {
                         tmpl: 'Dev_Bars',
                         query: '#Dev_Bars',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0
                         }
                     },
                     {
                         tmpl: 'Owner_Chart',
                         query: '#Owner_Chart',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0
                         }
                     },
                     {
                         tmpl: 'Owner_Table',
                         query: '#Owner_Table',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0
                         },
                         postProcess: function (processedEl, originalEl) {
-                            var allTexts = textNodesUnder(processedEl);
-                            for (var i = allTexts.length; i > 0; i--) {
-                                allTexts[i-1].parentElement.classList.add('selectableText');
+                            // this can get really long
+
+                            var rows = processedEl.querySelectorAll('tr');
+
+                            if (rows.length > 50) {
+                                processedEl.classList.add('columns', 'columns-3', 'smaller');
+                            }
+
+                            else if (rows.length > 16) {
+                                processedEl.classList.add('columns', 'columns-2');
+                            }
+                            else {
+                                // these break when there are multiple columns
+                                var allTexts = textNodesUnder(processedEl);
+                                for (var i = allTexts.length; i > 0; i--) {
+                                    allTexts[i-1].parentElement.classList.add('selectableText');
+                                }
                             }
                             return processedEl;
                         }
@@ -647,13 +692,22 @@ xhr.onload = function () {
                         tmpl: 'PartnerTab',
                         query: '#PartnerTab',
                         condition: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0
                         },
                         postProcess: function (processedEl, originalEl) {
                             processedEl.querySelector('.small.quiet').remove();
-                            var allTexts = textNodesUnder(processedEl);
-                            for (var i = allTexts.length; i > 0; i--) {
-                                allTexts[i-1].parentElement.classList.add('selectableText');
+
+                            var list = processedEl.querySelector('#LTList');
+                            var rows = list.querySelectorAll('li');
+                            if (rows.length > 16) {
+                                list.classList.add('columns', 'columns-2');
+                            }
+                            else {
+                                // these break when there are multiple columns
+                                var allTexts = textNodesUnder(processedEl);
+                                for (var i = allTexts.length; i > 0; i--) {
+                                    allTexts[i-1].parentElement.classList.add('selectableText');
+                                }
                             }
                             return processedEl;
                         }
@@ -700,7 +754,7 @@ xhr.onload = function () {
                     {
                         tmpl: 'hasDetails',
                         value: function () {
-                            return selectedID ? true : false
+                            return selectedIds.length > 0
                         }
                     },
                     {

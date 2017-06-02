@@ -15,9 +15,9 @@ var transparency = 25;  //on 0-100% scale
 var featureCache = {};
 var pendingRequest = null;
 var featuresURL = 'features/';
-var selectedID = null;
 var loadingUnit = false;
 var detailsShowing = false;
+var selectedIds = [];
 
 
 // Have to tell Leaflet where the marker images are
@@ -115,11 +115,9 @@ d3.selectAll('.button-close').on('click', function() {
     });
 });
 d3.select('#DetailsClose').on('click', function(){
-    detailsShowing = false;
-    updateNodeVisibility(['#MainSidebar', '#MainSidebarHeader'], ['#Details', '#DetailsHeader']);
-    d3.select('#ClearFilterContainer').classed('hidden', !hasFilters());
-    deselectUnit();
+    closeOutDetails();
 });
+
 
 /** Clear all button **/
 d3.select('#ClearAllButton').on('click', function() {
@@ -332,7 +330,6 @@ legend.onAdd = function (map) {
     return this._container;
 };
 legend.addTo(map);
-
 
 omnivore.topojson('static/features.json')
     .on('ready', function(){
@@ -815,7 +812,6 @@ function updateMap() {
 
 // reset handler
 function handleChartReset(id) {
-    // console.log('reset', id)
     d3.event.stopPropagation();
     var chart = _.find(dc.chartRegistry.list(), function(d){ return d.root().node().id === id });
     chart.filterAll();
@@ -882,55 +878,129 @@ function setSelectedField(field, group, subtitle) {
         });
 }
 
+function mergeSelectedUnits(ids) {
+    var arrayFields = ['bio', 'bio_pnc', 'bio_rare_spp', 'bio_shca', 'bio_spp_rich', 'clip', 'dev', 'land',
+        'land_greenways', 'land_integrity', 'slr', 'water', 'water_aquifer', 'water_floodplain',
+        'water_significant', 'water_wetland'];
+    var objFields = ['bio_pnc2', 'bio_shca2', 'bio_spp_rich2', 'counties', 'land_use', 'pflcc_pr', 'ownership_detailed'];
+
+    var records = ids.map(function(id){
+        return _.merge({'id': id}, featureCache[id]);
+    });
+
+    var merged = {
+        records: records,  // keep full records instead of selected info
+
+        hectares: _.sum(_.map(records, 'hectares')),
+        names: (records.length > 1)? records.length.toString() + ' selected watersheds': records[0].name,
+        partners: _.spread(_.union)(_.map(records, 'partners')),  // merge partners into unique list
+    };
+
+    arrayFields.forEach(function(field) {
+        var values = _.map(records, field);
+        merged[field] = sumArraysByIndex(values);
+    });
+
+    objFields.forEach(function(field) {
+        var values = _.map(records, field);
+        merged[field] = aggregateMerge(values);
+    });
+
+    // values for counties have an odd structure, need to flatten the single value arrays for each county code.
+    merged.counties =_.mapValues(merged.counties, function(value){return value[0]});
+
+    return merged;
+}
 
 
-function selectUnit(id){
-    console.log('select ', id);
+function closeOutDetails() {
+    detailsShowing = false;
+    updateNodeVisibility(['#MainSidebar', '#MainSidebarHeader'], ['#Details', '#DetailsHeader']);
+    d3.select('#ClearFilterContainer').classed('hidden', !hasFilters());
+    deselectUnits();
+}
 
+
+function selectUnit(id) {
+
+    var index = selectedIds.indexOf(id);
+    if (index > -1) {
+        if (selectedIds.length == 1) {
+            // deselecting last unit. close everything out.
+            closeOutDetails();
+        }
+        else {
+            selectedIds.splice(index, 1);
+            updateStats();
+        }
+    }
+    else {
+        selectedIds.push(id);
+        updateStats();
+    }
+}
+
+
+function updateStats() {
     if (!detailsShowing){
         updateNodeVisibility(['#SidebarLoadingScrim'], ['#SidebarContents', '#MainSidebar', '#MainSidebarHeader', '#ClearFilterContainer']);
     }
     detailsShowing = true;
 
+    var allDone = _.after(selectedIds.length, function() {
+        var success = true;
+        selectedIds.forEach( function(id) {
+            var r = featureCache[id];
+            if (r == null || r == undefined) {
+                // This may be called while other downloads are being completed, so we
+                // may not have everything we need to display
+                success = false;
+            }
+        })
 
-    if (pendingRequest != null) {
-        pendingRequest.abort();
-    }
+        if (success) {
+            loadingUnit = false;
+            var mf = mergeSelectedUnits(selectedIds);
+            showDetails(mf);
+        }
+    });
 
-    if (featureCache[id] != null){
-        loadingUnit = false;
-        showDetails(id);
-    }
-    else {
-        loadingUnit = true;
-        _.delay(function(){
-                if (loadingUnit){
-                    updateNodeVisibility(['#SidebarLoadingScrim'], ['#SidebarContents']);
-                }
-            },
-            250
-        );
+    selectedIds.forEach( function(id) {
+        if (featureCache[id] != null){
+            allDone();
+        }
+        else {
+            // console.log('requesting json for: ', id);
+            loadingUnit = true;
+            pendingRequest = d3.json(featuresURL + id + '.json', function (r) {
+                if (r == null || r == undefined) { return }  //should handle case where no data is available
+                featureCache[id] = r;
+                allDone();
+            });
+        }
+    });
 
-        pendingRequest = d3.json(featuresURL + id + '.json', function (r) {
-            if (r == null || r == undefined) { return }  //should handle case where no data is available
-            pendingRequest = null;
-            featureCache[id] = r;
-            selectUnit(id);
-        });
-    }
+    _.delay(function(){
+            if (loadingUnit){
+                updateNodeVisibility(['#SidebarLoadingScrim'], ['#SidebarContents']);
+            }
+        },
+        250
+    );
+
 }
 
-function deselectUnit() {
-    if (!selectedID) { return; }
-    d3.select(featureIndex.get(selectedID)._path).classed('selected', false);
-    selectedID = null;
+function deselectUnits() {
+    selectedIds.forEach( function(id) {
+        if (!id) { return; }
+        d3.select(featureIndex.get(id)._path).classed('selected', false);
+    });
+
+    selectedIds = [];
 }
 
 
-function showDetails(id) {
-    var record = index.get('id');
-    var details = featureCache[id];
-    // console.log('details', details);
+function showDetails(details) {
 
     if (!DEBUG) {
         // log via google analytics
@@ -939,14 +1009,25 @@ function showDetails(id) {
 
     d3.selectAll('path.selected').classed('selected', false);
 
-    var feature = featureIndex.get(id);
-    selectedID = id;
-    feature.bringToFront();
-    var path = d3.select(feature._path);
-    path.classed('selected', true);
+    selectedIds.forEach( function(id) {
+        var feature = featureIndex.get(id);
+        feature.bringToFront();
+        var path = d3.select(feature._path);
+        path.classed('selected', true);
+    });
 
-    d3.select('#Unit').text(details.name);
-    d3.select('#UnitID').text('HUC 12: ' + id);
+    d3.select('#DetailsSelectedWS').classed('hidden', selectedIds.length < 2);
+    var selectedWSList = d3.select('#PFLCC_SelectedWS_List');
+    selectedWSList.html('');
+    var selectedIDNodes = selectedWSList.selectAll('li').data(details.records);
+    selectedIDNodes.enter()
+        .append('li')
+        .html(function(d){
+            return d.name + '<div class="quiet small">(HUC 12: ' + d.id + ', ' + d3.format(',')(d.hectares) + ' hectares)</div>';
+        });
+
+    d3.select('#Unit').text(details.names);
+    d3.select('#UnitID').text((selectedIds.length == 1)? 'HUC 12: ' + selectedIds[0]: '');
     d3.select('#UnitArea').text(d3.format(',')(details.hectares));
 
     var chartColors4 = colorMap.general4;
@@ -1030,21 +1111,17 @@ function showDetails(id) {
         d3.select('#Aquifer_Chart').append('div').classed('quiet center', true).html('No data available');
     }
 
-
     // Land use tab
-    record = index.get(id); //FIXME: somehow this variable is getting hijacked before we get here
-    var luData = landUseTypes.filter(function(d) { return record['lu' + d] > 0 })
-        .map(function(d) {
-            return {
-                value: record['lu' + d],
-                label: landUseLabels[d],
-                color: landUseColors[d],
-                tooltip: landUseTooltips[d]
-            }
-        });
-    luData.sort(valueSort);
-    createInlineBarChart(d3.select('#LU_Bars'), luData, details.hectares);
-
+    var lu_data = d3.entries(details.land_use).map(function(d) {
+        return {
+            value: d.value,
+            label: landUseLabels[d.key],
+            color: landUseColors[d.key],
+            tooltip: landUseTooltips[d.key]
+        }
+    });
+    lu_data.sort(valueSort);
+    createInlineBarChart(d3.select('#LU_Bars'), lu_data, details.hectares);
 
     // Threats tab
 
@@ -1519,9 +1596,9 @@ function getStatusUrl() {
         }
     }
 
-    if (selectedID) {
+    if (selectedIds.length > 0) {
         // i for id
-        q += 'i=' + selectedID + '&';
+        q += 'i=' + selectedIds.join(',') + '&';
     }
 
     var mapCenter = map.getCenter();
@@ -1593,7 +1670,10 @@ function restorePage(url) {
             speciesSelect.bind(selectEl)();
             initializeSliderCharts(k, activeFilter, k);
         } else if (prefix === 'i') {
-            selectUnit(activeFilter);
+            ids = activeFilter.split(',');
+            ids.forEach( function(id) {
+                selectUnit(id);
+            })
         } else if (prefix === 'g') {
             selectedGroup = activeFilter;
         } else if (prefix === 'f') {

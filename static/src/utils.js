@@ -193,3 +193,56 @@ var LookBackEncoder = (function () {
     return LookBackEncoder;
 })();
 
+
+/**
+ * Aggregate values (sum if number, aggregate if string)
+ * @requires lodash
+ *
+ * @param {objValue} number or unique list of strings.
+ * @param {srcValue} string or number to aggregate into objValue.
+ * @returns {Object} Returns Object with union of keys, and sum of values if they are numbers, and unique set of strings if they are strings.
+ */
+function aggregateLeafValues(objValue, srcValue) {
+  if (_.isNumber(srcValue)){ // sum values
+    return (objValue != null)? objValue + srcValue: srcValue;
+  }
+  if (_.isString(srcValue)){ // aggregate to unique list
+    return (objValue != null)? _.union(objValue, [srcValue]): [srcValue];
+  }
+}
+
+/**
+ * Merge the data for nested objects
+ * @requires lodash
+ *
+ * Example:
+ * var j={1:{a:5}, 3:{z:20}}
+ * var k={1:{a:10, b:2}, 2:{c:20}}
+ * aggregateMerge([j, k]) ==> {1: {a: 15, b:2}, 2: {c:20}, 3: {z:20}}
+ *
+ * @param {items} array of like objects
+ * @returns {Object} Returns Object with merged values (summed leaf values and a union on keys)
+ */
+function aggregateMerge(items){
+  var out = {};
+  items.forEach(function(item){
+    _.mergeWith(out, item, aggregateLeafValues)
+  });
+  return out;
+}
+
+/**
+ * Merge the data for arrays of values
+ * @requires lodash
+ *
+ * Example:
+ * var j=[44, 22]
+ * var k=[44, 22]
+ * arraySum([j, k]) ==> [88, 44]
+ *
+ * @param {items} arrays of same-dimension
+ * @returns {array} Returns array with values summed at each index
+ */
+function sumArraysByIndex(items){
+    return _.spread(_.zip)(items).map(_.sum)
+}
