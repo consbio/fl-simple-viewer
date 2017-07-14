@@ -1001,10 +1001,13 @@ function deselectUnits() {
 
 
 function showDetails(details) {
-
     if (!DEBUG) {
         // log via google analytics
-        ga('send', 'event', 'Watersheds Map', 'view details', details.name + ' (' + id + ')');
+        var names = details.records.map(function(d){return d.name + ' (' + d.id + ')'}).join(', ');
+        if (details.records.length > 1) {
+            names = details.records.length + ' selected: ' + names;
+        }
+        ga('send', 'event', 'Watersheds Map', 'view details', names);
     }
 
     d3.selectAll('path.selected').classed('selected', false);

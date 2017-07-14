@@ -536,7 +536,7 @@ input[type=range]::-ms-tooltip {
     height: 30px;
 }
 #Header h3 {
-    margin:4px 6px;
+    margin:9px 0 0 0;
     text-shadow: 1px 1px 2px #333;
 }
 #Header .button {

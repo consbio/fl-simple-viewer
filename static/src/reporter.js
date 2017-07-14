@@ -449,17 +449,10 @@ xhr.onload = function () {
                         condition: function () {
                             return selectedIds.length > 0
                         },
-                        postProcess: function (processedEl, originalEl) {
+                        postProcess: function (processedEl) {
                             var rows = processedEl.querySelectorAll('li');
                             if (rows.length > 15) {
                                 processedEl.classList.add('columns', 'columns-2');
-                            }
-                            else {
-                                // these break when there are multiple columns
-                                var allTexts = textNodesUnder(processedEl);
-                                for (var i = allTexts.length; i > 0; i--) {
-                                    allTexts[i-1].parentElement.classList.add('selectableText');
-                                }
                             }
                             return processedEl;
                         }
