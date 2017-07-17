@@ -331,12 +331,125 @@ legend.onAdd = function (map) {
 };
 legend.addTo(map);
 
+L.SelectTooltip = L.Class.extend({
+    tooltipTexts: {
+        singleSelect: {
+            overNewWatershed: {
+                firstLine: 'Click to select watershed,',
+                secondLine: 'hold down Ctrl / Cmd key to add to selection'
+            },
+            overSelectedWatershed: {
+                firstLine: 'Click to unselect'
+            }
+        },
+        multiSelect: {
+            overNewWatershed: {
+                firstLine: 'Click to add to selection'
+            },
+            overSelectedWatershed: {
+                firstLine: 'Click to remove from selection'
+            }
+        }
+    },
+	initialize: function (map) {
+		this._map = map;
+		this._popupPane = map._panes.popupPane;
+
+		this._container = L.DomUtil.create('div', 'leaflet-select-tooltip', this._popupPane);
+
+		this._map.on('mouseout', function () {
+		    this.updateVisibility(false)
+        }, this);
+	},
+
+	updateContent: function (watershedElement) {
+	    var isSelected = L.DomUtil.hasClass(watershedElement, 'selected');
+	    var tooltipText;
+
+        if (isMultiSelect) {
+            if (isSelected) {
+                tooltipText = this.tooltipTexts.multiSelect.overSelectedWatershed;
+            } else {
+                tooltipText = this.tooltipTexts.multiSelect.overNewWatershed;
+            }
+        } else {
+            if (isSelected) {
+                tooltipText = this.tooltipTexts.singleSelect.overSelectedWatershed;
+            } else {
+                tooltipText = this.tooltipTexts.singleSelect.overNewWatershed;
+            }
+        }
+
+        var tooltipContent = '<span>' + tooltipText.firstLine + '</span>';
+        if (tooltipText.secondLine) {
+            tooltipContent += '<br /><span>' + tooltipText.secondLine + '</span>';
+        }
+        this._container.innerHTML = tooltipContent;
+
+		return this;
+	},
+
+	updatePosition: function (latlng) {
+		var pos = this._map.latLngToLayerPoint(latlng),
+			tooltipContainer = this._container;
+
+        L.DomUtil.setPosition(tooltipContainer, pos);
+
+		return this;
+	},
+
+	updateVisibility: function (showTooltip) {
+	    if (showTooltip) {
+	        this._container.style.visibility = 'inherit';
+        } else {
+            this._container.style.visibility = 'hidden';
+        }
+	}
+});
+
+var selectTooltip = new L.SelectTooltip(map);
+
+map.on('mousemove', function(e) {
+    selectTooltip.updatePosition(e.latlng);
+});
+
+var isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+var isMultiSelect = false;
+var lastHoveredOverWathershed = null;
+d3.select('body').on('keydown', function() {
+    isMultiSelect = isMac ? d3.event.keyCode === 91 || d3.event.keyCode === 93 : d3.event.keyCode === 17;
+    if (isMultiSelect) {
+        d3.select('#Map').classed('multiSelectMode', true);
+        if (lastHoveredOverWathershed) {
+            selectTooltip.updateContent(lastHoveredOverWathershed);
+            selectTooltip.updateVisibility(true);
+        }
+    }
+}).on('keyup', function() {
+    isMultiSelect = !(isMac ? d3.event.keyCode === 91 || d3.event.keyCode === 93 : d3.event.keyCode === 17);
+    if (!isMultiSelect) {
+        d3.select('#Map').classed('multiSelectMode', false);
+        if (lastHoveredOverWathershed) {
+            selectTooltip.updateContent(lastHoveredOverWathershed);
+            selectTooltip.updateVisibility(true);
+        }
+    }
+});
+
 omnivore.topojson('static/features.json')
     .on('ready', function(){
         this.getLayers().forEach(function(feature){
             feature.options.smoothFactor = 0.5;  //needed to prevent slivers
             feature.on('click', function (e) {
                 selectUnit(e.target.feature.id);
+                selectTooltip.updateContent(e.target.getElement());
+            }).on('mouseover', function (e) {
+                lastHoveredOverWathershed = e.target.getElement();
+                selectTooltip.updateContent(lastHoveredOverWathershed);
+                selectTooltip.updateVisibility(true);
+            }).on('mouseout', function (e) {
+                selectTooltip.updateVisibility(false);
+                lastHoveredOverWathershed = null;
             });
             var id = feature.feature.id;
             featureIndex.set(id, feature);
@@ -930,12 +1043,20 @@ function selectUnit(id) {
             closeOutDetails();
         }
         else {
-            selectedIds.splice(index, 1);
-            updateStats();
+            if (isMultiSelect) {
+                selectedIds.splice(index, 1);
+                updateStats();
+            } else {
+                closeOutDetails();
+            }
         }
     }
     else {
-        selectedIds.push(id);
+        if (isMultiSelect) {
+            selectedIds.push(id);
+        } else {
+            selectedIds = [id];
+        }
         updateStats();
     }
 }
@@ -1674,9 +1795,11 @@ function restorePage(url) {
             initializeSliderCharts(k, activeFilter, k);
         } else if (prefix === 'i') {
             ids = activeFilter.split(',');
+            isMultiSelect = true;
             ids.forEach( function(id) {
                 selectUnit(id);
-            })
+            });
+            isMultiSelect = false;
         } else if (prefix === 'g') {
             selectedGroup = activeFilter;
         } else if (prefix === 'f') {
