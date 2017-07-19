@@ -514,12 +514,10 @@ input[type=range]::-ms-tooltip {
 .t_75 path.leaflet-interactive {
     fill-opacity: 0.25 !important;
     stroke-opacity: 0.125 !important;
-    /*stroke: #333;*/
 }
 .t_100 path.leaflet-interactive {
     fill-opacity: 0 !important;
     stroke-opacity: 0.1 !important;
-    /*stroke: #333;*/
 }
 
 /* select mode cursor style and tooltip */
