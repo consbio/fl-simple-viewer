@@ -1,4 +1,4 @@
-var DEBUG = true; //FIXME
+var DEBUG = false;
 
 var pageLoadStart = new Date().getTime();
 var features, data;
