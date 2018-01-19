@@ -9,6 +9,17 @@ Output is `features.json`.
 3. Run `extract_HUC_summary.py` to extract summary information across all watersheds.  Output is `static/summary.csv`
 4. Run `glom_data.py` to extract a bunch of information for each feature.  Output is a bunch of json files under `features` folder.
 
+### Working lands
+
+Data were provided by PFLCC staff on 1/4/2018.
+Each column contains a unique link, but may have variable text to use as the label.  Columns are grouped by PFLCC Priority Resource.
+The columns were edited to use codes, and the full labels were added to `static/src/config.py`.
+Dropped first DryPrairie column, it was non-informative and seemed redundant.
+
+
+
+
+
 
 ## Setup
 

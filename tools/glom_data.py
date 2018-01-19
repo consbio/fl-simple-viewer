@@ -1,7 +1,7 @@
-import glob
 import json
 import os
 import pandas as pd
+import math
 
 
 working_dir = '/Volumes/data/projects/PFLCC/data/tables'
@@ -63,7 +63,9 @@ files = [
 
     'PartnerOrgPrioritiesByHUC12',
     'BobwhiteQByHUC12',
-    'FL_counties_by_HUC12'
+    'FL_counties_by_HUC12',
+
+    'PFLCC Conservation Opportunities Watershed data_hand-edit'
 ]
 
 dfs = dict()
@@ -73,7 +75,7 @@ for filename in files:
 
 primary_df = dfs['BluePrintV1_HUC12']
 
-for huc in primary_df.index: #[0:500]:
+for huc in primary_df.index[:]: #[0:500]:
     print('Processing {}'.format(huc))
     record = primary_df.loc[huc]
 
@@ -320,7 +322,23 @@ for huc in primary_df.index: #[0:500]:
             data['counties'] = counties
 
 
+    # Conservation opportunities
+    keep_field_values = {'sandhill', 'wetland', 'scrubspp', 'dryprairiespps', 'aquaticspps', 'partnersfw', 'forestedwetland', 'nonforestedwetland', 'springs', 'pinerockland'}  # columns for which to keep the original values, instead of just "1"
+    table = dfs['PFLCC Conservation Opportunities Watershed data_hand-edit']
+
+    if huc in table.index:
+        record = table.loc[huc]
+        cons_opportunities = {}
+        for col in table.columns:
+            value = record[col]
+            if isinstance(value, float):
+                if not math.isnan(value):
+                    cons_opportunities[col] = [v.strip() for v in value.split(',')] if col in keep_field_values else 1
+            elif value:
+                cons_opportunities[col] = [v.strip() for v in value.split(',')] if col in keep_field_values else 1
+
+        if cons_opportunities:
+            data['cons_opportunities'] = cons_opportunities
+
     with open(os.path.join(outdir, '{0}.json'.format(huc)), 'w') as outfile:
         outfile.write(json.dumps(data))  # , indent=2
-
-

@@ -78,6 +78,7 @@ body {
     font-size: 16px;
     color: #333;
     line-height: 1;
+    overflow: hidden;
 }
 
 button {
@@ -409,6 +410,7 @@ input[type=range]::-ms-tooltip {
     border-left: none;
     border-right: none;
     background: transparent;
+    text-align: center;
 }
 .tabs.subtabs > li:hover {
     background: #FFF;
@@ -813,7 +815,8 @@ h4:hover .fa-map {
 
 #PartnersList li,
 #LTList li,
-#PFLCC_SelectedWS_List li {
+#PFLCC_SelectedWS_List li,
+#OpportunitiesList li {
     font-size: 0.9em;
     padding: 0 0 8px 0;
     line-height: 1.3;

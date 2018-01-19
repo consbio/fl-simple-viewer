@@ -995,7 +995,7 @@ function mergeSelectedUnits(ids) {
     var arrayFields = ['bio', 'bio_pnc', 'bio_rare_spp', 'bio_shca', 'bio_spp_rich', 'clip', 'dev', 'land',
         'land_greenways', 'land_integrity', 'slr', 'water', 'water_aquifer', 'water_floodplain',
         'water_significant', 'water_wetland'];
-    var objFields = ['bio_pnc2', 'bio_shca2', 'bio_spp_rich2', 'counties', 'land_use', 'pflcc_pr', 'ownership_detailed'];
+    var objFields = ['bio_pnc2', 'bio_shca2', 'bio_spp_rich2', 'counties', 'land_use', 'pflcc_pr', 'ownership_detailed', 'cons_opportunities'];
 
     var records = ids.map(function(id){
         return _.merge({'id': id}, featureCache[id]);
@@ -1381,6 +1381,53 @@ function showDetails(details) {
         landTrustNodes.append('li').classed('quiet', true).html('No information available');
     }
 
+    var opportunitiesList = d3.select('#OpportunitiesList');
+    opportunitiesList.html('');
+    if (details.cons_opportunities){
+
+        // group
+        var groups = {};
+        _.keys(details.cons_opportunities).forEach(function(d){
+            var group = COconfig[d].group;
+            if (groups[group]) {
+                groups[group].push(d);
+            }
+            else {
+                groups[group] = [d];
+            }
+        }, this);
+
+        var sections = _.keys(groups);
+        sections.sort();
+
+        opportunitiesList.selectAll('div').data(sections).enter()
+            .append('div')
+            .each(function(group){
+                var node = d3.select(this);
+                node.append('H5').html(group);
+                node.append('ul').selectAll('li').data(groups[group]).enter()
+                    .append('li')
+                    .each(function(d){
+                        var node = d3.select(this);
+                        var config = COconfig[d];
+                        var value = details.cons_opportunities[d];
+                        var label = config.label;
+                        var prefix = '';
+                        // merge unique values into a single list
+                        if (value instanceof Array) {
+                            prefix = label + ': ';
+                            value = _.spread(_.union)(_.map(value));
+                            label = value.join(', ')
+                        }
+
+                        node.html(prefix + '<a href="' + config.url + '" target="_blank">' + label + '</a>');
+                    });
+            });
+    }
+    else {
+        opportunitiesList.append('ul').append('li').classed('quiet', true).html('No information available');
+    }
+
 
     updateNodeVisibility(['#SidebarContents', '#Details', '#DetailsHeader'], ['#SidebarLoadingScrim']);
 }
@@ -1449,8 +1496,8 @@ function createInlineBarChart(node, data, totalArea) {
 
 
 function createPieChart(node, data, totalArea){
-    var width = 240,
-        height = 240;
+    var width = 220,
+        height = 220;
 
     function dynamicPctFormatter(d){
         var pct = 100 * d / totalArea;
@@ -1477,7 +1524,7 @@ function createPieChart(node, data, totalArea){
             .style({
                 width: width + 'px',
                 height: height + 'px',
-                'margin-left': '-18px'
+                'margin-left': '-10px'
             })
             .datum(data.filter(function(d){return d.value >= 1}))
             .call(chart);

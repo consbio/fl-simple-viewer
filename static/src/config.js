@@ -562,3 +562,121 @@ var legendSubheading = {
     dev: '% of watershed with urban / suburban development'
 };
 
+// Conservation Opportunities
+var COconfig = {
+    FSP: {
+        label: 'Forest Stewardship Program (FL Forest Service, FL Fish & Wildlife Cons. Comm.)',
+        group: 'All Forests',
+        url: 'http://floridalandsteward.org/contacts.html'
+    },
+    SBMP: {
+        label: 'FL Forest Service - Silviculture BMPs',
+        group: 'All Forests',
+        url: 'http://www.freshfromflorida.com/Divisions-Offices/Florida-Forest-Service/Best-Management-Practices-BMPs'
+    },
+    SPBP: {
+        label: 'Southern Pine Beetle Prevention Program',
+        group: 'All Pine',
+        url: 'http://www.freshfromflorida.com/Divisions-Offices/Florida-Forest-Service/For-Landowners/Programs/Southern-Pine-Beetle-Prevention'
+    },
+    FL_USFS: {
+        label: 'Longleaf Pine Landowner Incentive Program',
+        group: 'Longleaf Pine / Upland Pine',
+        url: 'http://www.freshfromflorida.com/Divisions-Offices/Florida-Forest-Service/For-Landowners/Programs/Longleaf-Pine-Private-Landowner-Incentive-Program'
+    },
+    LLP_Focus_Area: {
+        label: 'Partners for Fish & Wildlife - Longleaf Pine/Groundcover Restoration',
+        group: 'Longleaf Pine / Upland Pine',
+        url: 'https://www.fws.gov/northflorida/Partners/index.html'
+    },
+    NRCS: {
+        label: 'Working Lands for Wildlife - Environmental Quality Incentives Program',
+        group: 'Longleaf Pine / Upland Pine',
+        url: 'https://www.nrcs.usda.gov/wps/portal/nrcs/detail/fl/programs/landscape/?cid=stelprdb1266008'
+    },
+    sandhill: {
+        label: 'Sandhill / Upland Pine Species',
+        group: 'Longleaf Pine / Upland Pine',
+        url: 'https://www.fws.gov/northflorida/Partners/index.html',
+        fieldLabel: true  // if true, use the field value as the link text, and this label as the subheading
+    },
+    wetland: {
+        label: 'Ephemeral Wetland Species',
+        group: 'Longleaf Pine / Upland Pine',
+        url: 'https://www.fws.gov/northflorida/Partners/index.html',
+        fieldLabel: true
+    },
+    scrubrestore: {
+        label: 'Partners for Fish & Wildlife - Scrub Restoration/Listed Plant Recovery',
+        group: 'Scrub and Scrubby Flatwoods',
+        url: 'https://www.fws.gov/northflorida/Partners/index.html'
+    },
+    scrubspp: {
+        label: 'Scrub Species',
+        group: 'Scrub and Scrubby Flatwoods',
+        url: 'https://www.fws.gov/northflorida/Partners/index.html',
+        fieldLabel: true
+    },
+    dryprairierestore: {
+        label: 'Partners for Fish and Wildlife - Dry Prairie Restoration',
+        group: 'Dry Prairie and South Florida Slash Pine',
+        url: 'https://www.fws.gov/northflorida/Partners/index.html'
+    },
+    dryprairiespps: {
+        label: 'Dry Prairie Species',
+        group: 'Dry Prairie and South Florida Slash Pine',
+        url: 'https://www.fws.gov/northflorida/Partners/index.html',
+        fieldLabel: true
+    },
+    aquaticrestore: {
+        label: 'Partners for Fish & Wildlife - Stream/Riparian Restoration',
+        group: 'Riparian and Streams',
+        url: 'https://www.fws.gov/northflorida/Partners/index.html'
+    },
+    aquaticspps: {
+        label: 'Aquatic Species',
+        group: 'Riparian and Streams',
+        url: 'https://www.fws.gov/northflorida/Partners/index.html'
+    },
+    BMPs: {
+        label: 'Department of Agriculture and Consumer Services Best Management Practices',
+        group: 'All Working Lands',
+        url: 'http://www.freshfromflorida.com/Business-Services/Water/Agricultural-Best-Management-Practices'
+    },
+    WLFWGT: {
+        label: 'NRCS Environmental Quality Incentives Program',
+        group: 'All Working Lands',
+        url: 'https://www.nrcs.usda.gov/wps/portal/nrcs/main/fl/programs/financial/eqip/'
+    },
+    partnersfw: {
+        label: 'Partners for Fish and Wildlife',
+        group: 'All Working Lands',
+        url: 'https://www.fws.gov/northflorida/Partners/index.html',
+        fieldLabel: true
+    },
+    forestedwetland: {
+        label: 'Forested Wetland',
+        group: 'Wetlands',
+        url: 'https://www.fws.gov/northflorida/Partners/index.html',
+        fieldLabel: true
+    },
+    nonforestedwetland: {
+        label: 'Non-Forested Wetland',
+        group: 'Wetlands',
+        url: 'https://www.fws.gov/northflorida/Partners/index.html',
+        fieldLabel: true
+    },
+    springs: {
+        label: 'Spring and Aquatic Cave Species',
+        group: 'Springs and Aquatic Caves',
+        url: 'https://www.fws.gov/northflorida/Partners/index.html',
+        fieldLabel: true
+    },
+    pinerockland: {
+        label: 'Pine Rockland',
+        group: 'Pine Rockland',
+        url: 'https://www.fws.gov/northflorida/Partners/index.html',
+        fieldLabel: true
+    }
+};
+

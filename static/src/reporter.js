@@ -704,6 +704,29 @@ xhr.onload = function () {
                             }
                             return processedEl;
                         }
+                    },
+                    {
+                        tmpl: 'OpportunitiesTab',
+                        query: '#OpportunitiesTab',
+                        condition: function () {
+                            return selectedIds.length > 0
+                        },
+                        postProcess: function (processedEl, originalEl) {
+
+                            var list = processedEl.querySelector('#OpportunitiesList');
+                            var rows = list.querySelectorAll('li');
+                            if (rows.length > 16) {
+                                list.classList.add('columns', 'columns-2');
+                            }
+                            else {
+                                // these break when there are multiple columns
+                                var allTexts = textNodesUnder(processedEl);
+                                for (var i = allTexts.length; i > 0; i--) {
+                                    allTexts[i-1].parentElement.classList.add('selectableText');
+                                }
+                            }
+                            return processedEl;
+                        }
                     }
                 ],
                 // maps is a collection of leaflet maps in the preview template to process or sync with a map in the main page
