@@ -1,6 +1,3 @@
-syntax: glob
-.git/*
-.gitignore
 .idea
 *.pyc
 media/*
