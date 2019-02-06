@@ -59,7 +59,7 @@ var fieldLabels = {
     'bio': 'CLIP Biodiversity',
     'clip': 'Overall CLIP',
     'land': 'CLIP Landscape',
-    'priority': 'PFLCC Blueprint v. 1.0 Priority Resources',
+    'priority': 'Blueprint v. 1.0 Conservation Assets',
     'water': 'CLIP Surface Water',
 
     dev: 'Urban Development / Population Growth',
@@ -81,7 +81,7 @@ var fieldTooltips = {
     'bio': 'This model is a combination of the four CLIP core data layers in the Biodiversity Resource Category: Strategic Habitat Conservation Areas (SHCA), Vertebrate Potential Habitat Richness (VertRich), Rare Species Habitat Conservation Priorities (FNAIHAB), and Priority Natural Communities (Natcom).  See pg. 14 of the CLIP Technical Report for the rules used to assign the core data layers into the Biodiversity resource priority model.',
     'clip': 'The Critical Lands and Waters Identification Project (CLIP) is a collection of spatial data that identify statewide priorities for a broad range of natural resources in Florida. CLIP 4.0 is organized into a set of core natural resource data layers which are combined into resource categories, three of which (biodiversity, landscapes, surface water) have been combined into the Aggregated CLIP model, which identifies five priority levels for natural resource conservation.',
     'land': 'This model is a combination of the two core data layers in the Landscapes Resource Category: Florida Ecological Greenways Network, and Landscape Integrity Index.  See pg. 14-15 of the CLIP Technical Report for the rules used to assign the core data layers into the Landscape resource priority model.',
-    'priority': 'Blueprint v. 1.0 delineates the PFLCC Priority Resources (PRs), the biological, ecological, and cultural features and ecological processes that are the focus of the PFLCC’s Landscape Conservation Design. The PFLCC collaboratively identified twelve Priority Resources.  Nine are based on natural land covers from the Cooperative Land Cover (CLC v. 3.2):  High Pine and Scrub, Pine Flatwoods and Dry Prairie, Freshwater Forested Wetlands, Hardwood Forested Uplands, Coastal Uplands, Freshwater non-forested Wetlands, Estuarine, Marine, and Freshwater Aquatic.  The other three are Landscape Connectivity, Cultural Features, and Working Lands. The Marine, Estuarine, and Cultural PRs are not yet fully developed, however partial Estuarine is shown.',
+    'priority': 'Blueprint v. 1.0 delineates Conservation Assets (CAs) the biological, ecological, and cultural features and ecological processes that are the focus of the Florida Landscape Conservation Design effort.  Twelve Conservation Assets were collaboratively identified.  Nine are based on natural land covers from the Cooperative Land Cover (CLC v. 3.2): High Pine and Scrub, Pine Flatwoods and Dry Prairie, Freshwater Forested Wetlands, Hardwood Forested Uplands, Coastal Uplands, Freshwater Non-forested Wetlands, Estuarine, Marine, and Freshwater Aquatic.  The other three are Landscape Connectivity, Cultural Features and Working Lands.  The Marine, Estuarine and Cultural Conservation Assets are not yet fully developed, however partial Estuarine is shown.',
     'water': 'This model is a combination of the three core data layers in the Surface Water Resource Category: Significant Surface Waters, Natural Floodplain, and Wetlands.  See pg. 15 of the CLIP Technical Report for the rules used to assign the core data layers into the Surface Water resource priority model.',
     dev: 'These development projections are derived from the Florida 2060 development dataset. This projections explores the physical reality and consequences of the population growth from 2005 to 2060 if existing land use policy or population growth patterns do not change.  The land use suitability analysis displayed in this dataset was performed by the University of Florida GeoPlan Center for 1000 Friends of Florida. The graph below reports the area affected for each of the three time steps used in this model, the existing extent of urbanization in 2005, and the area unaffected by urbanization. The hectares reported for each of the three time steps are cumulative figures.',
     slr: "These sea level rise projections were produced by the University of Florida Geoplan Center. These projections measure sea level rise in meter increments up until 3 meters. The graph below reports the area affected for each of these three scenarios (as well as the area unaffected). The hectares reported for each of these scenarios are cumulative figures.  <br/><br/>Time ranges were extrapolated from the High Bathtub Projections (for Mean Sea Level Rise) used in the University of Florida GeoPlan Center's Sea Level Rise Sketch tool"
@@ -286,7 +286,7 @@ var priorityResourceLabels = {
 };
 
 var priorityResourceTooltips = {
-    Conx: 'Linkages between Priority Resource Habitats, based on the P3 priority level of the CLIP Landscape Priorities.',
+    Conx: 'Linkages between Conservation Asset Habitats, based on the P3 priority level of the CLIP Landscape Priorities.',
     C: 'Important features of the environment or landscape related to social practices, customary beliefs, or economic activity that is influenced by social values.',
     E: 'Deepwater tidal habitats and adjacent tidal wetlands. Usually semi-enclosed by land with open, partly obstructed, or sporadic ocean access, with ocean derived water at least occasionally diluted by freshwater land runoff. The upstream and landward limit is where ocean-derived salts measure ˂ .5 ppt during average annual low flow. The seaward limit is: 1) an imaginary line closing the mouth of a river, bay, or sound; and 2) the seaward limit of wetland emergents, shrubs, or trees when not included in 1).',
     FNFW: 'Herbaceous or shrubby palustrine communities in floodplains or depressions; canopy trees, if present, very sparse and often stunted.',
@@ -555,7 +555,7 @@ var devRadioOrder = ['devCur', 'dev2020', 'dev2040', 'dev2060'];
 
 var legendSubheading = {
     priority: {
-        priority: '% of watershed covered by combined priority resources',
+        priority: '% of watershed covered by combined conservation assets',
         default: '% of watershed covered by Priority 1 and 2'
     },
     slr: '% of watershed inundated',

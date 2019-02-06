@@ -1,69 +1,70 @@
 @font-face {
-  font-family: 'fa';
-  src: url(data:font/ttf;base64,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);
-  font-weight: normal;
-  font-style: normal;
+    font-family: "fa";
+    src: url(data:font/ttf;base64,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);
+    font-weight: normal;
+    font-style: normal;
 }
 
-[class^="fa-"], [class*=" fa-"] {
-  /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'fa' !important;
-  speak: none;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
+[class^="fa-"],
+[class*=" fa-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: "fa" !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
 
-  /* Better Font Rendering =========== */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .fa-play-circle:before {
-  content: "\e90b";
+    content: "\e90b";
 }
 .fa-youtube-play:before {
-  content: "\e90c";
+    content: "\e90c";
 }
 .fa-bar-chart:before {
-  content: "\e906";
+    content: "\e906";
 }
 .fa-bar-chart-o:before {
-  content: "\e906";
+    content: "\e906";
 }
 .fa-map:before {
-  content: "\e907";
+    content: "\e907";
 }
 .fa-caret-right:before {
-  content: "\e908";
+    content: "\e908";
 }
 .fa-caret-down:before {
-  content: "\e909";
+    content: "\e909";
 }
 .fa-circle:before {
-  content: "\e90a";
+    content: "\e90a";
 }
 .fa-exclamation-triangle:before {
-  content: "\e900";
+    content: "\e900";
 }
 .fa-warning:before {
-  content: "\e900";
+    content: "\e900";
 }
 .fa-share-alt:before {
-  content: "\e901";
+    content: "\e901";
 }
 .fa-file-pdf-o:before {
-  content: "\e902";
+    content: "\e902";
 }
 .fa-eye-slash:before {
-  content: "\e903";
+    content: "\e903";
 }
 .fa-eye:before {
-  content: "\e904";
+    content: "\e904";
 }
 .fa-times-circle:before {
-  content: "\e905";
+    content: "\e905";
 }
 
 html {
@@ -85,7 +86,8 @@ button {
     line-height: 1;
 }
 
-h4, h5 {
+h4,
+h5 {
     margin: 4px 0;
 }
 
@@ -109,7 +111,7 @@ p.small {
     font-size: small;
 }
 
-input[type=range]{
+input[type="range"] {
     -webkit-appearance: none;
     /* fix for FF unable to apply focus style bug  */
     border: 1px solid white;
@@ -119,14 +121,14 @@ input[type=range]{
     padding: 0;
     vertical-align: middle;
 }
-input[type=range]::-webkit-slider-runnable-track {
+input[type="range"]::-webkit-slider-runnable-track {
     width: 150px;
     height: 5px;
     background: #ddd;
     border: none;
     border-radius: 3px;
 }
-input[type=range]::-webkit-slider-thumb {
+input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     border: none;
     height: 16px;
@@ -135,10 +137,10 @@ input[type=range]::-webkit-slider-thumb {
     background: #333;
     margin-top: -6px;
 }
-input[type=range]:focus {
+input[type="range"]:focus {
     outline: none;
 }
-input[type=range]::-moz-range-thumb {
+input[type="range"]::-moz-range-thumb {
     border: none;
     height: 16px;
     width: 16px;
@@ -146,14 +148,14 @@ input[type=range]::-moz-range-thumb {
     background: goldenrod;
 }
 /*hide the outline behind the border*/
-input[type=range]:-moz-focusring{
+input[type="range"]:-moz-focusring {
     outline: 1px solid white;
     outline-offset: -1px;
 }
-input[type=range]:focus::-moz-range-track {
+input[type="range"]:focus::-moz-range-track {
     background: #ccc;
 }
-input[type=range]::-ms-track {
+input[type="range"]::-ms-track {
     /*!*remove bg colour from the track, we'll use ms-fill-lower and ms-fill-upper instead *!*/
     background: transparent;
 
@@ -164,33 +166,30 @@ input[type=range]::-ms-track {
     /*remove default tick marks*/
     color: transparent;
 }
-input[type=range]::-ms-fill-lower {
+input[type="range"]::-ms-fill-lower {
     background: #777;
     border-radius: 10px;
 }
-input[type=range]::-ms-fill-upper {
+input[type="range"]::-ms-fill-upper {
     background: #ddd;
     border-radius: 10px;
 }
-input[type=range]::-ms-thumb {
+input[type="range"]::-ms-thumb {
     border: none;
     height: 16px;
     width: 16px;
     border-radius: 50%;
     background: goldenrod;
 }
-input[type=range]:focus::-ms-fill-lower {
+input[type="range"]:focus::-ms-fill-lower {
     background: #888;
 }
-input[type=range]:focus::-ms-fill-upper {
+input[type="range"]:focus::-ms-fill-upper {
     background: #ccc;
 }
-input[type=range]::-ms-tooltip {
+input[type="range"]::-ms-tooltip {
     display: none;
 }
-
-
-
 
 /* Core classes */
 .pos-rel {
@@ -202,7 +201,7 @@ input[type=range]::-ms-tooltip {
 .fullwidth {
     width: 100%;
 }
-.fullheight{
+.fullheight {
     height: 100%;
 }
 
@@ -230,8 +229,8 @@ input[type=range]::-ms-tooltip {
 
 .button {
     color: #888;
-    background: #F6F6F6;
-    border: 1px solid #AAA;
+    background: #f6f6f6;
+    border: 1px solid #aaa;
     padding: 4px 6px;
     cursor: pointer;
     border-radius: 6px;
@@ -280,31 +279,31 @@ input[type=range]::-ms-tooltip {
 .credit-photo {
     text-align: right;
     font-size: 0.7em;
-    color: #FFF;
+    color: #fff;
     position: relative;
     top: -16px;
     float: right;
-    background: rgba(0,0,0,0.35);
+    background: rgba(0, 0, 0, 0.35);
     padding: 0 4px;
     text-shadow: 1px 1px 2px #000;
 }
 .credit-photo a {
-    color: #FFF;
+    color: #fff;
 }
 
 .divider {
     height: 1px;
-    border-top: 1px solid #AAA;
+    border-top: 1px solid #aaa;
     margin: 6px 0;
 }
 
 .divider.divider-light {
-    border-color: #EEE;
+    border-color: #eee;
 }
 
 .badge {
     background: #333;
-    color: #FFF;
+    color: #fff;
     display: inline-block;
     text-align: center;
     padding: 0.2em 0.5em;
@@ -329,40 +328,37 @@ input[type=range]::-ms-tooltip {
 
 /* used for hover treatment over a node */
 .node-highlight:hover {
-    background: #F6F6F6;
+    background: #f6f6f6;
 }
 
-.node-highlight .node-highlight:hover{
-    background: #EEE;
+.node-highlight .node-highlight:hover {
+    background: #eee;
 }
-
 
 .disabled h4,
 .disabled p {
     color: #aaa;
 }
 .disabled .badge {
-    background: #CCC;
+    background: #ccc;
 }
-
 
 /* intended to be setup as a leaflet control to coordinate layout with other controls */
 .map-panel {
-    background: #FFF;
-    border: 4px solid #FFF;
-    box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+    background: #fff;
+    border: 4px solid #fff;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.65);
     border-radius: 4px;
     overflow: hidden;
 }
 /* End core classes */
-
 
 /* Tabs Widget */
 .tabs {
     list-style: none;
     margin: 0;
     padding: 4px 10px 0;
-    background-color: #AAA;
+    background-color: #aaa;
     color: white;
     display: flex;
 }
@@ -372,17 +368,17 @@ input[type=range]::-ms-tooltip {
     cursor: pointer;
     border-radius: 3px 3px 0 0;
     margin: 0 auto;
-    background-color: #BBB;
+    background-color: #bbb;
     border: 1px solid #999;
     border-bottom: none;
     position: relative;
 }
 .tabs > li:hover {
-    background-color: #CCC;
+    background-color: #ccc;
 }
 .tabs > li.active {
     font-weight: bold;
-    background: #FFF;
+    background: #fff;
     color: #333;
 }
 .tabs .indicator {
@@ -396,16 +392,16 @@ input[type=range]::-ms-tooltip {
 
 .tab-ref {
     padding: 1px 8px;
-    background: #AAA;
-    color: #FFF;
+    background: #aaa;
+    color: #fff;
     border-radius: 3px 3px 0 0;
 }
 .tabs.subtabs {
-    background: #FFF;
+    background: #fff;
     color: #333;
 }
 .tabs.subtabs > li {
-    border-bottom: 2px solid #FFF;
+    border-bottom: 2px solid #fff;
     border-top: none;
     border-left: none;
     border-right: none;
@@ -413,17 +409,14 @@ input[type=range]::-ms-tooltip {
     text-align: center;
 }
 .tabs.subtabs > li:hover {
-    background: #FFF;
-    border-bottom-color: #EEE;
+    background: #fff;
+    border-bottom-color: #eee;
 }
 .tabs.subtabs > li.active {
     border-bottom-color: orange;
 }
 
-
-
 /* End Tabs Widget */
-
 
 /* Modal Dialog */
 /* first element is actually the background scrim */
@@ -444,14 +437,14 @@ input[type=range]::-ms-tooltip {
     margin-left: auto;
     margin-right: auto;
     width: 600px;
-    background: #F6F6F6;
+    background: #f6f6f6;
     border: 1px solid #999;
     border-radius: 6px;
     box-shadow: 2px 2px 5px #000;
     padding: 10px;
 }
 .modal > div > div:first-child {
-    border-bottom: 1px solid #DDD;
+    border-bottom: 1px solid #ddd;
     padding-bottom: 3px;
     margin-bottom: 10px;
 }
@@ -467,7 +460,7 @@ input[type=range]::-ms-tooltip {
     color: #333;
 }
 .modal.alert {
-    background: #FFF;
+    background: #fff;
 }
 .modal.alert > div {
     background: rgba(255, 169, 0, 0.44);
@@ -478,22 +471,19 @@ input[type=range]::-ms-tooltip {
 
 /* End Modal Dialog */
 
-
 /* expandos */
-.expandable h4{
+.expandable h4 {
     cursor: pointer;
     padding: 4px;
     border-radius: 3px;
 }
 .expandable h4:hover {
-    background: #F6F6F6;
+    background: #f6f6f6;
 }
 .expandable h4 .fa {
     margin-right: 6px;
 }
 /* end expandos */
-
-
 
 /* Leaflet overrides */
 .leaflet-top.leaflet-right {
@@ -558,10 +548,10 @@ input[type=range]::-ms-tooltip {
 /* Page elements */
 
 #Header {
-    height:34px;
+    height: 34px;
     background: #587387;
-    background: linear-gradient(left, #b8673d 0, #646D5A 60px, #a6b398 100%);
-    background: -webkit-linear-gradient(left, #b8673d 0, #646D5A 60px, #a6b398 100%);
+    background: linear-gradient(left, #b8673d 0, #646d5a 60px, #a6b398 100%);
+    background: -webkit-linear-gradient(left, #b8673d 0, #646d5a 60px, #a6b398 100%);
     color: white;
 }
 #Header img {
@@ -569,7 +559,7 @@ input[type=range]::-ms-tooltip {
     height: 30px;
 }
 #Header h3 {
-    margin:9px 0 0 0;
+    margin: 9px 0 0 1em;
     text-shadow: 1px 1px 2px #333;
 }
 #Header .button {
@@ -578,14 +568,14 @@ input[type=range]::-ms-tooltip {
 }
 
 #Footer {
-    height:28px;
+    height: 28px;
     color: white;
-    background: #646D5A;
+    background: #646d5a;
     border-top: 2px solid #333;
 }
 #Footer > ul {
     list-style: none;
-    margin: 4px 4px 0;
+    margin: 8px 4px 0;
     padding: 0;
 }
 #Footer > ul > li {
@@ -605,8 +595,8 @@ input[type=range]::-ms-tooltip {
 
 #Sidebar {
     width: 470px;
-    border-right: 2px solid #AAA;
-    background-color: #FFF;
+    border-right: 2px solid #aaa;
+    background-color: #fff;
     overflow: hidden;
 }
 
@@ -627,17 +617,16 @@ input[type=range]::-ms-tooltip {
     text-align: center;
 }
 #ClearFilterContainer > div {
-    background: #FFFFCC;
-    border-top: 1px solid #DDD;
+    background: #ffffcc;
+    border-top: 1px solid #ddd;
 }
-
 
 .tooltip {
     position: absolute;
     max-width: 350px;
     z-index: 10000;
-    background: rgba(255,255,255,1);
-    border: 1px solid #AAA;
+    background: rgba(255, 255, 255, 1);
+    border: 1px solid #aaa;
     border-radius: 6px;
     padding: 0 10px 10px 10px;
     box-shadow: 2px 2px 6px #555;
@@ -649,19 +638,20 @@ input[type=range]::-ms-tooltip {
     top: 14px;
     right: 100%;
     margin-top: -8px;
-    width: 0; height: 0;
+    width: 0;
+    height: 0;
     border-right: 8px solid #555;
     border-top: 8px solid transparent;
     border-bottom: 8px solid transparent;
 }
 .tooltip-title {
-    border-bottom: 1px solid #DDD;
+    border-bottom: 1px solid #ddd;
     padding-bottom: 4px;
 }
 
 .tooltip-subtitle {
     padding-bottom: 4px;
-    border-bottom: 1px solid #DDD;
+    border-bottom: 1px solid #ddd;
     line-height: 1.5;
 }
 .tooltip-text {
@@ -680,12 +670,12 @@ input[type=range]::-ms-tooltip {
     vertical-align: middle;
     display: inline-block;
     margin: 1px 6px 1px 0;
-    border: 1px solid #DDD;
+    border: 1px solid #ddd;
 }
 
 #Details .tabs {
     padding: 0;
-    margin: 10px
+    margin: 10px;
 }
 
 #Details section p {
@@ -695,7 +685,7 @@ input[type=range]::-ms-tooltip {
     text-align: justify;
 }
 #Details section + section {
-    border-top: 1px solid #EEE;
+    border-top: 1px solid #eee;
 }
 
 #Details section.read-more {
@@ -706,7 +696,7 @@ input[type=range]::-ms-tooltip {
     cursor: pointer;
     font-size: 1.5em;
     margin-right: 4px;
-    color: #AAA;
+    color: #aaa;
 }
 #DetailsClose:hover {
     color: #555;
@@ -723,7 +713,7 @@ input[type=range]::-ms-tooltip {
 
 .filter-reset {
     display: none;
-    color: #AAA;
+    color: #aaa;
     font-style: italic;
     margin-left: 8px;
 }
@@ -736,17 +726,15 @@ h4.filtered {
     color: red;
 }
 
-h4.mapped .fa-map
- {
+h4.mapped .fa-map {
     color: #1f77b4 !important;
 }
 h4 .fa-map {
-    color: #DDD;
+    color: #ddd;
 }
 h4:hover .fa-map {
-    color: #AAA;
+    color: #aaa;
 }
-
 
 #SppFilter .select-row + .select-row {
     margin-top: 10px;
@@ -769,7 +757,6 @@ h4:hover .fa-map {
     margin-left: 0;
 }
 
-
 .slider-list {
     list-style: none;
     margin: 24px 0 0 0;
@@ -780,13 +767,13 @@ h4:hover .fa-map {
     padding: 4px 0;
     position: relative;
 }
-.slider-list input[type=range] {
+.slider-list input[type="range"] {
     width: 300px;
     /*margin: 0;*/
 }
 
 .slider-list h4 span {
-    color: #AAA;
+    color: #aaa;
     font-weight: normal;
     margin-left: 8px;
     cursor: pointer;
@@ -798,7 +785,7 @@ h4:hover .fa-map {
     border-radius: 3px;
     padding: 4px 8px;
     margin-left: 10px;
-    border: 1px solid #AAA;
+    border: 1px solid #aaa;
     outline: none;
     width: 64px;
 }
@@ -925,70 +912,72 @@ h4:hover .fa-map {
 }
 
 .pdfReporterContainer {
-  display: none;
+    display: none;
 }
 .pdfReporterContainer.active {
-  display: block;
-  z-index: 10000;
+    display: block;
+    z-index: 10000;
 }
 .pdfReporterContainer .scrim {
-  display: none;
-  opacity: 0.7;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 100000;
-  background: #fff;
-  padding: 15% 0 0 50%;
+    display: none;
+    opacity: 0.7;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100000;
+    background: #fff;
+    padding: 15% 0 0 50%;
 }
 .pdfReporterContainer .scrim .spinner {
-  width: 100px;
-  height: 100px;
-  background: transparent url(data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjNjQ2RDVBIiBoZWlnaHQ9IjI0IiB2aWV3Qm94PSIwIDAgMjQgMjQiIHdpZHRoPSIyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4gICAgPHBhdGggZD0iTTEyIDZ2M2w0LTQtNC00djNjLTQuNDIgMC04IDMuNTgtOCA4IDAgMS41Ny40NiAzLjAzIDEuMjQgNC4yNkw2LjcgMTQuOGMtLjQ1LS44My0uNy0xLjc5LS43LTIuOCAwLTMuMzEgMi42OS02IDYtNnptNi43NiAxLjc0TDE3LjMgOS4yYy40NC44NC43IDEuNzkuNyAyLjggMCAzLjMxLTIuNjkgNi02IDZ2LTNsLTQgNCA0IDR2LTNjNC40MiAwIDgtMy41OCA4LTggMC0xLjU3LS40Ni0zLjAzLTEuMjQtNC4yNnoiLz4gICAgPHBhdGggZD0iTTAgMGgyNHYyNEgweiIgZmlsbD0ibm9uZSIvPjwvc3ZnPg==) no-repeat center center;
-  background-size: 100px;
-  animation: spin 2s infinite linear;
+    width: 100px;
+    height: 100px;
+    background: transparent
+        url(data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjNjQ2RDVBIiBoZWlnaHQ9IjI0IiB2aWV3Qm94PSIwIDAgMjQgMjQiIHdpZHRoPSIyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4gICAgPHBhdGggZD0iTTEyIDZ2M2w0LTQtNC00djNjLTQuNDIgMC04IDMuNTgtOCA4IDAgMS41Ny40NiAzLjAzIDEuMjQgNC4yNkw2LjcgMTQuOGMtLjQ1LS44My0uNy0xLjc5LS43LTIuOCAwLTMuMzEgMi42OS02IDYtNnptNi43NiAxLjc0TDE3LjMgOS4yYy40NC44NC43IDEuNzkuNyAyLjggMCAzLjMxLTIuNjkgNi02IDZ2LTNsLTQgNCA0IDR2LTNjNC40MiAwIDgtMy41OCA4LTggMC0xLjU3LS40Ni0zLjAzLTEuMjQtNC4yNnoiLz4gICAgPHBhdGggZD0iTTAgMGgyNHYyNEgweiIgZmlsbD0ibm9uZSIvPjwvc3ZnPg==)
+        no-repeat center center;
+    background-size: 100px;
+    animation: spin 2s infinite linear;
 }
 .pdfReporterContainer .scrim .progress {
     padding: 15px 30px;
 }
 .pdfReporterContainer .curtain {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0.5;
-  background: #000;
-  z-index: 10000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.5;
+    background: #000;
+    z-index: 10000;
 }
 .pdfReporterContainer .preview {
-  position: absolute;
-  top: 3%;
-  margin-left: 10%;
-  height: 85%;
-  width: 80%;
-  z-index: 10001;
+    position: absolute;
+    top: 3%;
+    margin-left: 10%;
+    height: 85%;
+    width: 80%;
+    z-index: 10001;
 }
 .pdfReporterContainer .preview .toolbar {
-  width: 9.3in;
-  margin-left: calc((100% - 8.5in) / 2);
-  background: #ccc;
-  border-bottom: 1px solid #999;
-  border-radius: 5px 5px 0 0;
+    width: 9.3in;
+    margin-left: calc((100% - 8.5in) / 2);
+    background: #ccc;
+    border-bottom: 3px solid #999;
+    border-radius: 5px 5px 0 0;
 }
-.pdfReporterContainer .preview .toolbar .fa.fa-times-circle{
+.pdfReporterContainer .preview .toolbar .fa.fa-times-circle {
     color: #f6f6f6;
     font-size: 1.5em;
     cursor: pointer;
 }
 .pdfReporterContainer .preview .toolbar * {
-  margin: 5px 10px;
+    margin: 5px 10px;
 }
 .pdfReporterContainer .preview iframe {
-  background-color: #fff;
-  height: 100%;
-  width: 9.3in;
-  margin-left: calc((100% - 8.5in) / 2);
+    background-color: #fff;
+    height: 100%;
+    width: 9.3in;
+    margin-left: calc((100% - 8.5in) / 2);
 }

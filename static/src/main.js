@@ -506,7 +506,7 @@ var onLoad = _.after(2, load);
 function load() {
     d3.select('#LoadingScrim').classed('hidden', true);
 
-    setSelectedField(selectedField, 'priority', '% of watershed covered by combined priority resources');
+    setSelectedField(selectedField, 'priority', '% of watershed covered by combined conservation assets');
     features.addTo(map);
 
     d3.select('#PriorityFilter').selectAll('div')
@@ -526,7 +526,7 @@ function load() {
             container.classed('node-highlight', true);
             connectTooltip(container, {title: fieldLabels[d], text: fieldTooltips[d]});
 
-            var subheading = (i === 0)? '% of watershed covered by combined priority resources': '% of watershed covered by Priority 1 and 2';
+            var subheading = (i === 0)? '% of watershed covered by combined conservation assets': '% of watershed covered by Priority 1 and 2';
             chartContainer.append('div')
                 .classed('quiet small filter-subheading', true)
                 .html(subheading);

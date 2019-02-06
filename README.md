@@ -41,6 +41,11 @@ already out on S3, otherwise they take a while).
 
 Then from a command line, run `python tools/deploy.py` to push this up to S3.
 
+
+## Notes
+"Conservation Assets" were formerly known as "Priority Resources" - so any variables in the code that pointed to these will probably be "Priority*" or "PR*".
+
+
 ## Credit
 
 This project was developed based on grants from the U.S. Fish and Wildlife Service Peninsular Florida Landscape Conservation Cooperative and Florida Fish and Wildlife Conservation Commission.
