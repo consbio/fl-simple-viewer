@@ -33,7 +33,7 @@ Run `gulp build` to run the build, which produces artifacts in `static/dist`.
 
 To deploy, this requires a deploy_settings.py file from Brendan (contains S3 keys and bucket info).
 
-Files are deployed to `viewer.apps.pflcc.databasin.org` bucket in S3.
+Files are deployed to `viewer.apps.flcpa.databasin.org` bucket in S3.
 
 Run `create_version.py` after updating version in that script. This will create a vN (where N is version number) folder.
 You may need to comment or uncomment the lines for including the individual feature data (can be omitted if those versions
@@ -41,10 +41,9 @@ already out on S3, otherwise they take a while).
 
 Then from a command line, run `python tools/deploy.py` to push this up to S3.
 
-
 ## Notes
-"Conservation Assets" were formerly known as "Priority Resources" - so any variables in the code that pointed to these will probably be "Priority*" or "PR*".
 
+"Conservation Assets" were formerly known as "Priority Resources" - so any variables in the code that pointed to these will probably be "Priority*" or "PR*".
 
 ## Credit
 
