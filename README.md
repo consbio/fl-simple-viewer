@@ -31,20 +31,16 @@ Run `gulp build` to run the build, which produces artifacts in `static/dist`.
 
 ## Deploy process
 
-To deploy, this requires a deploy_settings.py file from Brendan (contains S3 keys and bucket info).
+Install AWS CLI and authorize with appropriate credentials for AWS Static Deploy
 
 Files are deployed to `viewer.apps.flcpa.databasin.org` bucket in S3.
 
-Run `create_version.py` after updating version in that script. This will create a vN (where N is version number) folder.
-You may need to comment or uncomment the lines for including the individual feature data (can be omitted if those versions
-already out on S3, otherwise they take a while).
-
-Then from a command line, run `python tools/deploy.py` to push this up to S3.
+From a command line, run `python tools/deploy.py` to push this up to S3.
 
 ## Notes
 
 "Conservation Assets" were formerly known as "Priority Resources" - so any variables in the code that pointed to these will probably be "Priority*" or "PR*".
 
-## Credit
+## Credits
 
 This project was developed based on grants from the U.S. Fish and Wildlife Service Peninsular Florida Landscape Conservation Cooperative and Florida Fish and Wildlife Conservation Commission.
