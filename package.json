@@ -15,7 +15,7 @@
         "leaflet-image": "^0.3.0",
         "leaflet-omnivore": "^0.3.2",
         "leaflet-zoombox": "^0.3.3",
-        "lodash": "^4.15.0",
+        "lodash": "^4.17.19",
         "nvd3": "^1.8.4"
     },
     "devDependencies": {
