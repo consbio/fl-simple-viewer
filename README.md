@@ -23,6 +23,16 @@ label of the column was used for the link text.
 
 Run `npm install` to pull down required modules.
 
+Run `pipenv install --dev` to setup a virtual environment (based on `Pipfile` and Python 3.7) with the development dependencies.
+
+The AWS CLI is installed based on these dependencies. Authorize it with appropriate credentials for AWS Static Deploy (CBI IAM account).
+
+[AWS CLI setup instructions](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html).
+
+```
+
+```
+
 ## Build process
 
 This project uses Gulp to minify and concatenate CSS and JS files.
@@ -30,8 +40,6 @@ This project uses Gulp to minify and concatenate CSS and JS files.
 Run `gulp build` to run the build, which produces artifacts in `static/dist`.
 
 ## Deploy process
-
-Install AWS CLI and authorize with appropriate credentials for AWS Static Deploy
 
 Files are deployed to `viewer.apps.flcpa.databasin.org` bucket in S3.
 

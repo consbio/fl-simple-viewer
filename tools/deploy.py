@@ -42,11 +42,13 @@ def upload_files(directory):
 
     print('Deleting old contents from: {}'.format(BUCKET))
     for key in bucket.objects.all():
+        print('Deleting', key)
         key.delete()
 
     print('Uploading to {}'.format(BUCKET))
     for root, dirs, files in os.walk(directory):
         for filename in files:
+
             print('Uploading', filename)
             path = os.path.relpath(root, os.path.realpath(directory))
             key = os.path.join(path, filename) if path != '.' else filename
