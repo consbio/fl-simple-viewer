@@ -19,13 +19,13 @@
         "nvd3": "^1.8.4"
     },
     "devDependencies": {
-        "gulp": "^3.9.1",
-        "gulp-clean-css": "^2.0.4",
+        "gulp": "^4.0.2",
+        "gulp-clean-css": "^4.3.0",
         "gulp-concat": "^2.6.0",
-        "gulp-expect-file": "0.0.7",
-        "gulp-less": "^3.3.0",
-        "gulp-minify": "^0.0.7",
-        "gulp-rename": "^1.2.2",
+        "gulp-expect-file": "^1.0.2",
+        "gulp-less": "^4.0.1",
+        "gulp-minify": "^3.1.0",
+        "gulp-rename": "^2.0.0",
         "gulp-strip-comments": "^2.4.2",
         "gulp-util": "^3.0.8"
     },

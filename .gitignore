@@ -8,3 +8,5 @@ node_modules/*
 static/dist/*
 build/*
 static/fonts/*
+data/*
+ARCHIVE/*

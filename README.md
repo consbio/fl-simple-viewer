@@ -15,9 +15,11 @@ Data were obtained from PFLCC staff as a shapefile for each factor, from Oct 201
 
 Data were provided by PFLCC staff on 1/4/2018.
 Each column contains a unique link, but may have variable text to use as the label. Columns are grouped by PFLCC Priority Resource.
-Give each column a unique key, and make sure this is synced with `static/src/config.py::COconfig`.
+Give each column a unique key, and make sure this is synced with `static/src/config.js::COconfig`.
 Columns that have species names varied across watersheds, so species names were shown as the link text; otherwise the
 label of the column was used for the link text.
+
+Updated links and additional landowner opportunities were provided by email from FWC staff on 5/19/2021.
 
 ## Setup
 

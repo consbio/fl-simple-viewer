@@ -4,12 +4,16 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-
+pandas = "*"
 
 [dev-packages]
 click = "*"
 "boto3" = "*"
 awscli = "*"
+black = "*"
 
 [requires]
 python_version = "3.7"
+
+[pipenv]
+allow_prereleases = true
