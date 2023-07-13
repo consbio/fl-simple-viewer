@@ -56,6 +56,9 @@ var labelSort = function(a, b){ return d3.ascending(a.label, b.label) };
 // Microsoft dropped IE < 11 so we should too
 if (L.Browser.ielt9 || (L.Browser.ie && ((/MSIE 9/i).test(navigator.userAgent) || (/MSIE 10/i).test(navigator.userAgent)))){
     updateNodeVisibility(['#IEAlert'], ['#LoadingScrim']);
+    if (!DEBUG) {
+        ga('send', 'event', 'Unsupported Browser', 'IE < 11');
+    }
     throw 'UnsupportedBrowser';
 }
 
@@ -142,6 +145,11 @@ d3.select('#ClearAllButton').on('click', function() {
     d3.select('#ClearFilterContainer').classed('hidden', true);
     dc.redrawAll();
     updateMap();
+
+    if (!DEBUG) {
+        // log via google analytics
+        ga('send', 'event', 'Filters: clear all', 'clear all filters');
+    }
 });
 
 
@@ -291,6 +299,20 @@ if (!DEBUG) {
     // log via google analytics
     geonamesControl.on('search', function (e) {
         if (!(e.params && e.params.q)) return;
+
+        ga('send', 'event',
+            'Geonames',
+            'search',
+            e.params.q
+        );
+    });
+
+    map.on('baselayerchange', function () {
+        ga('send', 'event',
+            'Basemaps',
+            'set',
+            basemapsControl.basemap.options.label
+        );
     });
 }
 
@@ -804,6 +826,16 @@ function updateSliderFilter(dimension, value, max, label) {
     dc.redrawAll();
     updateTabIndicator(dimension.id, hasFilter);
     updateMap();
+
+    if (!DEBUG) {
+        // log via google analytics
+        ga('send', 'event',
+            'Slider: ' + label,
+            'update filter',
+            (value > 0) ? 'set: ' + d3.format(',d')(value) + ' ha' : 'clear',
+            value
+        );
+    }
 }
 
 
@@ -824,6 +856,15 @@ function onFilter(header, dimensionName, chart, filter) {
     header.classed('filtered', isFiltered);
     updateTabIndicator(chart.dimension().id, isFiltered);
     updateMap();
+
+    if (!DEBUG) {
+        // log via google analytics
+        ga('send', 'event',
+            'Filter: ' + dimensionName,
+            'update filter',
+            (isFiltered)? 'set: ' + chart.filters().slice().sort().join(','): 'clear'
+        );
+    }
 }
 
 function updateTabIndicator (dimensionID, isFiltered) {
@@ -1087,6 +1128,7 @@ function showDetails(details) {
         if (details.records.length > 1) {
             names = details.records.length + ' selected: ' + names;
         }
+        ga('send', 'event', 'Watersheds Map', 'view details', names);
     }
 
     d3.selectAll('path.selected').classed('selected', false);
